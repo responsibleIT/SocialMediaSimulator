@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>FB Model Configuration</title>
+            <script src="app.js" defer></script>
+            <link rel="stylesheet" href="style.css">
+        </head>
+    <body>
+        <div id="header">
+            <h2>Social Network Simulation</h2>
+        </div>
+        <div id="simulationContainer">
+            <div id="canvasContainer" style="position: relative;">
+                <canvas id="nodeCanvas" width="800" height="600" onclick="spawnNode(event)"></canvas>
+                <div id="nodeDataContainer" class="hide">
+                    <label id="nodeLabel"></label>
+                    <label id="nodeX"></label>
+                    <label id="nodeY"></label>
+                </div>
+            </div>
+            <div id="controlPanel">
+                <div id="generalOptions">
+                    <label for="addPersonCheckbox">Add person
+                        <input type="checkbox" id="addPersonCheckbox">
+                    </label>
+                    <label for="addSocialMediaPostCheckbox">Add Social Media Post
+                        <input type="checkbox" id="addSocialMediaPostCheckbox">
+                    </label>
+
+                    <button type="button" onclick="drawRandomPersonNodes()">Add random people</button>
+                    <button type="button" onclick="drawRandomSocialMediaPostNodes()">Post random content</button>
+                    <button type="button" onclick="calculateAdjustedClosenessCentrality()">Calculate Closeness Centrality</button>
+                </div>
+                <div id="selectedNodeOptions" class="hide">
+                    <label id="selectedNodeId"></label>
+                    <label id="selectedNodeX"></label>
+                    <label id="selectedNodeY"></label>
+                    <label id="selectedNodeType"></label>
+                    <label id="totalPopularity"></label>
+                    <label for="increasedPopularity">Increased Popularity
+                        <input type="number" id="nodePopularity" min="0" max="50">
+                    </label>
+                    <button type="button" onclick="deleteNode()">Delete Node</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
