@@ -58,6 +58,13 @@ function addNodeLabel(mousePos, nodeId) {
                 linkHandler(nodeId, type);
         }
     });
+    canvas.addEventListener("click", () => {
+        if (selectedNode === nodeId) {
+            deselectNode(nodeId);
+            selectedNodeOptions.classList.add("hide");
+            generalOptions.classList.remove("hide");
+        }
+    });
 
     return nodeLabel;
 }
