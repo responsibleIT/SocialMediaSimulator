@@ -12,6 +12,7 @@
     </header>
     <main>
         <section id="simulationContainer">
+            <h2 class="visually-hidden">Simulation container</h2>
             <div id="canvasContainer" style="position: relative;">
                 <canvas id="nodeCanvas" width="800" height="600"></canvas>
                 <div id="nodeDataContainer" class="hide">
@@ -19,7 +20,8 @@
                     <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
                 </div>
             </div>
-            <aside id="controlPanel">
+            <section id="controlPanel">
+                <h2>Controls</h2>
                 <div id="generalOptions">
                     <label for="addPersonCheckbox">
                         <input type="checkbox" id="addPersonCheckbox">
@@ -45,7 +47,7 @@
                     </label>
                     <button type="button" id="deleteNode">Delete Node</button>
                 </div>
-            </aside>
+            </section>
         </section>
     </main>
     <script src="app.js" defer></script>
