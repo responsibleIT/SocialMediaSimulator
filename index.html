@@ -1,18 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-    </head>
-    <body>
-        <template id="user">
-            <section>
-                <p class="name">asdfghjkltfdfghj</p>
-                <img src="" alt="" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FB Model Configuration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Social Network Simulation</h1>
+    </header>
+    <main>
+        <section id="simulationContainer">
+            <h2 class="visually-hidden">Simulation container</h2>
+            <div id="canvasContainer" style="position: relative;">
+                <canvas id="nodeCanvas" width="800" height="600"></canvas>
+                <div id="nodeDataContainer" class="hide">
+                    <p><strong id="nodeLabel"></strong></p>
+                    <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
+                </div>
+            </div>
+            <section id="controlPanel">
+                <h3>Controls</h3>
+                <div id="generalOptions">
+                    <label for="addPersonCheckbox">
+                        <input type="checkbox" id="addPersonCheckbox">
+                        Add person
+                    </label>
+                    <label for="addSocialMediaPostCheckbox">
+                        <input type="checkbox" id="addSocialMediaPostCheckbox">
+                        Add Social Media Post
+                    </label>
+
+                    <button type="button" id="addRandomPeopleButton">Add random people</button>
+                    <button type="button" id="addRandomContentButton">Post random content</button>
+                    <button type="button" id="calcClosenessCentrality">Calculate Closeness Centrality</button>
+                </div>
+                <div id="selectedNodeOptions" class="hide">
+                    <p><strong id="selectedNodeId"></strong></p>
+                    <p>X: <span id="selectedNodeX"></span></p>
+                    <p>Y: <span id="selectedNodeY"></span></p>
+                    <p>Type: <span id="selectedNodeType"></span></p>
+                    <p>Total Popularity: <span id="totalPopularity"></span></p>
+                    <label>Increased Popularity
+                        <input type="number" id="nodePopularity" min="0" max="50">
+                    </label>
+                    <button type="button" id="deleteNode">Delete Node</button>
+                </div>
             </section>
-        </template>
-        <script src="user.js"></script>
-        <script src="main.js"></script>
-    </body>
+        </section>
+    </main>
+    <script src="app.js" defer></script>
+    <script src="addToCanvas.js" defer></script>
+</body>
 </html>
