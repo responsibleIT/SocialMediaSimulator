@@ -4,25 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FB Model Configuration</title>
-    <link rel="stylesheet" href="styles/style.css">
-</head>
-<body>
-    <header>
-      <h1>Social Network Simulation</h1>
-    </header>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
     <main>
-        <section id="simulationContainer">
-            <h2 class="visually-hidden">Simulation container</h2>
-            <div id="canvasContainer" style="position: relative;">
-                <canvas id="nodeCanvas" width="800" height="600"></canvas>
-                <div id="nodeDataContainer" class="hide">
-                    <p><strong id="nodeLabel"></strong></p>
-                    <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
-                </div>
-            </div>
-            
+        <h1>Social Network Simulation</h1>
+        <div id="canvasContainer" style="position: relative">
+          <canvas id="nodeCanvas" width="800" height="600"></canvas>
+          <div id="nodeDataContainer" class="hide">
+            <p><strong id="nodeLabel"></strong></p>
+            <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
+          </div>
+        </div>
 
         <section id="controlPanel">
+          <h2 class="visually-hidden">Simulation container</h2>
           <div id="generalOptions" class="person">
             <h3>Tools</h3>
             <!-- radio button for empty state, don't add a person or post. Just use the mouse as usual -->
@@ -49,22 +45,6 @@
 
             <h3>Automatic Tools</h3>
 
-            <form action="/submit" method="post">
-              <div class="form-group">
-                <label for="numberInput">Add people:</label>
-                <input
-                  type="number"
-                  id="numberInput"
-                  name="numberInput"
-                  min="1"
-                  max="100"
-                  placeholder="test"
-                />
-              </div>
-
-              <button type="submit">Submit</button>
-            </form>
-
             <button type="button" id="addRandomPeopleButton">Add people</button>
             <button type="button" id="addRandomContentButton">
               Post content
@@ -89,11 +69,10 @@
           </div>
         </section>
 
-      </section>
     </main>
     <script src="js/app.js" defer></script>
     <script src="js/createNode.js" defer></script>
     <script src="js/linkNodes.js" defer></script>
     <script src="js/centrality.js" defer></script>
-</body>
+  </body>
 </html>
