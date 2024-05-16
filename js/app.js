@@ -1,12 +1,13 @@
 // const socket = new WebSocket('ws://localhost:8765');
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d"); // Only used now for the links
 const canvasSize = { width: canvas.width, height: canvas.height };
+
 const nodeDataContainer = document.getElementById("nodeDataContainer");
 const gridRange = { min: -1, max: 1 };
-const addPersonCheckbox = document.getElementById("addPersonCheckbox");
-const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
+// const addPersonCheckbox = document.getElementById("addPersonCheckbox");
+// const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
 const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const standardPersonRadius = 8;
@@ -45,24 +46,13 @@ const labelColors = {
     "Social Media Post": "red",
 };
 
-//Handle checkbox behaviour
-addPersonCheckbox.addEventListener("change", function () {
-    if (addSocialMediaPostCheckbox.checked) {
-        addSocialMediaPostCheckbox.checked = false;
-    }
-});
-
-addSocialMediaPostCheckbox.addEventListener("change", function () {
-    if (addPersonCheckbox.checked) {
-        addPersonCheckbox.checked = false;
-    }
-});
-
 randomPeopleButton.addEventListener("click", () => {
-    drawRandomPersonNodes();
+    // drawRandomPersonNodes();
+    drawRandom("Person");
 });
 randomContentButton.addEventListener("click", () => {
-    drawRandomSocialMediaPostNodes();
+    // drawRandomSocialMediaPostNodes();
+    drawRandom("Social Media Post");
 });
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
@@ -82,28 +72,6 @@ function redrawCanvas() {
         let from = nodes.get(link.from);
         let to = nodes.get(link.to);
         drawLink(from, to, link.type, link.thickness); // Redraw each link
-    });
-
-    nodes.forEach((node, id) => {
-        if (node.label === "Person") {
-            drawNode(
-                node.x,
-                node.y,
-                node.label,
-                node.opacity,
-                (node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0)),
-                node.increasedPopularity
-            );
-        } else if (node.label === "Social Media Post") {
-            drawNode(
-                node.x,
-                node.y,
-                node.label,
-                node.opacity,
-                (node.popularity = calculatePostPopularity(node.readers?.length || 0)),
-                node.increasedPopularity
-            );
-        }
     });
 }
 //Function for checking who has an info link with a given node

@@ -1,29 +1,36 @@
 // Function to draw a node on the canvas
-function drawNode(x, y, label, opacity = 1, popularity = 0, increasedPopularity = 0) {
-    ctx.globalAlpha = opacity; // Set the global alpha based on the node's opacity
-    popularity = Number(popularity);
-    increasedPopularity = Number(increasedPopularity);
-    ctx.beginPath();
-    if (label === "Person") {
-        var radius = standardPersonRadius + popularity + increasedPopularity;
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    } else if (label === "Social Media Post") {
-        var radius = standardPostRadius + popularity + increasedPopularity;
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    }
-    ctx.fillStyle = labelColors[label] || "black";
-    ctx.fill();
-    ctx.globalAlpha = 1; // Reset global alpha to default after drawing
-}
+// function drawNode(x, y, label, opacity = 1, popularity = 0, increasedPopularity = 0) {
+    // ctx.globalAlpha = opacity; // Set the global alpha based on the node's opacity
+    // popularity = Number(popularity);
+    // increasedPopularity = Number(increasedPopularity);
+    // ctx.beginPath();
+    // if (label === "Person") {
+    //     var radius = standardPersonRadius + popularity + increasedPopularity;
+    //     ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    // } else if (label === "Social Media Post") {
+    //     var radius = standardPostRadius + popularity + increasedPopularity;
+    //     ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    // }
+    // ctx.fillStyle = labelColors[label] || "black";
+    // ctx.fill();
+    // ctx.globalAlpha = 1; // Reset global alpha to default after drawing
+// }
 
 // Function to add a label to the node in the body of the page absolutely positioned on the exact position of the node on the screen
-function addNodeLabel(mousePos, nodeId) {
+function addNodeLabel(mousePos, nodeId, label) {
     let nodeLabel = document.createElement("div");
     nodeLabel.style.position = "absolute";
     nodeLabel.style.left = mousePos.x - 5 + "px";
     nodeLabel.style.top = mousePos.y - 5 + "px";
     nodeLabel.style.width = "15px";
     nodeLabel.style.height = "15px";
+
+    if (label === "Person") {
+        nodeLabel.style.backgroundColor = "blue";
+    } else if (label === "Social Media Post") {
+        nodeLabel.style.backgroundColor = "red";
+    }
+
     canvasContainer.appendChild(nodeLabel);
 
     // Link node ID to nodeLabel in the map
@@ -71,6 +78,7 @@ function addNodeLabel(mousePos, nodeId) {
 
 //Function to spawn a node on the canvas given the position of the cursor
 function spawnNode(evt) {
+    // console.log(addPersonCheckbox, addSocialMediaPostCheckbox.checked); // Hoe kan ie m vinden
     let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
 
     if (label === "") {
@@ -80,18 +88,18 @@ function spawnNode(evt) {
     let nodeLabelRef;
     let nodeId = nodes.size;
     var mousePos = getMousePosOnCanvas(canvas, evt);
-
+    console.log(label);
     switch (label) {
         case "Person":
-            drawNode(mousePos.x, mousePos.y, label);
-            nodeLabelRef = addNodeLabel(mousePos, nodeId); // Pass node ID to label function
+            // drawNode(mousePos.x, mousePos.y, label);
+            nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
             nodeId = nodes.size;
             addPersonNode(nodeId, label, mousePos.x, mousePos.y, [], [], [], nodeLabelRef);
             break;
         case "Social Media Post":
             var mousePos = getMousePosOnCanvas(canvas, evt);
-            drawNode(mousePos.x, mousePos.y, label);
-            nodeLabelRef = addNodeLabel(mousePos, nodeId); // Pass node ID to label function
+            // drawNode(mousePos.x, mousePos.y, label);
+            nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
             nodeId = nodes.size;
             addItemNode(nodeId, label, mousePos.x, mousePos.y, [], nodeLabelRef);
             break;
@@ -147,27 +155,41 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
     });
 }
 
-//Function for adding 10 person nodes on random positions on the canvas
-function drawRandomPersonNodes() {
+function drawRandom(label) {
     for (var i = 0; i < 10; i++) {
         var x = Math.random() * canvasSize.width;
         var y = Math.random() * canvasSize.height;
-        drawNode(x, y, "Person");
-        let nodeLabelRef = addNodeLabel({ x, y }, nodes.size);
-        addPersonNode(nodes.size, "Person", x, y, [], [], [], nodeLabelRef);
+        let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
+
+        if (label === "Person") {
+            addPersonNode(nodes.size, label, x, y, [], [], [], nodeLabelRef);
+        } else if (label === "Social Media Post") {
+            addItemNode(nodes.size, label, x, y, [], nodeLabelRef);
+        }
     }
 }
 
-//Function for adding 10 social media post nodes on random positions on the canvas
-function drawRandomSocialMediaPostNodes() {
-    for (var i = 0; i < 10; i++) {
-        var x = Math.random() * canvasSize.width;
-        var y = Math.random() * canvasSize.height;
-        drawNode(x, y, "Social Media Post");
-        let nodeLabelRef = addNodeLabel({ x, y }, nodes.size);
-        addItemNode(nodes.size, "Social Media Post", x, y, [], nodeLabelRef);
-    }
-}
+// //Function for adding 10 person nodes on random positions on the canvas
+// function drawRandomPersonNodes() {
+//     for (var i = 0; i < 10; i++) {
+//         var x = Math.random() * canvasSize.width;
+//         var y = Math.random() * canvasSize.height;
+//         // drawNode(x, y, "Person");
+//         let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, "Person");
+//         addPersonNode(nodes.size, "Person", x, y, [], [], [], nodeLabelRef);
+//     }
+// }
+
+// //Function for adding 10 social media post nodes on random positions on the canvas
+// function drawRandomSocialMediaPostNodes() {
+//     for (var i = 0; i < 10; i++) {
+//         var x = Math.random() * canvasSize.width;
+//         var y = Math.random() * canvasSize.height;
+//         // drawNode(x, y, "Social Media Post");
+//         let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, "Social Media Post");
+//         addItemNode(nodes.size, "Social Media Post", x, y, [], nodeLabelRef);
+//     }
+// }
 
 //Function to get the position of the cursor on the canvas
 function getMousePosOnCanvas(canvas, evt) {

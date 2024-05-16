@@ -58,7 +58,7 @@ function removeItemLink(personId, itemId) {
     itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
 
     links.delete(personId + "-" + itemId);
-    redrawCanvas();
+    redrawCanvas(); // Redraws the links
 }
 
 //Function for removing a friend link between the currently selected node and the node with the given id
@@ -70,7 +70,7 @@ function removeFriend(personId, friendId) {
     friendIdData.friends = friendIdData.friends.filter((friendId) => friendId !== personId);
 
     links.delete(personId + "-" + friendId);
-    redrawCanvas();
+    redrawCanvas(); // Redraws the links
 }
 
 //Function for handling link actions
@@ -153,7 +153,7 @@ function selectNode(selectedNodeId) {
     if (nodes.get(selectedNodeId).label === "Person") {
         spawnForwardButtons();
     }
-    redrawCanvas(); // Redraw the entire canvas with updated opacities
+    redrawCanvas(); // Redraws the links
 }
 
 //Function for deselecting a node and remove the highlight
@@ -170,7 +170,7 @@ function deselectNode() {
     selectedNodeData.increasedPopularity = selectedNodeOptions.children[5].children[0].value;
     selectedNode = null;
     removeForwardButtons();
-    redrawCanvas(); // Redraw the entire canvas with updated opacities
+    redrawCanvas(); // Redraws the links
 }
 
 //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
