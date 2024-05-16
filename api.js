@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 data.results.forEach(user => {
                     const photoUrl = user.picture.large;
-
-                    // photoSet.add(photoUrl);
-
                     const userElement = `
                         <div class="user">
                             <img src="${photoUrl}" alt="User Picture">
