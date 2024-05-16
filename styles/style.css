@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 /* The hide class */
 .visually-hidden {
     clip: rect(0 0 0 0);
@@ -7,21 +12,14 @@
     position: absolute;
     white-space: nowrap;
     width: 1px;
-  }
-
+}
 
 #nodeCanvas {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 100%;
     height: 100%;
     position: relative;
     margin: 0 auto;
-}
-
-#canvasContainer {
-    width: 800px;  /* should match canvas' intrinsic width */
-    height: 600px; /* should match canvas' intrinsic height */
-    position: relative;
 }
 
 #nodeDataContainer {
@@ -33,19 +31,41 @@
     color: black;
 }
 
-#simulationContainer {
-    display: flex;
+main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    grid-template-rows: 5em 1fr;
+    width: 100vw;
+    height: 100vh;
+}
+
+h1 {
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+#canvasContainer {
+    /* width: 800px; */
+    width: 100%;
+    height: 100%;
+    /* height: 600px; */
+    position: relative;
+    grid-column: 1/2;
+    grid-row: 1/3;
 }
 
 .hide {
     /* display: none; */
 }
 
-#controlPanel{
+#controlPanel {
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 50%;
+    column-width: 340px;
+    grid-column: 2/3;
+    grid-row: 2/2;
 }
 
 #selectedNodeOptions {
@@ -60,7 +80,7 @@
     display: none;
 }
 
-#generalOptions{
+#generalOptions {
     display: flex;
     flex-direction: column;
     border: 1px solid black;
@@ -76,4 +96,33 @@
 
 .linkStripe {
     transform-origin: center left;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end;
+}
+/* 
+.person:has(input[type="radio"]:checked) {
+  background-color: yellow;
+} */
+
+label:has(input[type="radio"]:checked) {
+    background-color: yellow;
+}
+
+input[type="radio"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+#canvasContainer > div {
+    border: solid 1px black;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
 }
