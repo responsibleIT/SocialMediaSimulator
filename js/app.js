@@ -64,29 +64,6 @@ calcClosenessCentrality.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
 });
 
-//Function for redrawing the canvas
-function redrawCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-    links.forEach((link) => {
-        let from = nodes.get(link.from);
-        let to = nodes.get(link.to);
-        drawLink(from, to, link.type, link.thickness); // Redraw each link
-    });
-}
-//Function for checking who has an info link with a given node
-function checkInfoLinkRefs(nodeId) {
-    let refs = [];
-    //Get all person nodes
-    let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
-    //Loop over all nodes in the map and check if the given node has an info link with them
-    personNodes.forEach((node, id) => {
-        if (node.infolinks.includes(nodeId)) {
-            refs.push(id);
-        }
-    });
-    return refs;
-}
 //Function for calculating social media post popularity based on the number of readers
 function calculatePostPopularity(numOfReaders) {
     return numOfReaders * 1.5;

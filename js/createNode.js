@@ -1,22 +1,5 @@
-// Function to draw a node on the canvas
-// function drawNode(x, y, label, opacity = 1, popularity = 0, increasedPopularity = 0) {
-    // ctx.globalAlpha = opacity; // Set the global alpha based on the node's opacity
-    // popularity = Number(popularity);
-    // increasedPopularity = Number(increasedPopularity);
-    // ctx.beginPath();
-    // if (label === "Person") {
-    //     var radius = standardPersonRadius + popularity + increasedPopularity;
-    //     ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    // } else if (label === "Social Media Post") {
-    //     var radius = standardPostRadius + popularity + increasedPopularity;
-    //     ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    // }
-    // ctx.fillStyle = labelColors[label] || "black";
-    // ctx.fill();
-    // ctx.globalAlpha = 1; // Reset global alpha to default after drawing
-// }
-
 // Function to add a label to the node in the body of the page absolutely positioned on the exact position of the node on the screen
+// Add node label was the div above the drawn node
 function addNodeLabel(mousePos, nodeId, label) {
     let nodeLabel = document.createElement("div");
     nodeLabel.style.position = "absolute";
@@ -155,6 +138,7 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
     });
 }
 
+// Add random node based on the given label
 function drawRandom(label) {
     for (var i = 0; i < 10; i++) {
         var x = Math.random() * canvasSize.width;
@@ -169,29 +153,8 @@ function drawRandom(label) {
     }
 }
 
-// //Function for adding 10 person nodes on random positions on the canvas
-// function drawRandomPersonNodes() {
-//     for (var i = 0; i < 10; i++) {
-//         var x = Math.random() * canvasSize.width;
-//         var y = Math.random() * canvasSize.height;
-//         // drawNode(x, y, "Person");
-//         let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, "Person");
-//         addPersonNode(nodes.size, "Person", x, y, [], [], [], nodeLabelRef);
-//     }
-// }
-
-// //Function for adding 10 social media post nodes on random positions on the canvas
-// function drawRandomSocialMediaPostNodes() {
-//     for (var i = 0; i < 10; i++) {
-//         var x = Math.random() * canvasSize.width;
-//         var y = Math.random() * canvasSize.height;
-//         // drawNode(x, y, "Social Media Post");
-//         let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, "Social Media Post");
-//         addItemNode(nodes.size, "Social Media Post", x, y, [], nodeLabelRef);
-//     }
-// }
-
 //Function to get the position of the cursor on the canvas
+// This is needed to place the nodes based on where you click
 function getMousePosOnCanvas(canvas, evt) {
     var rect = canvas.getBoundingClientRect(), // abs. size of element
         scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
@@ -204,6 +167,7 @@ function getMousePosOnCanvas(canvas, evt) {
 }
 
 //Showdata function to display the nodeDataContainer with therein the node data when hovering over it
+// TODO can be written differently + other data
 function showNodeDataContainer(nodeId, noteData) {
     nodeDataContainer.children[0].innerHTML = nodeId;
     nodeDataContainer.children[1].innerHTML = noteData.label;
@@ -214,6 +178,7 @@ function showNodeDataContainer(nodeId, noteData) {
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
+// TODO can be written differently
 function showSelectedNodeOptions() {
     let selectedNodeData = nodes.get(selectedNode);
 
