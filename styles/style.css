@@ -38,7 +38,7 @@
 }
 
 .hide {
-    display: none;
+    /* display: none; */
 }
 
 #controlPanel{
@@ -68,4 +68,9 @@
 
 #generalOptions.hide {
     display: none;
+}
+
+#canvasContainer > div {
+    border: solid 1px black;
+    border-radius: 50%;
 }
