@@ -24,6 +24,22 @@ function checkInfoLinkRefs(nodeId) {
 
 //Function for drawing a link between two nodes
 function drawLink(from, to, type, thickness) {
+    console.log("type", type);
+    let linkStripe = document.createElement("div");
+    linkStripe.style.position = "absolute";
+    linkStripe.style.left = 5 + "px";
+    linkStripe.style.top = 5 + "px";
+    linkStripe.style.width = "30px";
+    linkStripe.style.height = "5px";
+
+    if (type === "itemlink") {
+        linkStripe.style.backgroundColor = "green";
+    } else if (type === "friend") {
+        linkStripe.style.backgroundColor = "black";
+    }
+
+    canvasContainer.appendChild(linkStripe);
+
     ctx.beginPath();
     ctx.moveTo(from.x, from.y);
     ctx.lineTo(to.x, to.y);
