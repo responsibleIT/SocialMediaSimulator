@@ -2,6 +2,7 @@
 // Add node label was the div above the drawn node
 function addNodeLabel(mousePos, nodeId, label) {
     let nodeLabel = document.createElement("div");
+    nodeLabel.className = "node";
     nodeLabel.style.position = "absolute";
     nodeLabel.style.left = mousePos.x - 5 + "px";
     nodeLabel.style.top = mousePos.y - 5 + "px";

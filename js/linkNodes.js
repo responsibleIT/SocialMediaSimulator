@@ -26,11 +26,25 @@ function checkInfoLinkRefs(nodeId) {
 function drawLink(from, to, type, thickness) {
     console.log("type", type);
     let linkStripe = document.createElement("div");
+    linkStripe.className = "linkStripe";
     linkStripe.style.position = "absolute";
-    linkStripe.style.left = 5 + "px";
-    linkStripe.style.top = 5 + "px";
-    linkStripe.style.width = "30px";
     linkStripe.style.height = "5px";
+
+    let Ydifference = from.y - to.y;
+    let Xdifference = from.x - to.x;
+
+    let linkLength = Math.sqrt(Math.pow(Ydifference,2) + Math.pow(Xdifference,2));
+    let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
+
+    console.log(linkAngle);
+
+    linkStripe.style.width = linkLength + 'px';
+    linkStripe.style.transform = 'rotate(' + linkAngle + 'rad)';
+
+    linkStripe.style.left = from.x + 'px';
+    linkStripe.style.top = from.y + 'px';
+
+
 
     if (type === "itemlink") {
         linkStripe.style.backgroundColor = "green";

@@ -72,5 +72,12 @@
 
 #canvasContainer > div {
     border: solid 1px black;
+}
+
+.node {
     border-radius: 50%;
+}
+
+.linkStripe {
+    transform-origin: center left;
 }
