@@ -17,3 +17,26 @@ function calculateAdjustedClosenessCentrality() {
 
     console.log(centralities);
 }
+
+//Function for calculating the shortest paths between all nodes
+function bfsShortestPath(graph, startNode) {
+    let distances = {};
+    let queue = [startNode];
+    graph.forEach((_, node) => (distances[node] = Infinity)); // Initialize distances
+    distances[startNode] = 0;
+
+    while (queue.length > 0) {
+        let currentNode = queue.shift();
+        let currentDistance = distances[currentNode];
+        let neighbors = graph.get(currentNode).friends; // Assuming 'friends' is the adjacency list
+        console.log(neighbors);
+        neighbors.forEach((neighbor) => {
+            if (distances[neighbor] === Infinity) {
+                // Node has not been visited
+                queue.push(neighbor);
+                distances[neighbor] = currentDistance + 1;
+            }
+        });
+    }
+    return distances;
+}
