@@ -41,7 +41,7 @@ main {
 }
 
 .hide {
-  display: none;
+    /* display: none; */
 }
 
 #controlPanel {
@@ -94,4 +94,10 @@ input[type="radio"] {
 
 .form-group {
   margin-bottom: 15px;
+}
+
+
+#canvasContainer > div {
+    border: solid 1px black;
+    border-radius: 50%;
 }
