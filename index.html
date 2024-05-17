@@ -1,78 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FB Model Configuration</title>
-    <link rel="stylesheet" href="styles/style.css" />
-  </head>
-  <body>
-    <main>
-        <h1>Social Network Simulation</h1>
-        <div id="canvasContainer" style="position: relative">
-          <canvas id="nodeCanvas" width="800" height="600"></canvas>
-          <div id="nodeDataContainer" class="hide">
-            <p><strong id="nodeLabel"></strong></p>
-            <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
-          </div>
-        </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FB Model Configuration</title>
+        <link rel="stylesheet" href="styles/style.css" />
+    </head>
+    <body>
+        <main>
+            <h1>Social Network Simulation</h1>
+            <div id="canvasContainer" style="position: relative">
+                <canvas id="nodeCanvas" width="800" height="600"></canvas>
+                <div id="nodeDataContainer" class="hide">
+                    <p><strong id="nodeLabel"></strong></p>
+                    <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
+                </div>
+            </div>
 
-        <section id="controlPanel">
-          <h2 class="visually-hidden">Simulation container</h2>
-          <div id="generalOptions" class="person">
-            <h3>Tools</h3>
-            <!-- radio button for empty state, don't add a person or post. Just use the mouse as usual -->
-            <label for="emptyStateCheckbox"
-              ><input
-                type="radio"
-                id="emptyStateCheckbox"
-                name="group1"
-              />Select</label
-            >
+            <section id="controlPanel">
+                <h2 class="visually-hidden">Simulation container</h2>
+                <div id="generalOptions" class="person">
+                    <h3>Tools</h3>
+                    <!-- radio button for empty state, don't add a person or post. Just use the mouse as usual -->
+                    <label for="emptyStateCheckbox" class="label-with-icon"
+                        ><input
+                            type="radio"
+                            id="emptyStateCheckbox"
+                            name="group1"
+                            checked
+                        />
+                        <img src="../images/sms_icons_Select.svg" alt="icon" />
+                        Select</label
+                    >
 
-            <label for="addPersonCheckbox"
-              ><input type="radio" id="addPersonCheckbox" name="group1" />Add
-              person</label
-            >
-            <label for="addSocialMediaPostCheckbox">
-              <input
-                type="radio"
-                id="addSocialMediaPostCheckbox"
-                name="group1"
-              />
-              Add Social Media Post
-            </label>
+                    <label for="addPersonCheckbox" class="label-with-icon"
+                        ><input
+                            type="radio"
+                            id="addPersonCheckbox"
+                            name="group1"
+                        /><img src="../images/sms_icons_User.svg" alt="icon" />
+                        Add person</label
+                    >
+                    <label
+                        for="addSocialMediaPostCheckbox"
+                        class="label-with-icon"
+                    >
+                        <input
+                            type="radio"
+                            id="addSocialMediaPostCheckbox"
+                            name="group1"
+                        />
+                        <img src="../images/sms_icons_Post.svg" alt="icon" />
+                        Add Post
+                    </label>
 
-            <h3>Automatic Tools</h3>
+                    <h3>Automatic Tools</h3>
 
-            <button type="button" id="addRandomPeopleButton">Add people</button>
-            <button type="button" id="addRandomContentButton">
-              Post content
-            </button>
+                    <button type="button" id="addRandomPeopleButton">
+                        Add people
+                    </button>
+                    <button type="button" id="addRandomContentButton">
+                        Post content
+                    </button>
 
-            <h3>Simulate</h3>
-            <button type="button" id="calcClosenessCentrality">
-              Calculate Closeness Centrality
-            </button>
-          </div>
-          <div id="selectedNodeOptions" class="hide">
-            <p><strong id="selectedNodeId"></strong></p>
-            <p>X: <span id="selectedNodeX"></span></p>
-            <p>Y: <span id="selectedNodeY"></span></p>
-            <p>Type: <span id="selectedNodeType"></span></p>
-            <p>Total Popularity: <span id="totalPopularity"></span></p>
-            <label
-              >Increased Popularity
-              <input type="number" id="nodePopularity" min="0" max="50"
-            /></label>
-            <button type="button" id="deleteNode">Delete Node</button>
-          </div>
-        </section>
+                    <h3>Simulate</h3>
+                    <button type="button" id="calcClosenessCentrality">
+                        Calculate Closeness Centrality
+                    </button>
+                </div>
 
-    </main>
-    <script src="js/app.js" defer></script>
-    <script src="js/createNode.js" defer></script>
-    <script src="js/linkNodes.js" defer></script>
-    <script src="js/centrality.js" defer></script>
-  </body>
+                <div id="selectedNodeOptions" class="hide">
+                    <h3>Node Info</h3>
+                    <p><strong id="selectedNodeId"></strong></p>
+                    <p>X: <span id="selectedNodeX"></span></p>
+                    <p>Y: <span id="selectedNodeY"></span></p>
+                    <p>Type: <span id="selectedNodeType"></span></p>
+                    <p>Popularity: <span id="totalPopularity"></span></p>
+                    <label
+                        >Increased Popularity
+                        <input
+                            type="number"
+                            id="nodePopularity"
+                            min="0"
+                            max="50"
+                    /></label>
+                    <button type="button" id="deleteNode">Delete Node</button>
+                </div>
+            </section>
+        </main>
+        <script src="js/app.js" defer></script>
+        <script src="js/createNode.js" defer></script>
+        <script src="js/linkNodes.js" defer></script>
+        <script src="js/centrality.js" defer></script>
+    </body>
 </html>
