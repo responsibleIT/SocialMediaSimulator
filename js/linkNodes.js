@@ -214,7 +214,9 @@ function deselectNode() {
     // });
 
     let selectedNodeData = nodes.get(selectedNode);
-    selectedNodeData.increasedPopularity = selectedNodeOptions.children[6].children[0].value;
+    const div = document.querySelector("#selectedNodeOptions > div");
+    selectedNodeData.increasedPopularity = div.querySelector("label input").value;
+
     selectedNode = null;
     removeForwardButtons();
     //redrawCanvas(); // Redraws the links

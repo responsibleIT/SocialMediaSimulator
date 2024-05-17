@@ -79,7 +79,7 @@ function resizeNodes(nodes) {
         else if(node.label === 'Social Media Post') {
             node.popularity = calculatePostPopularity(node.readers?.length || 0);
         }
-        node.nodeLabelRef.style.width = (node.radius + node.popularity + node.increasedPopularity) * 2 + 'px';
+        node.nodeLabelRef.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
     });
 }
 
