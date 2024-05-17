@@ -217,6 +217,18 @@ h3:nth-of-type(3) {
     transform-origin: center left;
 }
 
+.link-info {
+    background-color: #0075ff;
+}
+
+.link-friend {
+    background-color: #00b000;
+}
+
+.link-item {
+    background-color: #ff9900;
+}
+
 header {
     display: flex;
     justify-content: flex-end;
