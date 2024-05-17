@@ -151,6 +151,15 @@ h3:nth-of-type(3) {
     /* display: none; */
 }
 
+.node {
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.linkStripe {
+    transform-origin: center left;
+}
+
 header {
     display: flex;
     justify-content: flex-end;
@@ -188,11 +197,4 @@ input[type="radio"] {
 
 .form-group {
     margin-bottom: 15px;
-}
-
-#canvasContainer > div {
-    border: solid 1px black;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
 }
