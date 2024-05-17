@@ -193,12 +193,13 @@ function showNodeDataContainer(nodeId, noteData) {
 // TODO can be written differently
 function showSelectedNodeOptions() {
     let selectedNodeData = nodes.get(selectedNode);
+    const div = document.querySelector("#selectedNodeOptions > div");
 
-    selectedNodeOptions.children[0].innerHTML = `Node ID: ${selectedNode}`;
-    selectedNodeOptions.children[1].innerHTML = `X-position: ${selectedNodeData.x}`;
-    selectedNodeOptions.children[2].innerHTML = `Y-position: ${selectedNodeData.y}`;
-    selectedNodeOptions.children[3].innerHTML = `Label: ${selectedNodeData.label}`;
-    selectedNodeOptions.children[4].innerHTML = `Popularity: ${Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity)}`;
-    selectedNodeOptions.children[5].children[0].value = selectedNodeData.increasedPopularity;
+    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
+    div.querySelector("p:nth-of-type(2) span").innerHTML = "ILikeNodes2345";
+    div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
+    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
+    div.querySelector("label input").value = selectedNodeData.increasedPopularity;
+
     selectedNodeOptions.classList.remove("hide");
 }
