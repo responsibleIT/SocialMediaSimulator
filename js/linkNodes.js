@@ -39,7 +39,7 @@ function drawLink(from, to, type, thickness) {
     console.log(linkAngle);
 
     linkStripe.style.width = linkLength + 'px';
-    linkStripe.style.transform = 'rotate(' + linkAngle + 'rad)';
+    linkStripe.style.transform = 'translateY(-50%) rotate(' + linkAngle + 'rad)';
 
     linkStripe.style.left = from.x + 'px';
     linkStripe.style.top = from.y + 'px';
