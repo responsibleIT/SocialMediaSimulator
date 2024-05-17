@@ -2,7 +2,7 @@
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
 const ctx = canvas.getContext("2d"); // Only used now for the links
-const canvasSize = { width: canvas.width, height: canvas.height };
+let canvasSize = { width: canvas.width, height: canvas.height };
 
 const nodeDataContainer = document.getElementById("nodeDataContainer");
 const gridRange = { min: -1, max: 1 };
@@ -11,7 +11,7 @@ const gridRange = { min: -1, max: 1 };
 const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const standardPersonRadius = 8;
-const standardPostRadius = 4;
+const standardPostRadius = 5;
 
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
@@ -72,3 +72,16 @@ function calculatePostPopularity(numOfReaders) {
 function calculatePersonPopularity(numOfFriends, numOfInfoRefs) {
     return numOfInfoRefs > 0 ? numOfFriends * 1.5 + numOfInfoRefs * 2 : numOfFriends * 1.5;
 }
+
+// Function to set canvas size to window size
+function resizeCanvas() {
+    canvas.width = canvasContainer.clientWidth;
+    canvas.height = canvasContainer.clientHeight;
+    canvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
+}
+
+// Initial resize to set canvas size
+resizeCanvas();
+
+// Add event listener for window resize
+window.addEventListener("resize", resizeCanvas);
