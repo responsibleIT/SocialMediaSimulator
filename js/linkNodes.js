@@ -1,13 +1,13 @@
 //Function for redrawing the canvas
-function redrawCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+// function redrawCanvas() {
+//     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
-    links.forEach((link) => {
-        let from = nodes.get(link.from);
-        let to = nodes.get(link.to);
-        drawLink(from, to, link.type, link.thickness); // Redraw each link
-    });
-}
+//     links.forEach((link) => {
+//         let from = nodes.get(link.from);
+//         let to = nodes.get(link.to);
+//         drawLink(from, to, link.type, link.thickness); // Redraw each link
+//     });
+// }
 //Function for checking who has an info link with a given node
 function checkInfoLinkRefs(nodeId) {
     let refs = [];
@@ -26,11 +26,25 @@ function checkInfoLinkRefs(nodeId) {
 function drawLink(from, to, type, thickness) {
     console.log("type", type);
     let linkStripe = document.createElement("div");
+    linkStripe.className = "linkStripe";
     linkStripe.style.position = "absolute";
-    linkStripe.style.left = 5 + "px";
-    linkStripe.style.top = 5 + "px";
-    linkStripe.style.width = "30px";
-    linkStripe.style.height = "5px";
+    linkStripe.style.height = "1px";
+
+    let Ydifference = from.y - to.y;
+    let Xdifference = from.x - to.x;
+
+    let linkLength = Math.sqrt(Math.pow(Ydifference,2) + Math.pow(Xdifference,2));
+    let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
+
+    console.log(linkAngle);
+
+    linkStripe.style.width = linkLength + 'px';
+    linkStripe.style.transform = 'translateY(-50%) rotate(' + linkAngle + 'rad)';
+
+    linkStripe.style.left = from.x + 'px';
+    linkStripe.style.top = from.y + 'px';
+
+
 
     if (type === "itemlink") {
         linkStripe.style.backgroundColor = "green";
@@ -40,12 +54,12 @@ function drawLink(from, to, type, thickness) {
 
     canvasContainer.appendChild(linkStripe);
 
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.strokeStyle = linkColors[type];
-    ctx.lineWidth = thickness;
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(from.x, from.y);
+    // ctx.lineTo(to.x, to.y);
+    // ctx.strokeStyle = linkColors[type];
+    // ctx.lineWidth = thickness;
+    // ctx.stroke();
 }
 
 //Function for adding an info link between the currently selected node and the node with the given id
@@ -62,7 +76,7 @@ function addInfoLink(from, to) {
 //Function for removing an info link between the currently selected node and the node with the given id
 function removeInfoLink(from, to) {
     links.delete(from + "-" + to);
-    redrawCanvas();
+    // redrawCanvas();
 }
 
 //Function for adding a friend link between the currently selected node and the node with the given id
@@ -98,7 +112,7 @@ function removeItemLink(personId, itemId) {
     itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
 
     links.delete(personId + "-" + itemId);
-    redrawCanvas(); // Redraws the links
+    //redrawCanvas(); // Redraws the links
 }
 
 //Function for removing a friend link between the currently selected node and the node with the given id
@@ -110,7 +124,7 @@ function removeFriend(personId, friendId) {
     friendIdData.friends = friendIdData.friends.filter((friendId) => friendId !== personId);
 
     links.delete(personId + "-" + friendId);
-    redrawCanvas(); // Redraws the links
+    //redrawCanvas(); // Redraws the links
 }
 
 //Function for handling link actions
@@ -140,29 +154,6 @@ function itemHandler(id) {
     }
 }
 
-//Function for calculating the shortest paths between all nodes
-function bfsShortestPath(graph, startNode) {
-    let distances = {};
-    let queue = [startNode];
-    graph.forEach((_, node) => (distances[node] = Infinity)); // Initialize distances
-    distances[startNode] = 0;
-
-    while (queue.length > 0) {
-        let currentNode = queue.shift();
-        let currentDistance = distances[currentNode];
-        let neighbors = graph.get(currentNode).friends; // Assuming 'friends' is the adjacency list
-        console.log(neighbors);
-        neighbors.forEach((neighbor) => {
-            if (distances[neighbor] === Infinity) {
-                // Node has not been visited
-                queue.push(neighbor);
-                distances[neighbor] = currentDistance + 1;
-            }
-        });
-    }
-    return distances;
-}
-
 //Function for adding link to the global map of links
 //Each link object has the following properties:
 //from: id of the node where the link originates
@@ -179,38 +170,38 @@ function addLink(from, to, type) {
 
 //Function for selecting a node and highlight it and its data
 function selectNode(selectedNodeId) {
-    nodes.forEach((node, id) => {
-        node.opacity = id === selectedNodeId ? 1 : 0.2; // Selected node is fully opaque, others are more transparent
-    });
+    // nodes.forEach((node, id) => {
+    //     node.opacity = id === selectedNodeId ? 1 : 0.2; // Selected node is fully opaque, others are more transparent
+    // });
 
-    //Increase the thickness of the links of the selected node
-    links.forEach((link) => {
-        if (link.from === selectedNodeId || link.to === selectedNodeId) {
-            link.thickness = 4;
-        }
-    });
+    // //Increase the thickness of the links of the selected node
+    // links.forEach((link) => {
+    //     if (link.from === selectedNodeId || link.to === selectedNodeId) {
+    //         link.thickness = 4;
+    //     }
+    // });
     selectedNode = selectedNodeId;
     if (nodes.get(selectedNodeId).label === "Person") {
         spawnForwardButtons();
     }
-    redrawCanvas(); // Redraws the links
+    //redrawCanvas(); // Redraws the links
 }
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
-    nodes.forEach((node, id) => {
-        node.opacity = 1; // Reset opacity of all nodes to fully opaque
-    });
+    // nodes.forEach((node, id) => {
+    //     node.opacity = 1; // Reset opacity of all nodes to fully opaque
+    // });
 
-    links.forEach((link) => {
-        link.thickness = 1;
-    });
+    // links.forEach((link) => {
+    //     link.thickness = 1;
+    // });
 
     let selectedNodeData = nodes.get(selectedNode);
     selectedNodeData.increasedPopularity = selectedNodeOptions.children[5].children[0].value;
     selectedNode = null;
     removeForwardButtons();
-    redrawCanvas(); // Redraws the links
+    //redrawCanvas(); // Redraws the links
 }
 
 //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
