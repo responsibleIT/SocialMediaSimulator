@@ -4,16 +4,27 @@ function addNodeLabel(mousePos, nodeId, label) {
     let nodeLabel = document.createElement("div");
     nodeLabel.className = "node";
     nodeLabel.style.position = "absolute";
-    nodeLabel.style.left = mousePos.x - 5 + "px";
-    nodeLabel.style.top = mousePos.y - 5 + "px";
-    nodeLabel.style.width = "15px";
-    nodeLabel.style.height = "15px";
 
-    if (label === "Person") {
-        nodeLabel.style.backgroundColor = "blue";
-    } else if (label === "Social Media Post") {
-        nodeLabel.style.backgroundColor = "red";
+    let radius;
+    let color;
+    switch (label) {
+        case "Person":
+            radius = standardPersonRadius; // TODO when redrawing, get the current radius
+            color = "blue";
+            break;
+        case "Social Media Post":
+            radius = standardPostRadius; // TODO when redrawing, get the current radius
+            color = "red";
+            break;
+        default:
+            break;
     }
+
+    nodeLabel.style.backgroundColor = color;
+    nodeLabel.style.width = radius * 2 + "px";
+    nodeLabel.style.height = radius * 2 + "px";
+    nodeLabel.style.left = mousePos.x - radius + "px";
+    nodeLabel.style.top = mousePos.y - radius + "px";
 
     canvasContainer.appendChild(nodeLabel);
 
