@@ -33,7 +33,7 @@ function drawLink(from, to, type, thickness) {
     let Ydifference = from.y - to.y;
     let Xdifference = from.x - to.x;
 
-    let linkLength = Math.sqrt(Math.pow(Ydifference,2) + Math.pow(Xdifference,2));
+    let linkLength = Math.sqrt(Math.pow(Ydifference, 2) + Math.pow(Xdifference, 2));
     let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
 
     console.log(linkAngle);
@@ -209,10 +209,13 @@ function spawnForwardButtons() {
     let selectedNodeData = nodes.get(selectedNode);
     //Get the node ids of every social media post that the selected person node has read
     selectedNodeData.items.forEach((itemId) => {
+        let svgIcon = document.createElement("img");
+        svgIcon.src = "../images/sns_icons_Send.svg";
+        svgIcon.alt = "Forward";
         let itemNodeData = nodes.get(itemId);
         let forwardButton = document.createElement("button");
         forwardButton.classList.add("forwardButton");
-        forwardButton.innerHTML = "Forward";
+        forwardButton.appendChild(svgIcon);
         forwardButton.style.position = "absolute";
         forwardButton.style.left = itemNodeData.x + "px";
         forwardButton.style.top = itemNodeData.y + "px";
