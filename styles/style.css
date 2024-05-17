@@ -333,3 +333,38 @@ input[type="radio"] {
 .form-group {
     margin-bottom: 15px;
 }
+
+
+div.personNode {
+    background-color: blue;
+}
+div.postNode {
+    background-color: red;
+}
+div.personNode.noFocus {
+    background-color: color-mix(in srgb, blue, #d9dfe2 50%);
+}
+div.postNode.noFocus {
+    background-color: color-mix(in srgb, red, #d9dfe2 50%);
+}
+div.personNode.noFocus:hover {
+    background-color: blue;
+}
+div.postNode.noFocus:hover {
+    background-color: red;
+}
+
+div.followLink {
+    position: absolute;
+    height: 1px;
+    background-color: black;
+}
+
+#canvasContainer:has(div.personNode:hover) div.followLink{
+    height: 2px;
+    background-color: #00b000;;
+}
+#canvasContainer:has(div.postNode:hover) div.followLink{
+    height: 2px;
+    background-color: #ff9900;
+}

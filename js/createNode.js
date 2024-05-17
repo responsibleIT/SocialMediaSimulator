@@ -6,22 +6,22 @@ function addNodeLabel(mousePos, nodeId, label) {
     nodeLabel.style.position = "absolute";
     const foundNodeData = nodes.get(nodeId);
 
-    let radius, color;
+    let radius, classList;
 
     switch (label) {
         case "Person":
             radius = standardPersonRadius; // TODO when redrawing, get the current radius
-            color = "blue";
+            classList = "personNode";
             break;
         case "Social Media Post":
             radius = standardPostRadius; // TODO when redrawing, get the current radius
-            color = "red";
+            classList = "postNode";
             break;
         default:
             break;
     }
 
-    nodeLabel.style.backgroundColor = color;
+    nodeLabel.classList.add(classList);
     nodeLabel.style.width = radius * 2 + "px";
     nodeLabel.style.left = mousePos.x + "px";
     nodeLabel.style.top = mousePos.y + "px";
