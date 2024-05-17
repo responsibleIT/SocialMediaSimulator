@@ -23,7 +23,7 @@ function checkInfoLinkRefs(nodeId) {
 }
 
 //Function for drawing a link between two nodes
-function drawLink(from, to, type, thickness) {
+function drawLink(from, to, type) {
     console.log("type", type);
     let linkStripe = document.createElement("div");
     linkStripe.className = "linkStripe";
@@ -47,12 +47,16 @@ function drawLink(from, to, type, thickness) {
 
 
     if (type === "itemlink") {
-        linkStripe.style.backgroundColor = "green";
+        linkStripe.classList.add("link-item");
     } else if (type === "friend") {
-        linkStripe.style.backgroundColor = "black";
+        linkStripe.classList.add("link-friend");
+    } else if (type === 'infolink') {
+        linkStripe.classList.add("link-info");
     }
 
     canvasContainer.appendChild(linkStripe);
+
+    return linkStripe;
 
     // ctx.beginPath();
     // ctx.moveTo(from.x, from.y);
@@ -69,13 +73,17 @@ function addInfoLink(from, to) {
 
     fromData.infolinks.push(to);
 
-    addLink(from, to, "infolink");
-    drawLink(fromData, toData, "infolink", 4);
+    const linkElement = drawLink(fromData, toData, "infolink", 4);
+    addLink(from, to, "infolink", linkElement);
+   
+    resizeNodes(nodes);
 }
 
 //Function for removing an info link between the currently selected node and the node with the given id
 function removeInfoLink(from, to) {
-    links.delete(from + "-" + to);
+    links.get(from + "-" + to).linkElement.remove();
+    links.delete(`${from}-${to}`);
+    resizeNodes(nodes);
     // redrawCanvas();
 }
 
@@ -87,8 +95,9 @@ function addFriend(from, to) {
     currentlySelected.friends.push(to);
     toBeFriend.friends.push(from);
 
-    addLink(from, to, "friend");
-    drawLink(currentlySelected, toBeFriend, "friend", 4);
+    const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
+    addLink(from, to, "friend", linkElement);
+    resizeNodes(nodes);
 }
 
 //Function for adding an item link between the currently selected node and the node with the given id
@@ -99,8 +108,10 @@ function addItemLink(person, item) {
     currentlySelectedPerson.items.push(item);
     currentEyedItem.readers.push(person);
 
-    addLink(person, item, "itemlink");
-    drawLink(currentlySelectedPerson, currentEyedItem, "itemlink", 4);
+    const linkElement = drawLink(currentlySelectedPerson, currentEyedItem, "itemlink", 4);
+    addLink(person, item, "itemlink", linkElement);
+    
+    resizeNodes(nodes);
 }
 
 //Function for removing an item link between the currently selected node and the node with the given id
@@ -111,7 +122,9 @@ function removeItemLink(personId, itemId) {
     personIdData.items = personIdData.items.filter((itemId) => itemId !== personId);
     itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
 
+    links.get(personId + "-" + itemId).linkElement.remove();
     links.delete(personId + "-" + itemId);
+    resizeNodes(nodes);
     //redrawCanvas(); // Redraws the links
 }
 
@@ -123,8 +136,10 @@ function removeFriend(personId, friendId) {
     personIdData.friends = personIdData.friends.filter((friendId) => friendId !== friendId);
     friendIdData.friends = friendIdData.friends.filter((friendId) => friendId !== personId);
 
+    links.get(personId + "-" + friendId).linkElement.remove();
     links.delete(personId + "-" + friendId);
     //redrawCanvas(); // Redraws the links
+    resizeNodes(nodes);
 }
 
 //Function for handling link actions
@@ -159,17 +174,18 @@ function itemHandler(id) {
 //from: id of the node where the link originates
 //to: id of the node where the link ends
 //type: type of the link (friend, itemlink, infolink)
-function addLink(from, to, type) {
+function addLink(from, to, type, linkElement) {
     links.set(from + "-" + to, {
         from: from,
         to: to,
         type: type,
-        thickness: 4,
+        linkElement: linkElement
     });
 }
 
 //Function for selecting a node and highlight it and its data
 function selectNode(selectedNodeId) {
+    console.log('test');
     // nodes.forEach((node, id) => {
     //     node.opacity = id === selectedNodeId ? 1 : 0.2; // Selected node is fully opaque, others are more transparent
     // });
@@ -198,7 +214,7 @@ function deselectNode() {
     // });
 
     let selectedNodeData = nodes.get(selectedNode);
-    selectedNodeData.increasedPopularity = selectedNodeOptions.children[5].children[0].value;
+    selectedNodeData.increasedPopularity = selectedNodeOptions.children[6].children[0].value;
     selectedNode = null;
     removeForwardButtons();
     //redrawCanvas(); // Redraws the links

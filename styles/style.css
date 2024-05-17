@@ -209,10 +209,24 @@ h3:nth-of-type(3) {
 .node {
     border-radius: 50%;
     z-index: 2;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
 }
 
 .linkStripe {
     transform-origin: center left;
+}
+
+.link-info {
+    background-color: #0075ff;
+}
+
+.link-friend {
+    background-color: #00b000;
+}
+
+.link-item {
+    background-color: #ff9900;
 }
 
 header {
