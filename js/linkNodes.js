@@ -71,11 +71,13 @@ function addInfoLink(from, to) {
 
     addLink(from, to, "infolink");
     drawLink(fromData, toData, "infolink", 4);
+    resizeNodes(nodes);
 }
 
 //Function for removing an info link between the currently selected node and the node with the given id
 function removeInfoLink(from, to) {
     links.delete(from + "-" + to);
+    resizeNodes(nodes);
     // redrawCanvas();
 }
 
@@ -89,6 +91,7 @@ function addFriend(from, to) {
 
     addLink(from, to, "friend");
     drawLink(currentlySelected, toBeFriend, "friend", 4);
+    resizeNodes(nodes);
 }
 
 //Function for adding an item link between the currently selected node and the node with the given id
@@ -101,6 +104,7 @@ function addItemLink(person, item) {
 
     addLink(person, item, "itemlink");
     drawLink(currentlySelectedPerson, currentEyedItem, "itemlink", 4);
+    resizeNodes(nodes);
 }
 
 //Function for removing an item link between the currently selected node and the node with the given id
@@ -112,6 +116,7 @@ function removeItemLink(personId, itemId) {
     itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
 
     links.delete(personId + "-" + itemId);
+    resizeNodes(nodes);
     //redrawCanvas(); // Redraws the links
 }
 
@@ -125,6 +130,7 @@ function removeFriend(personId, friendId) {
 
     links.delete(personId + "-" + friendId);
     //redrawCanvas(); // Redraws the links
+    resizeNodes(nodes);
 }
 
 //Function for handling link actions
@@ -198,7 +204,7 @@ function deselectNode() {
     // });
 
     let selectedNodeData = nodes.get(selectedNode);
-    selectedNodeData.increasedPopularity = selectedNodeOptions.children[5].children[0].value;
+    selectedNodeData.increasedPopularity = selectedNodeOptions.children[6].children[0].value;
     selectedNode = null;
     removeForwardButtons();
     //redrawCanvas(); // Redraws the links

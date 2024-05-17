@@ -4,9 +4,10 @@ function addNodeLabel(mousePos, nodeId, label) {
     let nodeLabel = document.createElement("div");
     nodeLabel.className = "node";
     nodeLabel.style.position = "absolute";
+    const foundNodeData = nodes.get(nodeId);
 
-    let radius;
-    let color;
+    let radius, color;
+
     switch (label) {
         case "Person":
             radius = standardPersonRadius; // TODO when redrawing, get the current radius
@@ -22,9 +23,8 @@ function addNodeLabel(mousePos, nodeId, label) {
 
     nodeLabel.style.backgroundColor = color;
     nodeLabel.style.width = radius * 2 + "px";
-    nodeLabel.style.height = radius * 2 + "px";
-    nodeLabel.style.left = mousePos.x - radius + "px";
-    nodeLabel.style.top = mousePos.y - radius + "px";
+    nodeLabel.style.left = mousePos.x + "px";
+    nodeLabel.style.top = mousePos.y + "px";
 
     canvasContainer.appendChild(nodeLabel);
 
@@ -69,6 +69,18 @@ function addNodeLabel(mousePos, nodeId, label) {
     });
 
     return nodeLabel;
+}
+
+function resizeNodes(nodes) {
+    nodes.forEach((node, id) => {
+        if (node.label === 'Person') {
+            node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
+        }
+        else if(node.label === 'Social Media Post') {
+            node.popularity = calculatePostPopularity(node.readers?.length || 0);
+        }
+        node.nodeLabelRef.style.width = (node.radius + node.popularity + node.increasedPopularity) * 2 + 'px';
+    });
 }
 
 //Function to spawn a node on the canvas given the position of the cursor
@@ -121,7 +133,7 @@ function addPersonNode(id, label, x, y, friends, items, infolinks, nodeLabelRef,
         items: items,
         infolinks: infolinks,
         nodeLabelRef: nodeLabelRef,
-        personRadius: personRadius,
+        radius: personRadius,
         popularity: popularity,
         increasedPopularity: increasedPopularity,
         opacity: 1, // Default opacity is 1 (fully opaque)
@@ -143,7 +155,7 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
         y: y,
         readers: readers,
         nodeLabelRef: nodeLabelRef,
-        postRadius: postRadius,
+        radius: postRadius,
         popularity: popularity,
         increasedPopularity: increasedPopularity,
         opacity: 1, // Default opacity is 1 (fully opaque)

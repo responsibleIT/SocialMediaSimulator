@@ -165,6 +165,8 @@ h3:nth-of-type(3) {
 .node {
     border-radius: 50%;
     z-index: 2;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
 }
 
 .linkStripe {
