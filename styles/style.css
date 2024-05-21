@@ -10,8 +10,6 @@ body {
     height: 100vh;
 }
 
-
-
 /* font local font Roboto-Regular */
 @font-face {
     font-family: "Roboto";
@@ -25,7 +23,12 @@ body {
     font-weight: 700;
 }
 
-h1, h2, h3, p, label, button {
+h1,
+h2,
+h3,
+p,
+label,
+button {
     font-family: Roboto;
 }
 
@@ -204,10 +207,11 @@ h3:nth-of-type(3) {
     & > div {
         grid-column: 2/3;
         grid-row: 2/4;
-        & > p:nth-of-type(1){
+        & > p:nth-of-type(1) {
             padding-top: 0;
         }
-        & p, label {
+        & p,
+        label {
             padding: 0em;
             padding-block: 0.4em;
         }
@@ -339,6 +343,8 @@ input[type="radio"] {
 
 div.personNode {
     background-color: blue;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 div.postNode {
     background-color: red;
@@ -361,8 +367,6 @@ div.followLink {
     height: 1px;
     background-color: black;
 }
-
-
 
 #people-count {
     border: none;
@@ -389,12 +393,11 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-
-#canvasContainer:has(div.personNode:hover) div.followLink{
+#canvasContainer:has(div.personNode:hover) div.followLink {
     height: 2px;
-    background-color: #00b000;;
+    background-color: #00b000;
 }
-#canvasContainer:has(div.postNode:hover) div.followLink{
+#canvasContainer:has(div.postNode:hover) div.followLink {
     height: 2px;
     background-color: #ff9900;
 }

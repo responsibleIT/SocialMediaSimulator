@@ -1,6 +1,6 @@
 // Function to add a label to the node in the body of the page absolutely positioned on the exact position of the node on the screen
 // Add node label was the div above the drawn node
-function addNodeLabel(mousePos, nodeId, label) {
+function addNodeLabel(mousePos, nodeId, label, image, username) {
     let nodeLabel = document.createElement("div");
     nodeLabel.className = "node";
     nodeLabel.style.position = "absolute";
@@ -12,6 +12,8 @@ function addNodeLabel(mousePos, nodeId, label) {
         case "Person":
             radius = standardPersonRadius; // TODO when redrawing, get the current radius
             classList = "personNode";
+            // console.log(foundNodeData);
+            nodeLabel.style.backgroundImage = `url(${image})`;
             break;
         case "Social Media Post":
             radius = standardPostRadius; // TODO when redrawing, get the current radius
@@ -103,7 +105,8 @@ async function spawnNode(evt) {
             const image = userData[0].image;
             const username = userData[0].username;
 
-            nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
+            nodeLabelRef = addNodeLabel(mousePos, nodeId, label, image, username); // Pass node ID to label function
+
             nodeId = nodes.size;
             addPersonNode(nodeId, label, mousePos.x, mousePos.y, [], [], [], nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username);
             break;
@@ -184,7 +187,7 @@ function drawRandom(label, count, userData) {
             var y = Math.random() * canvasSize.height;
             const image = userData[i].image;
             const username = userData[i].username;
-            let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
+            let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label, image, username);
 
             if (label === "Person") {
                 addPersonNode(nodes.size, label, x, y, [], [], [], nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username);
