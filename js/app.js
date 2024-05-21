@@ -94,7 +94,7 @@ randomPeopleButton.addEventListener("click", async () => {
 });
 randomContentButton.addEventListener("click", () => {
     // drawRandomSocialMediaPostNodes();
-    drawRandom("Social Media Post");
+    drawRandom("Social Media Post", null, null);
 });
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();

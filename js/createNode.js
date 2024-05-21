@@ -76,7 +76,7 @@ function resizeNodes(nodes) {
         if (node.label === 'Person') {
             node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
         }
-        else if(node.label === 'Social Media Post') {
+        else if (node.label === 'Social Media Post') {
             node.popularity = calculatePostPopularity(node.readers?.length || 0);
         }
         node.nodeLabelRef.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
@@ -170,17 +170,27 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
 
 // Add random node based on the given label
 function drawRandom(label, count, userData) {
-    for (var i = 0; i < count; i++) {
-        var x = Math.random() * canvasSize.width;
-        var y = Math.random() * canvasSize.height;
-        const image = userData[i].image;
-        const username = userData[i].username;
-        let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
+    if (count === null && userData === null) {
+        for (var i = 0; i < 10; i++) {
+            var x = Math.random() * canvasSize.width;
+            var y = Math.random() * canvasSize.height;
+            let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
 
-        if (label === "Person") {
-            addPersonNode(nodes.size, label, x, y, [], [], [], nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username);
-        } else if (label === "Social Media Post") {
             addItemNode(nodes.size, label, x, y, [], nodeLabelRef);
+        }
+    } else {
+        for (var i = 0; i < count; i++) {
+            var x = Math.random() * canvasSize.width;
+            var y = Math.random() * canvasSize.height;
+            const image = userData[i].image;
+            const username = userData[i].username;
+            let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
+
+            if (label === "Person") {
+                addPersonNode(nodes.size, label, x, y, [], [], [], nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username);
+            } else if (label === "Social Media Post") {
+                addItemNode(nodes.size, label, x, y, [], nodeLabelRef);
+            }
         }
     }
 }
