@@ -4,16 +4,27 @@ function addNodeLabel(mousePos, nodeId, label) {
     let nodeLabel = document.createElement("div");
     nodeLabel.className = "node";
     nodeLabel.style.position = "absolute";
-    nodeLabel.style.left = mousePos.x - 5 + "px";
-    nodeLabel.style.top = mousePos.y - 5 + "px";
-    nodeLabel.style.width = "15px";
-    nodeLabel.style.height = "15px";
+    const foundNodeData = nodes.get(nodeId);
 
-    if (label === "Person") {
-        nodeLabel.style.backgroundColor = "blue";
-    } else if (label === "Social Media Post") {
-        nodeLabel.style.backgroundColor = "red";
+    let radius, classList;
+
+    switch (label) {
+        case "Person":
+            radius = standardPersonRadius; // TODO when redrawing, get the current radius
+            classList = "personNode";
+            break;
+        case "Social Media Post":
+            radius = standardPostRadius; // TODO when redrawing, get the current radius
+            classList = "postNode";
+            break;
+        default:
+            break;
     }
+
+    nodeLabel.classList.add(classList);
+    nodeLabel.style.width = radius * 2 + "px";
+    nodeLabel.style.left = mousePos.x + "px";
+    nodeLabel.style.top = mousePos.y + "px";
 
     canvasContainer.appendChild(nodeLabel);
 
@@ -65,7 +76,7 @@ function resizeNodes(nodes) {
         if (node.label === 'Person') {
             node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
         }
-        else if (node.label === 'Social Media Post') {
+        else if(node.label === 'Social Media Post') {
             node.popularity = calculatePostPopularity(node.readers?.length || 0);
         }
         node.nodeLabelRef.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
@@ -126,7 +137,7 @@ function addPersonNode(id, label, x, y, friends, items, infolinks, nodeLabelRef,
         items: items,
         infolinks: infolinks,
         nodeLabelRef: nodeLabelRef,
-        personRadius: personRadius,
+        radius: personRadius,
         popularity: popularity,
         increasedPopularity: increasedPopularity,
         opacity: 1, // Default opacity is 1 (fully opaque)
@@ -150,7 +161,7 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
         y: y,
         readers: readers,
         nodeLabelRef: nodeLabelRef,
-        postRadius: postRadius,
+        radius: postRadius,
         popularity: popularity,
         increasedPopularity: increasedPopularity,
         opacity: 1, // Default opacity is 1 (fully opaque)
@@ -208,6 +219,7 @@ function showSelectedNodeOptions() {
     image.src = selectedNodeData.image;
     div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
     div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
+
     div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
     div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
     div.querySelector("label input").value = selectedNodeData.increasedPopularity;

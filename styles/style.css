@@ -1,27 +1,31 @@
-body {
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #d9dfe2;
-    font-family: Roboto-Regular;
 }
+
+body {
+    padding: 1em;
+    background-color: #d9dfe2;
+    height: 100vh;
+}
+
+
 
 /* font local font Roboto-Regular */
 @font-face {
-    font-family: "Roboto-Regular";
+    font-family: "Roboto";
     src: url("../fonts/Roboto/Roboto-Regular.ttf");
+    font-weight: 400;
 }
 
 @font-face {
-    font-family: "Roboto-Bold";
+    font-family: "Roboto";
     src: url("../fonts/Roboto/Roboto-Bold.ttf");
     font-weight: 700;
 }
-h1,
-h2,
-h3,
-p,
-label,
-button {
+
+h1, h2, h3, p, label, button {
     font-family: Roboto;
 }
 
@@ -111,9 +115,9 @@ button {
 main {
     display: grid;
     grid-template-columns: 1fr 340px;
-    grid-template-rows: 5rem 1fr;
-    width: 100vw;
-    height: 100vh;
+    grid-template-rows: min-content 1fr;
+    gap: 1em;
+    height: 100%;
 }
 
 h1 {
@@ -121,11 +125,13 @@ h1 {
     grid-row: 1/2;
     margin: 1em;
     padding: 0;
+    margin: 0;
+    height: fit-content;
 }
 
 h3 {
     font-size: 20px;
-    font-family: Roboto-Bold;
+    font-family: Roboto;
     margin-bottom: 0.3em;
     margin-top: 0;
 }
@@ -151,7 +157,7 @@ h3:nth-of-type(3) {
 }
 
 .hide {
-    /* display: none; */
+    display: none;
 }
 
 #controlPanel {
@@ -162,7 +168,6 @@ h3:nth-of-type(3) {
     column-width: 340px;
     grid-column: 2/3;
     grid-row: 1/3;
-    margin: 0.75rem 1em;
 }
 
 #selectedNodeOptions {
@@ -199,11 +204,10 @@ h3:nth-of-type(3) {
     & > div {
         grid-column: 2/3;
         grid-row: 2/4;
-        & > p:nth-of-type(1) {
+        & > p:nth-of-type(1){
             padding-top: 0;
         }
-        & p,
-        label {
+        & p, label {
             padding: 0em;
             padding-block: 0.4em;
         }
@@ -247,7 +251,7 @@ h3:nth-of-type(3) {
 
 #selectedNodeOptions p:nth-of-type(1),
 #selectedNodeOptions p:nth-of-type(2) {
-    display: none;
+    /* display: none; */
 }
 
 #selectedNodeOptions button {
@@ -271,10 +275,24 @@ h3:nth-of-type(3) {
 .node {
     border-radius: 50%;
     z-index: 2;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
 }
 
 .linkStripe {
     transform-origin: center left;
+}
+
+.link-info {
+    background-color: #0075ff;
+}
+
+.link-friend {
+    background-color: #00b000;
+}
+
+.link-item {
+    background-color: #ff9900;
 }
 
 header {
@@ -287,7 +305,7 @@ button {
     /* margin-bottom: 0.5em; */
     padding: 0.5em;
     border-radius: 0.75rem;
-    font-family: "Roboto-Regular";
+    font-family: "Roboto";
     font-size: 1rem;
 }
 
@@ -298,6 +316,7 @@ button {
     border: none;
     width: fit-content;
     padding: 0.7em;
+    cursor: pointer;
 }
 
 /* 
@@ -343,14 +362,7 @@ div.followLink {
     background-color: black;
 }
 
-#canvasContainer:has(div.personNode:hover) div.followLink {
-    height: 2px;
-    background-color: #00b000;
-}
-#canvasContainer:has(div.postNode:hover) div.followLink {
-    height: 2px;
-    background-color: #ff9900;
-}
+
 
 #people-count {
     border: none;
@@ -377,3 +389,12 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
+
+#canvasContainer:has(div.personNode:hover) div.followLink{
+    height: 2px;
+    background-color: #00b000;;
+}
+#canvasContainer:has(div.postNode:hover) div.followLink{
+    height: 2px;
+    background-color: #ff9900;
+}

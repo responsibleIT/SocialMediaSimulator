@@ -10,7 +10,7 @@
         <main>
             <h1>Social Network Simulation</h1>
             <div id="canvasContainer" style="position: relative">
-                <canvas id="nodeCanvas" width="800" height="600"></canvas>
+                <canvas id="nodeCanvas"></canvas>
                 <div id="nodeDataContainer" class="hide">
                     <p><strong id="nodeLabel"></strong></p>
                     <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
@@ -28,8 +28,9 @@
                             id="emptyStateCheckbox"
                             name="group1"
                             checked
+                            value="select"
                         />
-                        <img src="../images/sms_icons_Select.svg" alt="icon" />
+                        <img src="images/sns_icons_Select.svg" alt="icon" />
                         Select</label
                     >
 
@@ -39,9 +40,9 @@
                             id="addPersonCheckbox"
                             name="group1"
                             value="add-person"
-                        /><img src="images/sns_icons_User.svg" alt="icon" /> Add
-                        person</label
-                    >
+
+                        /><img src="images/sns_icons_User.svg" alt="icon" />
+                        Add person</label                    >
                     <label
                         for="addSocialMediaPostCheckbox"
                         class="label-with-icon"
@@ -50,8 +51,9 @@
                             type="radio"
                             id="addSocialMediaPostCheckbox"
                             name="group1"
+                            value="add-post"
                         />
-                        <img src="../images/sms_icons_Post.svg" alt="icon" />
+                        <img src="images/sns_icons_Post.svg" alt="icon" />
                         Add Post
                     </label>
 
@@ -96,11 +98,8 @@
                     <div>
                         <p>Type: <span id="selectedNodeType"></span></p>
                         <p>Username: <span id="selectedNodeUserName"></span></p>
-                        <p>
-                            Friends: <span id="selectedNodeUserFriends"></span>
-                        </p>
+                        <p>Friends: <span id="selectedNodeUserFriends"></span></p>
                         <p>Popularity: <span id="totalPopularity"></span></p>
-
                         <label
                             >Increased Popularity
                             <input
@@ -110,7 +109,6 @@
                                 max="50"
                         /></label>
                     </div>
-
                     <button type="button" id="deleteNode">Delete Node</button>
                 </div>
             </section>
@@ -120,5 +118,6 @@
         <script src="js/linkNodes.js" defer></script>
         <script src="js/api.js" defer></script>
         <script src="js/centrality.js" defer></script>
+        <script src="js/cursor.js" defer></script>
     </body>
 </html>
