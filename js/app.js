@@ -5,6 +5,7 @@ const ctx = canvas.getContext("2d"); // Only used now for the links
 let canvasSize = { width: canvas.width, height: canvas.height };
 
 const nodeDataContainer = document.getElementById("nodeDataContainer");
+nodeDataContainer.style.display = "none";
 const gridRange = { min: -1, max: 1 };
 // const addPersonCheckbox = document.getElementById("addPersonCheckbox");
 // const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
