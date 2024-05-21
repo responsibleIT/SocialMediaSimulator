@@ -124,11 +124,25 @@ function removeFriend(personId, friendId) {
     let personIdData = nodes.get(personId);
     let friendIdData = nodes.get(friendId);
 
+    let linkKey1 = personId + "-" + friendId;
+    let linkKey2 = friendId + "-" + personId;
+
+    let linkElement1 = links.get(linkKey1);
+    let linkElement2 = links.get(linkKey2);
+
+    if (linkElement1 !== undefined && linkElement1.linkElement !== undefined) {
+        linkElement1.linkElement.remove();
+    } else if (linkElement2 !== undefined && linkElement2.linkElement !== undefined) {
+        linkElement2.linkElement.remove();
+    } else {
+        return;
+    }
+
     personIdData.friends = personIdData.friends.filter((id) => id !== friendId);
     friendIdData.friends = friendIdData.friends.filter((id) => id !== personId);
 
-    links.get(personId + "-" + friendId).linkElement.remove();
-    links.delete(personId + "-" + friendId);
+    links.delete(linkKey1);
+    links.delete(linkKey2);
     //redrawCanvas(); // Redraws the links
     resizeNodes(nodes);
 }
