@@ -110,8 +110,8 @@ function removeItemLink(personId, itemId) {
     let personIdData = nodes.get(personId);
     let itemIdData = nodes.get(itemId);
 
-    personIdData.items = personIdData.items.filter((itemId) => itemId !== itemId);
-    itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
+    personIdData.items = personIdData.items.filter((id) => id !== itemId);
+    itemIdData.readers = itemIdData.readers.filter((id) => id !== personId);
 
     links.get(personId + "-" + itemId).linkElement.remove();
     links.delete(personId + "-" + itemId);
@@ -124,8 +124,8 @@ function removeFriend(personId, friendId) {
     let personIdData = nodes.get(personId);
     let friendIdData = nodes.get(friendId);
 
-    personIdData.friends = personIdData.friends.filter((friendId) => friendId !== friendId);
-    friendIdData.friends = friendIdData.friends.filter((friendId) => friendId !== personId);
+    personIdData.friends = personIdData.friends.filter((id) => id !== friendId);
+    friendIdData.friends = friendIdData.friends.filter((id) => id !== personId);
 
     links.get(personId + "-" + friendId).linkElement.remove();
     links.delete(personId + "-" + friendId);
