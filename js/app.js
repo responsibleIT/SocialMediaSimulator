@@ -33,13 +33,6 @@ let selectedNode = null;
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
 
-//Link colours in rgba format (blue, red, green) with 20% opacity
-const linkColors = {
-    friend: "rgb(0, 255, 0)",
-    itemlink: "rgb(254, 143, 0)",
-    infolink: "rgb(0, 0, 255)",
-};
-
 //Node colours in rgba format (blue, red) with 100% opacity
 const labelColors = {
     Person: "blue",
