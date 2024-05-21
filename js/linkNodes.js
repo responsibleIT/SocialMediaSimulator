@@ -38,32 +38,23 @@ function drawLink(from, to, type) {
 
     console.log(linkAngle);
 
-    linkStripe.style.width = linkLength + 'px';
-    linkStripe.style.transform = 'translateY(-50%) rotate(' + linkAngle + 'rad)';
+    linkStripe.style.width = linkLength + "px";
+    linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
 
-    linkStripe.style.left = from.x + 'px';
-    linkStripe.style.top = from.y + 'px';
-
-
+    linkStripe.style.left = from.x + "px";
+    linkStripe.style.top = from.y + "px";
 
     if (type === "itemlink") {
         linkStripe.classList.add("link-item");
     } else if (type === "friend") {
         linkStripe.classList.add("link-friend");
-    } else if (type === 'infolink') {
+    } else if (type === "infolink") {
         linkStripe.classList.add("link-info");
     }
 
     canvasContainer.appendChild(linkStripe);
 
     return linkStripe;
-
-    // ctx.beginPath();
-    // ctx.moveTo(from.x, from.y);
-    // ctx.lineTo(to.x, to.y);
-    // ctx.strokeStyle = linkColors[type];
-    // ctx.lineWidth = thickness;
-    // ctx.stroke();
 }
 
 //Function for adding an info link between the currently selected node and the node with the given id
@@ -75,7 +66,7 @@ function addInfoLink(from, to) {
 
     const linkElement = drawLink(fromData, toData, "infolink", 4);
     addLink(from, to, "infolink", linkElement);
-   
+
     resizeNodes(nodes);
 }
 
@@ -110,7 +101,7 @@ function addItemLink(person, item) {
 
     const linkElement = drawLink(currentlySelectedPerson, currentEyedItem, "itemlink", 4);
     addLink(person, item, "itemlink", linkElement);
-    
+
     resizeNodes(nodes);
 }
 
@@ -119,7 +110,7 @@ function removeItemLink(personId, itemId) {
     let personIdData = nodes.get(personId);
     let itemIdData = nodes.get(itemId);
 
-    personIdData.items = personIdData.items.filter((itemId) => itemId !== personId);
+    personIdData.items = personIdData.items.filter((itemId) => itemId !== itemId);
     itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
 
     links.get(personId + "-" + itemId).linkElement.remove();
