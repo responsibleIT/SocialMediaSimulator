@@ -60,8 +60,20 @@ function addNodeLabel(mousePos, nodeId, label) {
     return nodeLabel;
 }
 
+function resizeNodes(nodes) {
+    nodes.forEach((node, id) => {
+        if (node.label === 'Person') {
+            node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
+        }
+        else if (node.label === 'Social Media Post') {
+            node.popularity = calculatePostPopularity(node.readers?.length || 0);
+        }
+        node.nodeLabelRef.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
+    });
+}
+
 //Function to spawn a node on the canvas given the position of the cursor
-function spawnNode(evt) {
+async function spawnNode(evt) {
     // console.log(addPersonCheckbox, addSocialMediaPostCheckbox.checked); // Hoe kan ie m vinden
     let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
 
@@ -76,9 +88,13 @@ function spawnNode(evt) {
     switch (label) {
         case "Person":
             // drawNode(mousePos.x, mousePos.y, label);
+            let userData = await fetchUsers(1);
+            const image = userData[0].image;
+            const username = userData[0].username;
+
             nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
             nodeId = nodes.size;
-            addPersonNode(nodeId, label, mousePos.x, mousePos.y, [], [], [], nodeLabelRef);
+            addPersonNode(nodeId, label, mousePos.x, mousePos.y, [], [], [], nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username);
             break;
         case "Social Media Post":
             var mousePos = getMousePosOnCanvas(canvas, evt);
@@ -101,7 +117,7 @@ function spawnNode(evt) {
 //friends: list of node ids that are friends with this node
 //items: list of item ids that this node has liked
 //nodeLabelRef: reference to the node label div element
-function addPersonNode(id, label, x, y, friends, items, infolinks, nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0) {
+function addPersonNode(id, label, x, y, friends, items, infolinks, nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username) {
     nodes.set(id, {
         label: label,
         x: x,
@@ -114,6 +130,8 @@ function addPersonNode(id, label, x, y, friends, items, infolinks, nodeLabelRef,
         popularity: popularity,
         increasedPopularity: increasedPopularity,
         opacity: 1, // Default opacity is 1 (fully opaque)
+        image: image,
+        username: username,
     });
 }
 
@@ -140,14 +158,16 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
 }
 
 // Add random node based on the given label
-function drawRandom(label) {
-    for (var i = 0; i < 10; i++) {
+function drawRandom(label, count, userData) {
+    for (var i = 0; i < count; i++) {
         var x = Math.random() * canvasSize.width;
         var y = Math.random() * canvasSize.height;
+        const image = userData[i].image;
+        const username = userData[i].username;
         let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
 
         if (label === "Person") {
-            addPersonNode(nodes.size, label, x, y, [], [], [], nodeLabelRef);
+            addPersonNode(nodes.size, label, x, y, [], [], [], nodeLabelRef, personRadius = standardPersonRadius, popularity = 0, increasedPopularity = 0, image, username);
         } else if (label === "Social Media Post") {
             addItemNode(nodes.size, label, x, y, [], nodeLabelRef);
         }
@@ -182,12 +202,15 @@ function showNodeDataContainer(nodeId, noteData) {
 // TODO can be written differently
 function showSelectedNodeOptions() {
     let selectedNodeData = nodes.get(selectedNode);
+    const div = document.querySelector("#selectedNodeOptions > div");
+    const image = document.getElementById("selectedNodeImage");
 
-    selectedNodeOptions.children[0].innerHTML = `Node ID: ${selectedNode}`;
-    selectedNodeOptions.children[1].innerHTML = `X-position: ${selectedNodeData.x}`;
-    selectedNodeOptions.children[2].innerHTML = `Y-position: ${selectedNodeData.y}`;
-    selectedNodeOptions.children[3].innerHTML = `Label: ${selectedNodeData.label}`;
-    selectedNodeOptions.children[4].innerHTML = `Popularity: ${Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity)}`;
-    selectedNodeOptions.children[5].children[0].value = selectedNodeData.increasedPopularity;
+    image.src = selectedNodeData.image;
+    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
+    div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
+    div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
+    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
+    div.querySelector("label input").value = selectedNodeData.increasedPopularity;
+
     selectedNodeOptions.classList.remove("hide");
 }
