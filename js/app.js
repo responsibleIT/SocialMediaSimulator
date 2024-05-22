@@ -41,13 +41,55 @@ const labelColors = {
     "Social Media Post": "red",
 };
 
-randomPeopleButton.addEventListener("click", () => {
+// Function to calc the number of people the user wants to add
+function updateCount(newCount) {
+    const countInput = document.getElementById('people-count');
+    countInput.value = newCount;
+}
+
+function increasePeople() {
+    const countInput = document.getElementById('people-count');
+    let count = parseInt(countInput.value);
+    if (count < countInput.max) {
+        count++;
+        updateCount(count);
+    }
+}
+
+function decreasePeople() {
+    const countInput = document.getElementById('people-count');
+    let count = parseInt(countInput.value);
+    if (count > countInput.min) {
+        count--;
+        updateCount(count);
+    }
+}
+
+// api picture and data
+
+
+
+
+randomPeopleButton.addEventListener("click", async () => {
     // drawRandomPersonNodes();
-    drawRandom("Person");
+    const count = document.getElementById('people-count').value;
+
+    let userData = await fetchUsers(count);
+    console.log(userData);
+
+    drawRandom("Person", count, userData);
+
+    // change image
+    // const image = document.getElementById(`image`);
+    // image.src = userData.image;
+
+
+
+
 });
 randomContentButton.addEventListener("click", () => {
     // drawRandomSocialMediaPostNodes();
-    drawRandom("Social Media Post");
+    drawRandom("Social Media Post", null, null);
 });
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
