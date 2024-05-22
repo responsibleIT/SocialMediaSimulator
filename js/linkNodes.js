@@ -194,6 +194,8 @@ function selectNode(selectedNodeId) {
         if (selectedNodeId !== id) {
             // node.nodeLabelRef.style.opacity = 0.5;
             node.nodeLabelRef.classList.add("noFocus");
+        } else {
+            node.nodeLabelRef.classList.add("focus");
         }
     });
     const node = nodes.get(selectedNodeId);
@@ -256,6 +258,8 @@ function deselectNode() {
     nodes.forEach((node, id) => {
         if (selectedNode !== id) {
             node.nodeLabelRef.classList.remove("noFocus");
+        } else {
+            node.nodeLabelRef.classList.remove("focus");
         }
     });
 
@@ -265,6 +269,7 @@ function deselectNode() {
         linkStripe.remove();
     }
 
+    selectedNodeOptions.classList.add("hide");
     // let selectedNodeData = nodes.get(selectedNode);
     // const div = document.querySelector("#selectedNodeOptions > div");
     // selectedNodeData.increasedPopularity = div.querySelector("label input").value;

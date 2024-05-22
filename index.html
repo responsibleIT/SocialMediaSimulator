@@ -40,9 +40,9 @@
                             id="addPersonCheckbox"
                             name="group1"
                             value="add-person"
+
                         /><img src="images/sns_icons_User.svg" alt="icon" />
-                        Add person</label
-                    >
+                        Add person</label                    >
                     <label
                         for="addSocialMediaPostCheckbox"
                         class="label-with-icon"
@@ -58,10 +58,27 @@
                     </label>
 
                     <h3>Automatic Tools</h3>
+                    <div>
+                        <button type="button" id="addRandomPeopleButton">
+                            Add people
+                        </button>
 
-                    <button type="button" id="addRandomPeopleButton">
-                        Add people
-                    </button>
+                        <button onclick="decreasePeople()" id="minPeople">
+                            -
+                        </button>
+                        <!-- <span id="people-count">0</span> Add people -->
+                        <input
+                            type="number"
+                            id="people-count"
+                            value="10"
+                            min="3"
+                            max="50"
+                        />
+                        <button onclick="increasePeople()" id="plusPeople">
+                            +
+                        </button>
+                    </div>
+
                     <button type="button" id="addRandomContentButton">
                         Post content
                     </button>
@@ -74,7 +91,7 @@
 
                 <div id="selectedNodeOptions" class="hide">
                     <h3>Node Info <span></span></h3>
-                    <img src="" alt="">
+                    <img src="" alt="" id="selectedNodeImage" />
                     <!-- <p><strong id="selectedNodeId"></strong></p> -->
                     <!-- <p>X: <span id="selectedNodeX"></span></p> -->
                     <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
@@ -92,7 +109,6 @@
                                 max="50"
                         /></label>
                     </div>
-                    
                     <button type="button" id="deleteNode">Delete Node</button>
                 </div>
 
@@ -109,6 +125,7 @@
         <script src="js/app.js" defer></script>
         <script src="js/createNode.js" defer></script>
         <script src="js/linkNodes.js" defer></script>
+        <script src="js/api.js" defer></script>
         <script src="js/centrality.js" defer></script>
         <script src="js/cursor.js" defer></script>
     </body>
