@@ -19,6 +19,7 @@ const randomContentButton = document.getElementById("addRandomContentButton");
 const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
+const calcGroupsButton = document.getElementById("calcGroups");
 
 //Global map of nodes
 let nodes = new Map();
@@ -43,12 +44,12 @@ const labelColors = {
 
 // Function to calc the number of people the user wants to add
 function updateCount(newCount) {
-    const countInput = document.getElementById('people-count');
+    const countInput = document.getElementById("people-count");
     countInput.value = newCount;
 }
 
 function increasePeople() {
-    const countInput = document.getElementById('people-count');
+    const countInput = document.getElementById("people-count");
     let count = parseInt(countInput.value);
     if (count < countInput.max) {
         count++;
@@ -57,7 +58,7 @@ function increasePeople() {
 }
 
 function decreasePeople() {
-    const countInput = document.getElementById('people-count');
+    const countInput = document.getElementById("people-count");
     let count = parseInt(countInput.value);
     if (count > countInput.min) {
         count--;
@@ -67,12 +68,9 @@ function decreasePeople() {
 
 // api picture and data
 
-
-
-
 randomPeopleButton.addEventListener("click", async () => {
     // drawRandomPersonNodes();
-    const count = document.getElementById('people-count').value;
+    const count = document.getElementById("people-count").value;
 
     let userData = await fetchUsers(count);
     console.log(userData);
@@ -82,10 +80,6 @@ randomPeopleButton.addEventListener("click", async () => {
     // change image
     // const image = document.getElementById(`image`);
     // image.src = userData.image;
-
-
-
-
 });
 randomContentButton.addEventListener("click", () => {
     // drawRandomSocialMediaPostNodes();
@@ -107,6 +101,9 @@ increasedPopularityInput.addEventListener("change", () => {
     resizeNodes(nodes);
 });
 
+calcGroupsButton.addEventListener("click", () => {
+    findAllConnectedComponents();
+});
 
 //Function for calculating social media post popularity based on the number of readers
 function calculatePostPopularity(numOfReaders) {
@@ -129,3 +126,47 @@ resizeCanvas();
 
 // Add event listener for window resize
 window.addEventListener("resize", resizeCanvas);
+
+function findAllConnectedComponents() {
+    let visited = new Set();
+    let components = [];
+    // Filter to include only 'Person' nodes that have at least one friend
+    let graph = new Map([...nodes].filter(([id, node]) => node.label === "Person" && node.friends && node.friends.length > 0));
+
+    // Helper function to perform BFS and find all nodes connected to 'startNode'
+    function bfs(startNode) {
+        let queue = [startNode];
+        let component = [];
+        visited.add(startNode);
+        component.push(startNode);
+
+        while (queue.length > 0) {
+            let currentNode = queue.shift();
+            let neighbors = graph.get(currentNode).friends || [];
+
+            neighbors.forEach((neighbor) => {
+                if (!visited.has(neighbor) && graph.has(neighbor)) {
+                    // Ensure neighbor is also a 'Person' with friends
+                    visited.add(neighbor);
+                    queue.push(neighbor);
+                    component.push(neighbor);
+                }
+            });
+        }
+        return component;
+    }
+
+    // Main loop to initiate BFS from each unvisited node that has friends
+    graph.forEach((_, node) => {
+        if (!visited.has(node)) {
+            let component = bfs(node);
+            if (component.length > 1) {
+                // Only consider components with more than one node
+                components.push(component);
+            }
+        }
+    });
+
+    console.log("Total number of connected components:", components.length);
+    console.log("Connected components:", components);
+}
