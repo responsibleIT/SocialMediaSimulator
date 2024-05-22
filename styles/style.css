@@ -59,6 +59,10 @@ h1, h2, h3, p, label, button {
 }
 
 #nodeDataContainer {
+    /* position-anchor: --menu;
+    left: anchor(--menu right);
+    top: anchor(--menu bottom); */
+
     z-index: 99;
     position: absolute;
     width: fit-content;
@@ -440,3 +444,7 @@ div.followLink {
     }
 }
 
+/* #canvasContainer > div:hover {
+    anchor-name: --menu;
+}
+ */
