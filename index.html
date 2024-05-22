@@ -11,10 +11,10 @@
             <h1>Social Network Simulation</h1>
             <div id="canvasContainer" style="position: relative">
                 <canvas id="nodeCanvas"></canvas>
-                <div id="nodeDataContainer" class="hide">
-                    <p><strong id="nodeLabel"></strong></p>
-                    <p><span id="nodeX"></span>, <span id="nodeY"></span></p>
-                </div>
+                <div id="nodeDataContainer" popover class="hide">
+                    <p></p>
+                    <img src="" alt="">
+                    <p>Friends:<span class="friendsSpan">1</span><span class="dot">and</span>Popularity:<span class="popularitySpan">2</span></p>                </div>
             </div>
 
             <section id="controlPanel">
@@ -110,6 +110,15 @@
                         /></label>
                     </div>
                     <button type="button" id="deleteNode">Delete Node</button>
+                </div>
+
+                <div class="legend">
+                    <h3>Legend</h3>
+                    <ul>
+                        <li>Friends: <span class="friendLink"></span></li>
+                        <li>Data link: <span class="dataLink"></span></li>
+                        <li>Liked: <span class="likedLink"></span></li>
+                    </ul>
                 </div>
             </section>
         </main>

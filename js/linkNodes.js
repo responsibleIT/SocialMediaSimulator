@@ -38,32 +38,23 @@ function drawLink(from, to, type) {
 
     console.log(linkAngle);
 
-    linkStripe.style.width = linkLength + 'px';
-    linkStripe.style.transform = 'translateY(-50%) rotate(' + linkAngle + 'rad)';
+    linkStripe.style.width = linkLength + "px";
+    linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
 
-    linkStripe.style.left = from.x + 'px';
-    linkStripe.style.top = from.y + 'px';
-
-
+    linkStripe.style.left = from.x + "px";
+    linkStripe.style.top = from.y + "px";
 
     if (type === "itemlink") {
         linkStripe.classList.add("link-item");
     } else if (type === "friend") {
         linkStripe.classList.add("link-friend");
-    } else if (type === 'infolink') {
+    } else if (type === "infolink") {
         linkStripe.classList.add("link-info");
     }
 
     canvasContainer.appendChild(linkStripe);
 
     return linkStripe;
-
-    // ctx.beginPath();
-    // ctx.moveTo(from.x, from.y);
-    // ctx.lineTo(to.x, to.y);
-    // ctx.strokeStyle = linkColors[type];
-    // ctx.lineWidth = thickness;
-    // ctx.stroke();
 }
 
 //Function for adding an info link between the currently selected node and the node with the given id
@@ -75,7 +66,7 @@ function addInfoLink(from, to) {
 
     const linkElement = drawLink(fromData, toData, "infolink", 4);
     addLink(from, to, "infolink", linkElement);
-   
+
     resizeNodes(nodes);
 }
 
@@ -110,7 +101,7 @@ function addItemLink(person, item) {
 
     const linkElement = drawLink(currentlySelectedPerson, currentEyedItem, "itemlink", 4);
     addLink(person, item, "itemlink", linkElement);
-    
+
     resizeNodes(nodes);
 }
 
@@ -119,8 +110,8 @@ function removeItemLink(personId, itemId) {
     let personIdData = nodes.get(personId);
     let itemIdData = nodes.get(itemId);
 
-    personIdData.items = personIdData.items.filter((itemId) => itemId !== personId);
-    itemIdData.readers = itemIdData.readers.filter((readerId) => readerId !== personId);
+    personIdData.items = personIdData.items.filter((id) => id !== itemId);
+    itemIdData.readers = itemIdData.readers.filter((id) => id !== personId);
 
     links.get(personId + "-" + itemId).linkElement.remove();
     links.delete(personId + "-" + itemId);
@@ -133,11 +124,25 @@ function removeFriend(personId, friendId) {
     let personIdData = nodes.get(personId);
     let friendIdData = nodes.get(friendId);
 
-    personIdData.friends = personIdData.friends.filter((friendId) => friendId !== friendId);
-    friendIdData.friends = friendIdData.friends.filter((friendId) => friendId !== personId);
+    let linkKey1 = personId + "-" + friendId;
+    let linkKey2 = friendId + "-" + personId;
 
-    links.get(personId + "-" + friendId).linkElement.remove();
-    links.delete(personId + "-" + friendId);
+    let linkElement1 = links.get(linkKey1);
+    let linkElement2 = links.get(linkKey2);
+
+    if (linkElement1 !== undefined && linkElement1.linkElement !== undefined) {
+        linkElement1.linkElement.remove();
+    } else if (linkElement2 !== undefined && linkElement2.linkElement !== undefined) {
+        linkElement2.linkElement.remove();
+    } else {
+        return;
+    }
+
+    personIdData.friends = personIdData.friends.filter((id) => id !== friendId);
+    friendIdData.friends = friendIdData.friends.filter((id) => id !== personId);
+
+    links.delete(linkKey1);
+    links.delete(linkKey2);
     //redrawCanvas(); // Redraws the links
     resizeNodes(nodes);
 }
@@ -189,6 +194,8 @@ function selectNode(selectedNodeId) {
         if (selectedNodeId !== id) {
             // node.nodeLabelRef.style.opacity = 0.5;
             node.nodeLabelRef.classList.add("noFocus");
+        } else {
+            node.nodeLabelRef.classList.add("focus");
         }
     });
     const node = nodes.get(selectedNodeId);
@@ -251,6 +258,8 @@ function deselectNode() {
     nodes.forEach((node, id) => {
         if (selectedNode !== id) {
             node.nodeLabelRef.classList.remove("noFocus");
+        } else {
+            node.nodeLabelRef.classList.remove("focus");
         }
     });
 
@@ -260,9 +269,10 @@ function deselectNode() {
         linkStripe.remove();
     }
 
-    let selectedNodeData = nodes.get(selectedNode);
-    const div = document.querySelector("#selectedNodeOptions > div");
-    selectedNodeData.increasedPopularity = div.querySelector("label input").value;
+    selectedNodeOptions.classList.add("hide");
+    // let selectedNodeData = nodes.get(selectedNode);
+    // const div = document.querySelector("#selectedNodeOptions > div");
+    // selectedNodeData.increasedPopularity = div.querySelector("label input").value;
 
     selectedNode = null;
     removeForwardButtons();
