@@ -5,6 +5,7 @@ const ctx = canvas.getContext("2d"); // Only used now for the links
 let canvasSize = { width: canvas.width, height: canvas.height };
 
 const nodeDataContainer = document.getElementById("nodeDataContainer");
+nodeDataContainer.style.display = "none";
 const gridRange = { min: -1, max: 1 };
 // const addPersonCheckbox = document.getElementById("addPersonCheckbox");
 // const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
@@ -17,6 +18,7 @@ const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
 const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
+const increasedPopularityInput = document.getElementById("nodePopularity");
 
 //Global map of nodes
 let nodes = new Map();
@@ -32,13 +34,6 @@ let selectedNode = null;
 
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
-
-//Link colours in rgba format (blue, red, green) with 20% opacity
-const linkColors = {
-    friend: "rgb(0, 255, 0)",
-    itemlink: "rgb(254, 143, 0)",
-    infolink: "rgb(0, 0, 255)",
-};
 
 //Node colours in rgba format (blue, red) with 100% opacity
 const labelColors = {
@@ -63,6 +58,13 @@ canvas.addEventListener("click", (event) => {
 calcClosenessCentrality.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
 });
+
+increasedPopularityInput.addEventListener("change", () => {
+    let selectedNodeData = nodes.get(selectedNode);
+    selectedNodeData.increasedPopularity = increasedPopularityInput.value;
+    resizeNodes(nodes);
+});
+
 
 //Function for calculating social media post popularity based on the number of readers
 function calculatePostPopularity(numOfReaders) {

@@ -34,12 +34,14 @@ function addNodeLabel(mousePos, nodeId, label) {
     nodeLabel.addEventListener("mouseover", function () {
         hoveredNode = nodeId;
         console.log("Data:", nodes.get(nodeId));
-        showNodeDataContainer(nodeId, nodes.get(nodeId));
+        if (nodes.get(nodeId).label === "Person") {
+            showNodeDataContainer(nodeId, nodes.get(nodeId));
+        }
     });
 
     nodeLabel.addEventListener("mouseout", function () {
         hoveredNode = null;
-        nodeDataContainer.classList.add("hide");
+        nodeDataContainer.style.display = "none";
     });
 
     nodeLabel.addEventListener("click", function () {
@@ -73,10 +75,9 @@ function addNodeLabel(mousePos, nodeId, label) {
 
 function resizeNodes(nodes) {
     nodes.forEach((node, id) => {
-        if (node.label === 'Person') {
+        if (node.label === "Person") {
             node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
-        }
-        else if(node.label === 'Social Media Post') {
+        } else if (node.label === "Social Media Post") {
             node.popularity = calculatePostPopularity(node.readers?.length || 0);
         }
         node.nodeLabelRef.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
@@ -191,11 +192,11 @@ function getMousePosOnCanvas(canvas, evt) {
 }
 
 //Showdata function to display the nodeDataContainer with therein the node data when hovering over it
-// TODO can be written differently + other data
+
 function showNodeDataContainer(nodeId, noteData) {
-    nodeDataContainer.children[0].innerHTML = nodeId;
-    nodeDataContainer.children[1].innerHTML = noteData.label;
-    nodeDataContainer.classList.remove("hide");
+    nodeDataContainer.children[0].innerHTML = "NodeId:" + nodeId;
+
+    nodeDataContainer.style.display = "grid";
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = noteData.x + 10 + "px";
     nodeDataContainer.style.top = noteData.y + 10 + "px";
