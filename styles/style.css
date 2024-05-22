@@ -204,7 +204,8 @@ h3:nth-of-type(3) {
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
-    height: auto;
+    height: 100%;
+    overflow: auto;
     column-width: 340px;
     grid-column: 2/3;
     grid-row: 1/3;
