@@ -18,6 +18,7 @@ const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
 const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
+const increasedPopularityInput = document.getElementById("nodePopularity");
 
 //Global map of nodes
 let nodes = new Map();
@@ -57,6 +58,13 @@ canvas.addEventListener("click", (event) => {
 calcClosenessCentrality.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
 });
+
+increasedPopularityInput.addEventListener("change", () => {
+    let selectedNodeData = nodes.get(selectedNode);
+    selectedNodeData.increasedPopularity = increasedPopularityInput.value;
+    resizeNodes(nodes);
+});
+
 
 //Function for calculating social media post popularity based on the number of readers
 function calculatePostPopularity(numOfReaders) {

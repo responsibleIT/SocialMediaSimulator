@@ -265,9 +265,9 @@ function deselectNode() {
         linkStripe.remove();
     }
 
-    let selectedNodeData = nodes.get(selectedNode);
-    const div = document.querySelector("#selectedNodeOptions > div");
-    selectedNodeData.increasedPopularity = div.querySelector("label input").value;
+    // let selectedNodeData = nodes.get(selectedNode);
+    // const div = document.querySelector("#selectedNodeOptions > div");
+    // selectedNodeData.increasedPopularity = div.querySelector("label input").value;
 
     selectedNode = null;
     removeForwardButtons();
