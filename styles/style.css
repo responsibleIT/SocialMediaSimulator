@@ -184,7 +184,7 @@ h3:nth-of-type(3) {
     margin-top: 2rem;
 }
 
-#canvasContainer {
+.canvas-container {
     /* width: 800px; */
     width: 100%;
     height: 100%;
@@ -195,7 +195,7 @@ h3:nth-of-type(3) {
     overflow: auto;
     cursor: url('./../images/Select-cursor.png') 7 7, default;
 }
-#canvasContainer::-webkit-scrollbar {
+.canvas-container::-webkit-scrollbar {
     display: none;
 }
 
@@ -355,13 +355,30 @@ button {
 }
 
 button {
-    background-color: #0075ff;
+    --background-color: #0075ff;
+    background-color: var(--background-color);
     color: white;
     margin-bottom: 0.5em;
     border: none;
     width: fit-content;
     padding: 0.7em;
     cursor: pointer;
+    transition: 100ms;
+
+    &:focus-visible {
+        outline: 2px solid orange;
+        outline-offset: 2px;
+    }
+
+    &:hover, &:focus-visible {
+        box-shadow: 0 0 2px 1px #0009;
+        background-color: color-mix(in srgb, var(--background-color), #ffffff 30%);
+    }
+
+    &:active {
+        box-shadow: inset 0 0 3px 1px #0009;
+        background-color: color-mix(in srgb, var(--background-color), #000000 30%);
+    }
 }
 
 /* 
@@ -382,30 +399,42 @@ input[type="radio"] {
     margin-bottom: 15px;
 }
 
-div.personNode {
+.personNode {
     background-color: blue;
     background-repeat: no-repeat;
     background-size: contain;
+    position: relative;
+    overflow: hidden;
+
+    &.selected {
+        border: 2px solid orange;
+    }
 }
+
 div.postNode {
     background-color: red;
 }
-div.personNode.noFocus {
+
+.canvas-container:has(.personNode.selected) .personNode:not(.selected) {
     background-color: color-mix(in srgb, blue, #d9dfe2 50%);
-    /* filter:brightness(150%); */
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: #D9DFE2;
+        opacity: 50%;
+    }
+
+    &:hover {
+        &::after {
+            display: none;
+        }
+    }
 }
-div.personNode.focus{
-    border: solid 1px rgb(0, 0, 0);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
-}
-div.postNode.noFocus {
+
+div.postNode.selected {
     background-color: color-mix(in srgb, red, #d9dfe2 50%);
-}
-div.personNode.noFocus:hover {
-    background-color: blue;
-}
-div.postNode.noFocus:hover {
-    background-color: red;
 }
 
 div.followLink {
@@ -439,11 +468,11 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-#canvasContainer:has(div.personNode:hover) div.followLink {
+.canvas-container:has(div.personNode:hover) div.followLink {
     height: 2px;
     background-color: #00b000;
 }
-#canvasContainer:has(div.postNode:hover) div.followLink {
+.canvas-container:has(div.postNode:hover) div.followLink {
     height: 2px;
     background-color: #ff9900;
 }
