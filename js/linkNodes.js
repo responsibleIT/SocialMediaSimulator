@@ -227,7 +227,7 @@ function showPreLink(from) {
 
         let to = {
             x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
-            y: e.clientY - canvasRect.top,
+            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
         };
 
         let Ydifference = from.y - to.y;
