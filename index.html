@@ -10,6 +10,7 @@
         <main>
             <section id="controlPanel">
                 <h2 class="visually-hidden">Simulation container</h2>
+                <img src="images/logo.svg" alt="icon" class="logo" />
                 <div id="generalOptions" class="person">
                     <section>
                         <h3>Tools</h3>
@@ -62,7 +63,6 @@
 
                     <div class="vertical-line"></div>
 
-                    <<<<<<< HEAD
                     <section>
                         <h3>Automatic Tools</h3>
 
@@ -94,37 +94,20 @@
                     <div class="vertical-line"></div>
 
                     <section>
-                        <h3>Simulate</h3>
+                        <h3>Calculate</h3>
                         <button type="button" id="calcClosenessCentrality">
-                            Calculate Closeness Centrality
+                            Closeness Centrality
                         </button>
+                        <button type="button" id="calcGroups">Groups</button>
                     </section>
-                  
-                </div>
 
-                <div id="selectedNodeOptions" class="hide">
-                    <h3>Node Info <span></span></h3>
-                    <img src="" alt="" id="selectedNodeImage" />
-                    <!-- <p><strong id="selectedNodeId"></strong></p> -->
-                    <!-- <p>X: <span id="selectedNodeX"></span></p> -->
-                    <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
-                    <div>
-                        <p>Type: <span id="selectedNodeType"></span></p>
-                        <p>Username: <span id="selectedNodeUserName"></span></p>
-                        <p>
-                            Friends: <span id="selectedNodeUserFriends"></span>
-                        </p>
-                        <p>Popularity: <span id="totalPopularity"></span></p>
-                        <label
-                            >Increased Popularity
-                            <input
-                                type="number"
-                                id="nodePopularity"
-                                min="0"
-                                max="50"
-                        /></label>
-                    </div>
-                    <button type="button" id="deleteNode">Delete Node</button>
+                    <div class="vertical-line"></div>
+
+                    <section>
+                        <h3>Simulate</h3>
+                        <button type="button" id="step">Step</button>
+                        <button type="button" id="reset">Reset</button>
+                    </section>
                 </div>
 
                 <div class="legend">
@@ -136,6 +119,30 @@
                     </ul>
                 </div>
             </section>
+
+            <div id="selectedNodeOptions" class="hide">
+                <h3>Node Info <span></span></h3>
+                <img src="" alt="" id="selectedNodeImage" />
+                <!-- <p><strong id="selectedNodeId"></strong></p> -->
+                <!-- <p>X: <span id="selectedNodeX"></span></p> -->
+                <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
+                <div>
+                    <p>Type: <span id="selectedNodeType"></span></p>
+                    <p>Username: <span id="selectedNodeUserName"></span></p>
+                    <p>Friends: <span id="selectedNodeUserFriends"></span></p>
+                    <p>Popularity: <span id="totalPopularity"></span></p>
+                    <label
+                        >Increased Popularity
+                        <input
+                            type="number"
+                            id="nodePopularity"
+                            min="0"
+                            max="50"
+                    /></label>
+                </div>
+                <button type="button" id="deleteNode">Delete Node</button>
+            </div>
+
             <div id="canvasContainer" class="canvas-container">
                 <canvas id="nodeCanvas"></canvas>
                 <div id="nodeDataContainer" popover class="hide">

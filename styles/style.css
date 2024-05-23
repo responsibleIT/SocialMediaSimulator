@@ -38,7 +38,6 @@ button {
 }
 
 .label-with-icon img {
-    margin-right: 8px; /* Adjust spacing between the icon and the text */
     width: 24px; /* Adjust size as needed */
     height: 24px; /* Adjust size as needed */
 }
@@ -212,6 +211,7 @@ h3:nth-of-type(3) {
     column-width: 340px;
     grid-column: 1 / 3;
     grid-row: 1 / 2;
+    align-items: center;
 }
 
 #selectedNodeOptions {
@@ -359,7 +359,6 @@ button {
     --background-color: #0075ff;
     background-color: var(--background-color);
     color: white;
-    margin-bottom: 0.5em;
     border: none;
     width: fit-content;
     padding: 0.7em;
@@ -511,7 +510,8 @@ div.followLink {
 }
 
 .legend {
-    display: flex;
+    /* display: flex; */
+    display: none;
     flex-direction: column;
     padding: 1em;
     background-color: white;
@@ -556,4 +556,9 @@ div.followLink {
 
 .tools {
     display: flex;
+}
+
+.logo {
+    height: 2rem;
+    margin: 1rem;
 }
