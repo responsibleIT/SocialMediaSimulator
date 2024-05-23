@@ -11,7 +11,7 @@ const gridRange = { min: -1, max: 1 };
 // const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
 const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
-const standardPersonRadius = 8;
+const standardPersonRadius = 10;
 const standardPostRadius = 5;
 
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
@@ -116,9 +116,11 @@ function calculatePersonPopularity(numOfFriends, numOfInfoRefs) {
 
 // Function to set canvas size to window size
 function resizeCanvas() {
-    canvas.width = canvasContainer.clientWidth;
-    canvas.height = canvasContainer.clientHeight;
-    canvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
+    if (canvasSize.width < canvasContainer.clientWidth || canvasSize.height < canvasContainer.height) {
+        canvas.width = canvasContainer.clientWidth;
+        canvas.height = canvasContainer.clientHeight;
+        canvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
+    }
 }
 
 // Initial resize to set canvas size

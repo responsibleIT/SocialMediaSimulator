@@ -226,7 +226,7 @@ function showPreLink(from) {
         let canvasRect = canvasContainer.getBoundingClientRect();
 
         let to = {
-            x: e.clientX - canvasRect.left,
+            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
             y: e.clientY - canvasRect.top,
         };
 
