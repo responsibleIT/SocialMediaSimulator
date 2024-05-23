@@ -205,13 +205,13 @@ h3:nth-of-type(3) {
 
 #controlPanel {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     /* justify-content: center; */
     height: 100%;
     overflow: auto;
     column-width: 340px;
-    grid-column: 2/3;
-    grid-row: 1/3;
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
 }
 
 #selectedNodeOptions {
@@ -305,12 +305,13 @@ h3:nth-of-type(3) {
 
 #generalOptions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     /* border: 1px solid black; */
     padding: 1em;
     background-color: white;
     border-radius: 0.75rem;
     top: 0;
+    gap: 0.75em;
 }
 
 #generalOptions.hide {
@@ -394,7 +395,7 @@ div.personNode.noFocus {
     background-color: color-mix(in srgb, blue, #d9dfe2 50%);
     /* filter:brightness(150%); */
 }
-div.personNode.focus{
+div.personNode.focus {
     border: solid 1px rgb(0, 0, 0);
     box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
 }
@@ -455,7 +456,6 @@ input::-webkit-inner-spin-button {
     background-color: white;
     border-radius: 0.75rem;
     top: 0;
-    margin-top: 1em;
     & ul li {
         font-family: roboto;
         list-style: none;
@@ -484,3 +484,15 @@ input::-webkit-inner-spin-button {
     anchor-name: --menu;
 }
  */
+
+.vertical-line {
+    height: 100%;
+    width: 2px;
+    background-color: #d3d3d3;
+    align-self: center;
+    margin: 1rem;
+}
+
+.tools {
+    display: flex;
+}
