@@ -190,15 +190,19 @@ function addLink(from, to, type, linkElement) {
 
 //Function for selecting a node and highlight it and its data
 function selectNode(selectedNodeId) {
-    nodes.forEach((node, id) => {
-        if (selectedNodeId !== id) {
-            // node.nodeLabelRef.style.opacity = 0.5;
-            node.nodeLabelRef.classList.add("noFocus");
-        } else {
-            node.nodeLabelRef.classList.add("focus");
-        }
-    });
     const node = nodes.get(selectedNodeId);
+
+    node.nodeLabelRef.classList.add('selected');
+
+    // nodes.forEach((node, id) => {
+    //     if (selectedNodeId !== id) {
+    //         // node.nodeLabelRef.style.opacity = 0.5;
+    //         node.nodeLabelRef.classList.add("noFocus");
+    //     } else {
+    //         node.nodeLabelRef.classList.add("focus");
+    //     }
+    // });
+
     if (node.label === "Person") {
         showPreLink(node);
     }
@@ -217,17 +221,20 @@ function selectNode(selectedNodeId) {
 }
 let linkStripe;
 let mouseMoveHandler;
+let scrollMoveHandler;
 
 function showPreLink(from) {
     linkStripe = document.createElement("div");
     linkStripe.classList.add("followLink", "linkStripe");
-
+    let to;
+    let currentScrollY = 0;
+    let currentScrollX = 0;
     mouseMoveHandler = (e) => {
         let canvasRect = canvasContainer.getBoundingClientRect();
 
-        let to = {
-            x: e.clientX - canvasRect.left,
-            y: e.clientY - canvasRect.top,
+        to = {
+            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
+            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
         };
 
         let Ydifference = from.y - to.y;
@@ -242,7 +249,49 @@ function showPreLink(from) {
         linkStripe.style.top = from.y + "px";
         // console.log("From: x:", from.x, "y:", from.y, "To x:", to.x, "y:", to.y, linkStripe);
     };
+
+    scrollMoveHandler = () => {
+        if (currentScrollY < canvasContainer.scrollTop) {
+            console.log("to bottom");
+        } else if (currentScrollY > canvasContainer.scrollTop) {
+            console.log("to top");
+        } else if (currentScrollX > canvasContainer.scrollLeft) {
+            console.log("to right");
+        } else if (currentScrollX < canvasContainer.scrollLeft) {
+            console.log("to left");
+        }
+        let Ydifference = from.y - (to.y + canvasContainer.scrollTop);
+        let Xdifference = from.x - (to.x + canvasContainer.scrollLeft);
+
+        let linkLength = Math.sqrt(Math.pow(Ydifference, 2) + Math.pow(Xdifference, 2));
+        let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
+
+        linkStripe.style.width = linkLength + "px";
+        linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
+        linkStripe.style.left = from.x + "px";
+        linkStripe.style.top = from.y + "px";
+
+        // let Ydifference = 0;
+        // let Xdifference = 0;
+        // if (currentScrollY < canvasContainer.scrollTop) {
+        //     console.log("to bottom");
+        //     Ydifference = from.y - (to.y + canvasContainer.scrollTop);
+        // } else if (currentScrollY > canvasContainer.scrollTop) {
+        //     console.log("to top");
+        //     Ydifference = from.y - (to.y - canvasContainer.scrollTop);
+        // } else if (currentScrollX > canvasContainer.scrollLeft) {
+        //     console.log("to left");
+        //     Xdifference = from.x - (to.x - canvasContainer.scrollLeft);
+        // } else if (currentScrollX < canvasContainer.scrollLeft) {
+        //     console.log("to right");
+        //     Xdifference = from.x - (to.x + canvasContainer.scrollLeft);
+        // }
+        // console.log(Ydifference, Xdifference);
+        // currentScrollY = canvasContainer.scrollTop;
+        // currentScrollX = canvasContainer.scrollLeft;
+    };
     canvasContainer.addEventListener("mousemove", mouseMoveHandler);
+    canvasContainer.addEventListener("scroll", scrollMoveHandler);
 
     linkStripe.addEventListener("click", () => {
         canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
@@ -255,16 +304,13 @@ function showPreLink(from) {
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
-    nodes.forEach((node, id) => {
-        if (selectedNode !== id) {
-            node.nodeLabelRef.classList.remove("noFocus");
-        } else {
-            node.nodeLabelRef.classList.remove("focus");
-        }
-    });
+    const node = nodes.get(selectedNode);
+
+    node.nodeLabelRef.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
     canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
+    canvasContainer.removeEventListener("scroll", scrollMoveHandler);
     if (linkStripe) {
         linkStripe.remove();
     }

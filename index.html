@@ -8,7 +8,6 @@
     </head>
     <body>
         <main>
-            <!-- <h1>Social Network Simulation</h1> -->
             <section id="controlPanel">
                 <h2 class="visually-hidden">Simulation container</h2>
                 <div id="generalOptions" class="person">
@@ -63,6 +62,7 @@
 
                     <div class="vertical-line"></div>
 
+                    <<<<<<< HEAD
                     <section>
                         <h3>Automatic Tools</h3>
 
@@ -71,20 +71,17 @@
                                 Add people
                             </button>
 
-                            <button onclick="decreasePeople()" id="minPeople">
-                                -
-                            </button>
-                            <!-- <span id="people-count">0</span> Add people -->
-                            <input
-                                type="number"
-                                id="people-count"
-                                value="10"
-                                min="3"
-                                max="50"
-                            />
-                            <button onclick="increasePeople()" id="plusPeople">
-                                +
-                            </button>
+                            <div class="counter-input">
+                                <button tabindex="-1">–</button>
+                                <input
+                                    type="number"
+                                    id="people-count"
+                                    value="10"
+                                    min="3"
+                                    max="50"
+                                />
+                                <button tabindex="-1">+</button>
+                            </div>
 
                             <div class="vertical-line"></div>
 
@@ -102,6 +99,7 @@
                             Calculate Closeness Centrality
                         </button>
                     </section>
+                  
                 </div>
 
                 <div id="selectedNodeOptions" class="hide">
@@ -138,7 +136,7 @@
                     </ul>
                 </div>
             </section>
-            <div id="canvasContainer" style="position: relative">
+            <div id="canvasContainer" class="canvas-container">
                 <canvas id="nodeCanvas"></canvas>
                 <div id="nodeDataContainer" popover class="hide">
                     <p></p>
