@@ -9,7 +9,7 @@
     <body>
         <main>
             <h1>Social Network Simulation</h1>
-            <div id="canvasContainer" style="position: relative">
+            <div id="canvasContainer" class="canvas-container">
                 <canvas id="nodeCanvas"></canvas>
                 <div id="nodeDataContainer" popover class="hide">
                     <p></p>
@@ -58,24 +58,15 @@
                     </label>
 
                     <h3>Automatic Tools</h3>
-                    <div>
+                    <div class="coupled-inputs">
+                        <div class="counter-input">
+                            <button tabindex="-1">–</button>
+                            <input type="number" id="people-count" value="10" min="3" max="50" />
+                            <button tabindex="-1">+</button>
+                        </div>
+
                         <button type="button" id="addRandomPeopleButton">
                             Add people
-                        </button>
-
-                        <button onclick="decreasePeople()" id="minPeople">
-                            -
-                        </button>
-                        <!-- <span id="people-count">0</span> Add people -->
-                        <input
-                            type="number"
-                            id="people-count"
-                            value="10"
-                            min="3"
-                            max="50"
-                        />
-                        <button onclick="increasePeople()" id="plusPeople">
-                            +
                         </button>
                     </div>
 

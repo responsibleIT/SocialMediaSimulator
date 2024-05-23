@@ -190,15 +190,19 @@ function addLink(from, to, type, linkElement) {
 
 //Function for selecting a node and highlight it and its data
 function selectNode(selectedNodeId) {
-    nodes.forEach((node, id) => {
-        if (selectedNodeId !== id) {
-            // node.nodeLabelRef.style.opacity = 0.5;
-            node.nodeLabelRef.classList.add("noFocus");
-        } else {
-            node.nodeLabelRef.classList.add("focus");
-        }
-    });
     const node = nodes.get(selectedNodeId);
+
+    node.nodeLabelRef.classList.add('selected');
+
+    // nodes.forEach((node, id) => {
+    //     if (selectedNodeId !== id) {
+    //         // node.nodeLabelRef.style.opacity = 0.5;
+    //         node.nodeLabelRef.classList.add("noFocus");
+    //     } else {
+    //         node.nodeLabelRef.classList.add("focus");
+    //     }
+    // });
+
     if (node.label === "Person") {
         showPreLink(node);
     }
@@ -300,13 +304,9 @@ function showPreLink(from) {
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
-    nodes.forEach((node, id) => {
-        if (selectedNode !== id) {
-            node.nodeLabelRef.classList.remove("noFocus");
-        } else {
-            node.nodeLabelRef.classList.remove("focus");
-        }
-    });
+    const node = nodes.get(selectedNode);
+
+    node.nodeLabelRef.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
     canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
