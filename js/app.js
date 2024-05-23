@@ -41,29 +41,55 @@ const labelColors = {
     "Social Media Post": "red",
 };
 
-// Function to calc the number of people the user wants to add
-function updateCount(newCount) {
-    const countInput = document.getElementById('people-count');
-    countInput.value = newCount;
-}
 
-function increasePeople() {
-    const countInput = document.getElementById('people-count');
-    let count = parseInt(countInput.value);
-    if (count < countInput.max) {
-        count++;
-        updateCount(count);
-    }
-}
+const countInputs = document.querySelectorAll(".counter-input");
 
-function decreasePeople() {
-    const countInput = document.getElementById('people-count');
-    let count = parseInt(countInput.value);
-    if (count > countInput.min) {
-        count--;
-        updateCount(count);
-    }
-}
+countInputs.forEach(input => {
+    const increaseButton = input.children[2];
+    const decreaseButton = input.children[0];
+    const countInput = input.children[1];
+    let count = Number(countInput.value);
+    const minValue = countInput.min ? Number(countInput.min) : false;
+    const maxValue = countInput.max ? Number(countInput.max) : false;
+
+    increaseButton.addEventListener("click", () => {
+        count = Number(countInput.value);
+        if(count < maxValue) {
+            countInput.value = count + 1;
+        }
+    });
+
+    decreaseButton.addEventListener("click", () => {
+        count = Number(countInput.value);
+        if(count > minValue) {
+            countInput.value = count - 1;
+        }
+    });
+
+});
+// // Function to calc the number of people the user wants to add
+// function updateCount(newCount) {
+//     const countInput = document.getElementById('people-count');
+//     countInput.value = newCount;
+// }
+
+// function increasePeople() {
+//     const countInput = document.getElementById('people-count');
+//     let count = parseInt(countInput.value);
+//     if (count < countInput.max) {
+//         count++;
+//         updateCount(count);
+//     }
+// }
+
+// function decreasePeople() {
+//     const countInput = document.getElementById('people-count');
+//     let count = parseInt(countInput.value);
+//     if (count > countInput.min) {
+//         count--;
+//         updateCount(count);
+//     }
+// }
 
 // api picture and data
 
