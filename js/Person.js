@@ -161,14 +161,14 @@ export default class Person extends Node {
     }
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
-    spawnForwardButtons() {
-        let selectedNodeData = this;
+    spawnForwardButtons(links) {
+        const thisNode = this;
         //Get the node ids of every social media post that the selected person node has read
-        selectedNodeData.items.forEach((itemId) => {
+        this.items.forEach((item) => {
             let svgIcon = document.createElement("img");
             svgIcon.src = "../images/sns_icons_Send.svg";
             svgIcon.alt = "Forward";
-            let itemNodeData = nodes.get(itemId);
+            let itemNodeData = item;
             let forwardButton = document.createElement("button");
             forwardButton.classList.add("forwardButton");
             forwardButton.appendChild(svgIcon);
@@ -176,9 +176,10 @@ export default class Person extends Node {
             forwardButton.style.left = itemNodeData.x + "px";
             forwardButton.style.top = itemNodeData.y + "px";
             forwardButton.addEventListener("click", function () {
-                selectedNodeData.friends.forEach((friendId) => {
-                    addItemLink(friendId, itemId);
-                    addInfoLink(friendId, selectedNode);
+                // const friendsArray = this.friends;
+                thisNode.friends.forEach((friend) => {
+                    thisNode.addItemLink(item, friend, links);
+                    thisNode.addInfoLink(friend, thisNode, links);
                 });
             });
             canvasContainer.appendChild(forwardButton);
@@ -239,15 +240,16 @@ export default class Person extends Node {
     }
 
     //Function for adding an item link between the currently selected node and the node with the given id
-    addItemLink(item, itemId, links) {
-        console.log("addItemLink", this, item);
-        let currentlySelectedPerson = this;
+    addItemLink(item, from, links) {
+        console.log("addItemLink", from, item);
+        let currentlySelectedPerson = from;
         let currentEyedItem = item;
-        currentlySelectedPerson.items.set(itemId, item);
-        currentEyedItem.readers.set(this.id, this);
+        currentlySelectedPerson.items.set(item.id, item);
+        currentEyedItem.readers.set(from.id, from);
 
-        const link = new Edge(this, item, "itemlink");
-        link.drawLink(links, this.id, item.id);
+        const link = new Edge(from, item, "itemlink");
+        console.log(from, item);
+        link.drawLink(links, from.id, item.id);
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
@@ -271,15 +273,17 @@ export default class Person extends Node {
     }
 
     //Function for adding an info link between the currently selected node and the node with the given id
-    addInfoLink(from, to) {
-        console.log("addInfoLink");
-        let fromData = nodes.get(from);
-        let toData = nodes.get(to);
+    addInfoLink(from, to, links) {
+        // console.log(from, to);
+        from.infoLinks.set(to.id, to);
 
-        fromData.infolinks.push(to);
+        // console.log(from.infoLinks);
+        // console.log(from, this, to);
+        const link = new Edge(from, to, "infolink");
+        link.drawLink(links, from.id, to.id);
 
-        const linkElement = drawLink(fromData, toData, "infolink", 4);
-        addLink(from, to, "infolink", linkElement);
+        // const linkElement = this.drawLink(from, to, "infolink", 4);
+        // addLink(from, to, "infolink", linkElement);
 
         // resizeNodes(nodes);
     }

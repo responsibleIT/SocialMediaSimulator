@@ -162,9 +162,9 @@ export default class Node {
         console.log(this, node.items);
         if (node.items.get(this.id)) {
             console.log("REMOVE");
-            node.removeItemLink(this, this.id, links);
+            node.removeItemLink(this, node, links);
         } else {
-            node.addItemLink(this, this.id, links);
+            node.addItemLink(this, node, links);
         }
     }
 }

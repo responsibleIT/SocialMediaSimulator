@@ -439,7 +439,7 @@ function selectNode(selectedNodeId) {
 
     selectedNode = selectedNodeId;
     if (nodes.get(selectedNodeId).label === "Person") {
-        node.spawnForwardButtons();
+        node.spawnForwardButtons(links);
     }
 }
 
