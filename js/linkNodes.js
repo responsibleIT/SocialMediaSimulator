@@ -194,34 +194,18 @@ function selectNode(selectedNodeId) {
 
     node.nodeLabelRef.classList.add('selected');
 
-    // nodes.forEach((node, id) => {
-    //     if (selectedNodeId !== id) {
-    //         // node.nodeLabelRef.style.opacity = 0.5;
-    //         node.nodeLabelRef.classList.add("noFocus");
-    //     } else {
-    //         node.nodeLabelRef.classList.add("focus");
-    //     }
-    // });
-
     if (node.label === "Person") {
         showPreLink(node);
     }
 
-    // //Increase the thickness of the links of the selected node
-    // links.forEach((link) => {
-    //     if (link.from === selectedNodeId || link.to === selectedNodeId) {
-    //         link.thickness = 4;
-    //     }
-    // });
     selectedNode = selectedNodeId;
     if (nodes.get(selectedNodeId).label === "Person") {
         spawnForwardButtons();
     }
-    //redrawCanvas(); // Redraws the links
 }
-let linkStripe;
-let mouseMoveHandler;
-let scrollMoveHandler;
+// let linkStripe;
+// let mouseMoveHandler;
+// let scrollMoveHandler;
 
 function showPreLink(from) {
     linkStripe = document.createElement("div");
@@ -270,25 +254,6 @@ function showPreLink(from) {
         linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
         linkStripe.style.left = from.x + "px";
         linkStripe.style.top = from.y + "px";
-
-        // let Ydifference = 0;
-        // let Xdifference = 0;
-        // if (currentScrollY < canvasContainer.scrollTop) {
-        //     console.log("to bottom");
-        //     Ydifference = from.y - (to.y + canvasContainer.scrollTop);
-        // } else if (currentScrollY > canvasContainer.scrollTop) {
-        //     console.log("to top");
-        //     Ydifference = from.y - (to.y - canvasContainer.scrollTop);
-        // } else if (currentScrollX > canvasContainer.scrollLeft) {
-        //     console.log("to left");
-        //     Xdifference = from.x - (to.x - canvasContainer.scrollLeft);
-        // } else if (currentScrollX < canvasContainer.scrollLeft) {
-        //     console.log("to right");
-        //     Xdifference = from.x - (to.x + canvasContainer.scrollLeft);
-        // }
-        // console.log(Ydifference, Xdifference);
-        // currentScrollY = canvasContainer.scrollTop;
-        // currentScrollX = canvasContainer.scrollLeft;
     };
     canvasContainer.addEventListener("mousemove", mouseMoveHandler);
     canvasContainer.addEventListener("scroll", scrollMoveHandler);

@@ -1,14 +1,15 @@
 import Node from './Node.js';
+import Edge from './Edge.js';
 
-export default class Agent extends Node {
-	constructor(id, label, x, y, nodeElement, user) {
-		super(id, label, x, y, 8, nodeElement);
+export default class Person extends Node {
+	constructor(id, label, x, y, user) {
+		super(id, label, x, y, 8);
 		this.friends = new Map(); //Contains {friend: score} pairs
 		this.items = new Map(); //Contains {item: score} pairs
         this.infoLinks = new Map(); //Contains {infoLink: score} pairs
 		this.socialScore = 0.5; //Decides how social the agent is
-        this.profileImage = user.picture;
-        this.userName = user.login.username;
+        this.profileImage = user.image;
+        this.userName = user.username;
 	}
 
 	//Function for choosing a random social media post to read
@@ -154,51 +155,156 @@ export default class Agent extends Node {
 			}
 		});
 	}
-	
-	//Function for moving the agent to a new position
-	moveAgent(){
-		//Get all friends and infolinks with a score higher than 0
-		const positiveFriends = Array.from(this.friends.keys()).filter(friend => this.friends.get(friend) > 0);
-		const positiveInfoLinks = Array.from(this.infoLinks.keys()).filter(infoLink => this.infoLinks.get(infoLink) > 0);
 
-		//Get all items with a score higher than 0
-		const positiveItems = Array.from(this.items.keys()).filter(item => this.items.get(item) > 0);
-
-		//Calculate the average position of all friends, infolinks and items
-		let averageX = this.x;
-		let averageY = this.y;
-		positiveFriends.forEach(friend => {
-			averageX += friend.x;
-			averageY += friend.y;
-		});
-		positiveInfoLinks.forEach(infoLink => {
-			averageX += infoLink.x;
-			averageY += infoLink.y;
-		});
-		positiveItems.forEach(item => {
-			averageX += item.x;
-			averageY += item.y;
-		});
-		averageX = averageX / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
-		averageY = averageY / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
-
-		//Move the agent towards the average position
-		let dx = averageX - this.x;
-		let dy = averageY - this.y;
-		let distance = Math.sqrt(dx * dx + dy * dy);
-
-		if (distance > 0) {
-			this.x += dx / distance;
-			this.y += dy / distance;
-		}
+	//Function that spawns 'forward' buttons under each read social media post by the currently selected person node
+	spawnForwardButtons() {
+	    let selectedNodeData = this;
+	    //Get the node ids of every social media post that the selected person node has read
+	    selectedNodeData.items.forEach((itemId) => {
+	        let svgIcon = document.createElement("img");
+	        svgIcon.src = "../images/sns_icons_Send.svg";
+	        svgIcon.alt = "Forward";
+	        let itemNodeData = nodes.get(itemId);
+	        let forwardButton = document.createElement("button");
+	        forwardButton.classList.add("forwardButton");
+	        forwardButton.appendChild(svgIcon);
+	        forwardButton.style.position = "absolute";
+	        forwardButton.style.left = itemNodeData.x + "px";
+	        forwardButton.style.top = itemNodeData.y + "px";
+	        forwardButton.addEventListener("click", function () {
+	            selectedNodeData.friends.forEach((friendId) => {
+	                addItemLink(friendId, itemId);
+	                addInfoLink(friendId, selectedNode);
+	            });
+	        });
+	        canvasContainer.appendChild(forwardButton);
+	    });
 	}
 
-	//Function for performing all behaviors of the agent in one step
-	step() {
-		this.readSocialMediaPost();
-		this.forwardSocialMediaPost();
-		this.manageRelationships();
-		this.addFriendThroughContent();
-		this.moveAgent();
+	//Function to remove all forward buttons from the canvas
+	removeForwardButtons() {
+	    let forwardButtons = document.querySelectorAll(".forwardButton");
+	    forwardButtons.forEach((button) => {
+	        button.remove();
+	    });
 	}
+
+	//Function for adding a friend link between the currently selected node and the node with the given id
+	addFriend(node) {
+	    let currentlySelected = this;
+	    let toBeFriend = node;
+
+	    currentlySelected.friends.set(node.id, node);
+	    toBeFriend.friends.set(this.id, this);
+
+	    const link = new Edge(this, node, "friend");
+	    link.drawLink();
+	    // const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
+	    // addLink(from, to, "friend", linkElement);
+	    // resizeNodes(nodes);
+	}
+
+	removeFriend(node) {
+	    let personIdData = this;
+	    let friendIdData = node;
+
+	    let linkKey1 = personId + "-" + friendId;
+	    let linkKey2 = friendId + "-" + personId;
+
+	    let linkElement1 = links.get(linkKey1);
+	    let linkElement2 = links.get(linkKey2);
+
+	    if (linkElement1 !== undefined && linkElement1.linkElement !== undefined) {
+	        linkElement1.linkElement.remove();
+	    } else if (linkElement2 !== undefined && linkElement2.linkElement !== undefined) {
+	        linkElement2.linkElement.remove();
+	    } else {
+	        return;
+	    }
+
+	    personIdData.friends = personIdData.friends.filter((id) => id !== friendId);
+	    friendIdData.friends = friendIdData.friends.filter((id) => id !== personId);
+
+	    links.delete(linkKey1);
+	    links.delete(linkKey2);
+	    //redrawCanvas(); // Redraws the links
+	    resizeNodes(nodes);
+	}
+
+	//Function for adding an item link between the currently selected node and the node with the given id
+	addItemLink(person, item) {
+	    let currentlySelectedPerson = nodes.get(person);
+	    let currentEyedItem = nodes.get(item);
+
+	    currentlySelectedPerson.items.push(item);
+	    currentEyedItem.readers.push(person);
+
+	    const linkElement = drawLink(currentlySelectedPerson, currentEyedItem, "itemlink", 4);
+	    addLink(person, item, "itemlink", linkElement);
+
+	    resizeNodes(nodes);
+	}
+
+	//Function for removing an item link between the currently selected node and the node with the given id
+	removeItemLink(personId, itemId) {
+	    let personIdData = nodes.get(personId);
+	    let itemIdData = nodes.get(itemId);
+
+	    personIdData.items = personIdData.items.filter((id) => id !== itemId);
+	    itemIdData.readers = itemIdData.readers.filter((id) => id !== personId);
+
+	    links.get(personId + "-" + itemId).linkElement.remove();
+	    links.delete(personId + "-" + itemId);
+	    resizeNodes(nodes);
+	    //redrawCanvas(); // Redraws the links
+	}
+
+	//Function for adding an info link between the currently selected node and the node with the given id
+	addInfoLink(from, to) {
+	    let fromData = nodes.get(from);
+	    let toData = nodes.get(to);
+
+	    fromData.infolinks.push(to);
+
+	    const linkElement = drawLink(fromData, toData, "infolink", 4);
+	    addLink(from, to, "infolink", linkElement);
+
+	    resizeNodes(nodes);
+	}
+
+	//Function for removing an info link between the currently selected node and the node with the given id
+	removeInfoLink(from, to) {
+	    links.get(from + "-" + to).linkElement.remove();
+	    links.delete(`${from}-${to}`);
+	    resizeNodes(nodes);
+	    // redrawCanvas();
+	}
+
+	//Function for handling link actions
+    linkHandler(node) {
+    	console.log(node.label);
+        if (node.label === "Person") {
+            this.friendsHandler(node);
+        } else if (node.label === "Social Media Post") {
+            this.itemHandler(node.id);
+        }
+    }
+
+    //Function for handling friend actions
+    friendsHandler(node) {
+        if (this.friends.get(node.id)) {
+            this.removeFriend(node);
+        } else {
+            this.addFriend(node);
+        }
+    }
+
+    //Function for handling item actions
+    itemHandler(id) {
+        if (this.items.get(id)) {
+            this.removeItemLink(selectedNode, id);
+        } else {
+            this.addItemLink(selectedNode, id);
+        }
+    }
 }
