@@ -1,14 +1,17 @@
 export default class Edge {
-	constructor(from, to, type) {
-		this.from = from;
-		this.to = to;
-		this.type = type;
-		this.element = null;
-	}
+    constructor(from, to, type) {
+        this.from = from;
+        this.to = to;
+        this.type = type;
+        this.element = null;
+    }
 
-	drawLink() {
-	    let linkStripe = document.createElement("div");
-		console.log(linkStripe);
+    drawLink(links, name1, name2) {
+        let linkStripe = document.createElement("div");
+        this.element = linkStripe;
+        links.set(name1 + "-" + name2, this);
+        console.log("THIS ELEMENT", this.element);
+        console.log(linkStripe);
         linkStripe.className = "linkStripe";
         linkStripe.style.position = "absolute";
         linkStripe.style.height = "1px";
@@ -25,16 +28,16 @@ export default class Edge {
         linkStripe.style.left = this.from.x + "px";
         linkStripe.style.top = this.from.y + "px";
         console.log("TYPE", this.type);
-	    if (this.type === "itemlink") {
-	        linkStripe.classList.add("link-item");
-	    } else if (this.type === "friend") {
-	        linkStripe.classList.add("link-friend");
-	    } else if (this.type === "infolink") {
-	        linkStripe.classList.add("link-info");
-	    }
+        if (this.type === "itemlink") {
+            linkStripe.classList.add("link-item");
+        } else if (this.type === "friend") {
+            linkStripe.classList.add("link-friend");
+        } else if (this.type === "infolink") {
+            linkStripe.classList.add("link-info");
+        }
 
-	    canvasContainer.appendChild(linkStripe);
+        canvasContainer.appendChild(linkStripe);
 
-	    return linkStripe;
-	}
+        return linkStripe;
+    }
 }

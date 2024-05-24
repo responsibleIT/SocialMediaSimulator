@@ -134,35 +134,36 @@ export default class Node {
     }
 
     //Function for handling link actions
-    linkHandler(node) {
+    linkHandler(node, links) {
         if (this.label === "Person") {
-            this.friendsHandler(node);
+            this.friendsHandler(node, links);
         } else if (this.label === "Social Media Post") {
-            this.itemHandler(node);
+            this.itemHandler(node, links);
         }
     }
 
     //Function for handling friend actions
-    friendsHandler(node) {
+    friendsHandler(node, links) {
         console.log("friends handler");
         console.log(this.friends, node.id);
         if (this.friends.get(node.id)) {
             console.log("REMOVE");
-            this.removeFriend(node);
+            this.removeFriend(node, links);
         } else {
-            this.addFriend(node);
+            console.log(links);
+            this.addFriend(node, links);
         }
     }
 
     //Function for handling item actions
-    itemHandler(node) {
+    itemHandler(node, links) {
         console.log("items handler");
         console.log(this, node.items);
         if (node.items.get(this.id)) {
             console.log("REMOVE");
-            node.removeItemLink(this, this.id);
+            node.removeItemLink(this, this.id, links);
         } else {
-            node.addItemLink(this, this.id);
+            node.addItemLink(this, this.id, links);
         }
     }
 }

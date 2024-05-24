@@ -236,7 +236,8 @@ function drawRandom(label, count, userData) {
                         const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
                         const nodeHovered = nodes.get(hoveredNode);
                         const nodeSelected = nodes.get(selectedNode);
-                        nodeHovered.linkHandler(nodeSelected);
+                        console.log(links);
+                        nodeHovered.linkHandler(nodeSelected, links);
                 }
             });
         }
@@ -292,7 +293,7 @@ function drawRandom(label, count, userData) {
                         const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
                         const nodeHovered = nodes.get(hoveredNode);
                         const nodeSelected = nodes.get(selectedNode);
-                        nodeHovered.linkHandler(nodeSelected);
+                        nodeHovered.linkHandler(nodeSelected, links);
                 }
             });
         }
