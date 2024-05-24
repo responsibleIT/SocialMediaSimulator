@@ -1,7 +1,7 @@
 import Person from './Person.js';
 import Post from './Post.js';
 import Edge from './Edge.js';
-import Cursor from './Cursor.js';
+import Cursor from "./cursor.js";
 import fetchUsers from './api.js';
 
 const cursor = new Cursor();
@@ -200,29 +200,65 @@ function drawRandom(label, count, userData) {
         for (var i = 0; i < 10; i++) {
             var x = Math.random() * canvasSize.width;
             var y = Math.random() * canvasSize.height;
-            let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
+            const id = nodes.size;
+            const node = new Post(id, "Social Media Post", x, y);
 
-            addItemNode(nodes.size, label, x, y, [], nodeLabelRef);
+            node.addNodeLabel({ x, y }, id, label);
+            nodes.set(id, node);
+
+            node.element.addEventListener("mouseover", function () {
+                hoveredNode = node.id;
+                console.log("Data:", nodes.get(node.id));
+                if (nodes.get(node.id).label === "Person") {
+                    showNodeDataContainer(node.id, nodes.get(node.id));
+                }
+            });
+
+            node.element.addEventListener("mouseout", function () {
+                hoveredNode = null;
+                nodeDataContainer.style.display = "none";
+            });
+
+            node.element.addEventListener("click", function () {
+                //Check whether the node is a person node or a social media post node
+                switch (selectedNode) {
+                    case null:
+                        selectNode(node.id);
+                        showSelectedNodeOptions();
+                        generalOptions.classList.add("hide");
+                        break;
+                    case node.id:
+                        deselectNode(node.id);
+                        selectedNodeOptions.classList.add("hide");
+                        generalOptions.classList.remove("hide");
+                        break;
+                    default:
+                        const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
+                        const nodeHovered = nodes.get(hoveredNode);
+                        const nodeSelected = nodes.get(selectedNode);
+                        nodeHovered.linkHandler(nodeSelected);
+                }
+            });
         }
     } else {
         for (var i = 0; i < count; i++) {
-
             let node;
 
             const x = Math.random() * canvasSize.width;
             const y = Math.random() * canvasSize.height;
 
             const image = userData[i].image;
-            const username = userData[i].username
+            const username = userData[i].username;
 
             const id = nodes.size;
 
             if (label === "Person") {
-                node = new Person(id, "Person", x, y, {image, username});
+                node = new Person(id, "Person", x, y, { image, username });
                 nodes.set(nodes.size, node);
-            } else if (label === "Social Media Post") {
-                addItemNode(id, label, x, y, [], nodeLabelRef);
             }
+            // else if (label === "Social Media Post") {
+            //     addItemNode(id, label, x, y, [], nodeLabelRef);
+            // }
 
             node.addNodeLabel({ x, y }, id, label, image, username);
 
@@ -254,7 +290,7 @@ function drawRandom(label, count, userData) {
                         break;
                     default:
                         const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
-                        const nodeHovered  = nodes.get(hoveredNode);
+                        const nodeHovered = nodes.get(hoveredNode);
                         const nodeSelected = nodes.get(selectedNode);
                         nodeHovered.linkHandler(nodeSelected);
                 }
@@ -375,6 +411,7 @@ function showPreLink(from) {
     canvasContainer.addEventListener("scroll", scrollMoveHandler);
 
     linkStripe.addEventListener("click", () => {
+        console.log("CLICK");
         canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
         linkStripe.remove();
         deselectNode();
@@ -387,7 +424,7 @@ function showPreLink(from) {
 function selectNode(selectedNodeId) {
     const node = nodes.get(selectedNodeId);
 
-    node.element.classList.add('selected');
+    node.element.classList.add("selected");
 
     if (node.label === "Person") {
         showPreLink(node);
@@ -401,9 +438,10 @@ function selectNode(selectedNodeId) {
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
+    console.log("DESELECT");
     const node = nodes.get(selectedNode);
 
-    node.nodeLabelRef.classList.remove("selected");
+    node.element.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
     canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
@@ -418,7 +456,7 @@ function deselectNode() {
     // selectedNodeData.increasedPopularity = div.querySelector("label input").value;
 
     selectedNode = null;
-    removeForwardButtons();
+    node.removeForwardButtons();
     //redrawCanvas(); // Redraws the links
 }
 

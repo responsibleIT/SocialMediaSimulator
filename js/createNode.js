@@ -47,6 +47,7 @@ function addNodeLabel(mousePos, nodeId, label, image, username) {
     });
 
     nodeLabel.addEventListener("click", function () {
+        console.log("Clicked on node label");
         //Check whether the node is a person node or a social media post node
         switch (selectedNode) {
             case null:
