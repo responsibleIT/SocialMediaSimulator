@@ -5,7 +5,7 @@ export default class Node {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.nodeElement = null;
+        this.element = null;
         this.popularity = 0;
         this.increasedPopularity = 0;
     }
@@ -135,6 +135,7 @@ export default class Node {
 
     //Function for handling link actions
     linkHandler(node, links) {
+		console.log("linkhandler");
         if (this.label === "Person") {
             this.friendsHandler(node, links);
         } else if (this.label === "Social Media Post") {

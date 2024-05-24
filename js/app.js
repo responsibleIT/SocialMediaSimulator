@@ -185,13 +185,16 @@ function findAllConnectedComponents() {
 }
 
 function resizeNodes(nodes) {
+    console.log("RESIZE NODES", nodes);
     nodes.forEach((node, id) => {
         if (node.label === "Person") {
             node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
+            // console.log("PERSON POPU", node.popularity);
         } else if (node.label === "Social Media Post") {
             node.popularity = calculatePostPopularity(node.readers?.length || 0);
         }
-        node.nodeLabelRef.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
+        // console.log(node);
+        node.element.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
     });
 }
 
@@ -236,8 +239,9 @@ function drawRandom(label, count, userData) {
                         const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
                         const nodeHovered = nodes.get(hoveredNode);
                         const nodeSelected = nodes.get(selectedNode);
-                        console.log(links);
                         nodeHovered.linkHandler(nodeSelected, links);
+                        console.log("LINK");
+                        resizeNodes(nodes);
                 }
             });
         }
@@ -294,6 +298,7 @@ function drawRandom(label, count, userData) {
                         const nodeHovered = nodes.get(hoveredNode);
                         const nodeSelected = nodes.get(selectedNode);
                         nodeHovered.linkHandler(nodeSelected, links);
+                        resizeNodes(nodes);
                 }
             });
         }
@@ -349,7 +354,8 @@ function checkInfoLinkRefs(nodeId) {
     let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
     //Loop over all nodes in the map and check if the given node has an info link with them
     personNodes.forEach((node, id) => {
-        if (node.infolinks.includes(nodeId)) {
+        // console.log(node);
+        if (node.infoLinks.get(nodeId)) {
             refs.push(id);
         }
     });

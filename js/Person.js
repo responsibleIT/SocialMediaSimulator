@@ -235,7 +235,7 @@ export default class Person extends Node {
         links.delete(linkKey1);
         links.delete(linkKey2);
         //redrawCanvas(); // Redraws the links
-        resizeNodes(nodes);
+        // resizeNodes(nodes);
     }
 
     //Function for adding an item link between the currently selected node and the node with the given id
@@ -266,7 +266,7 @@ export default class Person extends Node {
         // console.log(links.get(personId + "-" + itemId));
         links.get(personId + "-" + itemId).element.remove();
         links.delete(personId + "-" + itemId);
-        resizeNodes(nodes);
+        // resizeNodes(nodes);
         //redrawCanvas(); // Redraws the links
     }
 
@@ -281,7 +281,7 @@ export default class Person extends Node {
         const linkElement = drawLink(fromData, toData, "infolink", 4);
         addLink(from, to, "infolink", linkElement);
 
-        resizeNodes(nodes);
+        // resizeNodes(nodes);
     }
 
     //Function for removing an info link between the currently selected node and the node with the given id
@@ -289,7 +289,7 @@ export default class Person extends Node {
         console.log("removeInfoLink");
         links.get(from + "-" + to).element.remove();
         links.delete(`${from}-${to}`);
-        resizeNodes(nodes);
+        // resizeNodes(nodes);
         // redrawCanvas();
     }
 }
