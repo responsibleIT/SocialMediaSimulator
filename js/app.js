@@ -90,9 +90,10 @@ calcClosenessCentrality.addEventListener("click", () => {
 });
 
 increasedPopularityInput.addEventListener("change", () => {
-    let selectedNodeData = nodes.get(selectedNode);
-    selectedNodeData.increasedPopularity = increasedPopularityInput.value;
+    // let selectedNodeData = nodes.get(selectedNode);
+    selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
+    showSelectedNodeOptions();
 });
 
 calcGroupsButton.addEventListener("click", () => {
@@ -185,7 +186,7 @@ function drawRandom(label, count, userData) {
             const id = nodes.size;
             const node = new Post(id, "Social Media Post", x, y);
 
-            node.addNodeLabel({ x, y }, id, label);
+            node.addNodeLabel({ x, y }, label);
             nodes.set(id, node);
 
             setEventListeners(node);
@@ -210,7 +211,7 @@ function drawRandom(label, count, userData) {
             //     addItemNode(id, label, x, y, [], nodeLabelRef);
             // }
 
-            node.addNodeLabel({ x, y }, id, label, image, username);
+            node.addNodeLabel({ x, y }, label, image, username);
 
             setEventListeners(node);
         }
@@ -235,13 +236,13 @@ async function spawnNode(evt) {
             const username = userData[0].username;
             node = new Person(nodeId, "Person", mousePos.x, mousePos.y, { image, username });
             nodes.set(nodes.size, node);
-            node.addNodeLabel(mousePos, nodeId, label, image, username); // Pass node ID to label function
+            node.addNodeLabel(mousePos, label, image, username); // Pass node ID to label function
             break;
         case "Social Media Post":
             var mousePos = getMousePosOnCanvas(canvas, evt);
             node = new Post(nodeId, "Social Media Post", mousePos.x, mousePos.y);
             nodes.set(nodes.size, node);
-            node.addNodeLabel(mousePos, nodeId, label);
+            node.addNodeLabel(mousePos, label);
             break;
         default:
             break;
@@ -266,27 +267,26 @@ function setEventListeners(node) {
         //Check whether the node is a person node or a social media post node
         switch (selectedNode) {
             case null:
-                selectNode(node.id);
+                selectNode(node);
                 showSelectedNodeOptions();
                 generalOptions.classList.add("hide");
                 break;
-            case node.id:
-                deselectNode(node.id);
+            case node:
+                deselectNode(node);
                 selectedNodeOptions.classList.add("hide");
                 generalOptions.classList.remove("hide");
                 break;
             default:
-                const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
                 const nodeHovered = nodes.get(hoveredNode);
-                const nodeSelected = nodes.get(selectedNode);
-                nodeHovered.linkHandler(nodeSelected, links);
+                nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
+                showSelectedNodeOptions();
         }
     });
 
     canvas.addEventListener("click", () => {
-        if (selectedNode === node.id) {
-            deselectNode(node.id);
+        if (selectedNode === node) {
+            deselectNode(node);
             selectedNodeOptions.classList.add("hide");
             generalOptions.classList.remove("hide");
         }
@@ -308,8 +308,10 @@ function getMousePosOnCanvas(canvas, evt) {
 //Showdata function to display the nodeDataContainer with therein the node data when hovering over it
 
 function showNodeDataContainer(nodeId, noteData) {
-    nodeDataContainer.children[0].innerHTML = "NodeId:" + nodeId;
-
+    nodeDataContainer.children[0].textContent = noteData.userName;
+    nodeDataContainer.children[1].src = noteData.profileImage;
+    nodeDataContainer.children[2].children[0].textContent = noteData.friends.size;
+    nodeDataContainer.children[2].children[2].textContent = noteData.popularity;
     nodeDataContainer.style.display = "grid";
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = noteData.x + 10 + "px";
@@ -319,17 +321,16 @@ function showNodeDataContainer(nodeId, noteData) {
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 // TODO can be written differently
 function showSelectedNodeOptions() {
-    let selectedNodeData = nodes.get(selectedNode);
     const div = document.querySelector("#selectedNodeOptions > div");
     const image = document.getElementById("selectedNodeImage");
 
-    image.src = selectedNodeData.image;
-    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
-    div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
+    image.src = selectedNode.profileImage;
+    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNode.label;
+    div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNode.username;
 
-    div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
-    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
-    div.querySelector("label input").value = selectedNodeData.increasedPopularity;
+    div.querySelector("p:nth-of-type(3) span").innerHTML = selectedNode.friends.size;
+    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
+    div.querySelector("label input").value = selectedNode.increasedPopularity;
 
     selectedNodeOptions.classList.remove("hide");
 }
@@ -408,24 +409,22 @@ function showPreLink(from) {
 }
 
 //Function for selecting a node and highlight it and its data
-function selectNode(selectedNodeId) {
-    const node = nodes.get(selectedNodeId);
-
+function selectNode(node) {
     node.element.classList.add("selected");
 
     if (node.label === "Person") {
         showPreLink(node);
     }
 
-    selectedNode = selectedNodeId;
-    if (nodes.get(selectedNodeId).label === "Person") {
+    selectedNode = node;
+    if (node.label === "Person") {
         node.spawnForwardButtons(links);
     }
 }
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
-    const node = nodes.get(selectedNode);
+    const node = selectedNode;
 
     node.element.classList.remove("selected");
 

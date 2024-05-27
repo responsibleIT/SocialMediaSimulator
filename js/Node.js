@@ -50,12 +50,10 @@ export default class Node {
 
     // Function to add a label to the node in the body of the page absolutely positioned on the exact position of the node on the screen
     // Add node label was the div above the drawn node
-    addNodeLabel(mousePos, nodeId, label, image, username) {
+    addNodeLabel(mousePos, label, image, username) {
         let nodeLabel = document.createElement("div");
         nodeLabel.className = "node";
         nodeLabel.style.position = "absolute";
-        const foundNodeData = this;
-
         let classList;
 
         switch (label) {
