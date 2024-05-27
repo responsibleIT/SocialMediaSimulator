@@ -67,10 +67,6 @@
                         <h3>Automatic Tools</h3>
 
                         <div class="tools">
-                            <button type="button" id="addRandomPeopleButton">
-                                Add people
-                            </button>
-
                             <div class="counter-input">
                                 <button tabindex="-1">–</button>
                                 <input
@@ -82,8 +78,22 @@
                                 />
                                 <button tabindex="-1">+</button>
                             </div>
+                            <button type="button" id="addRandomPeopleButton">
+                                Add people
+                            </button>
 
-                            <div class="vertical-line"></div>
+                            <!-- <div class="vertical-line"></div> -->
+                            <div class="counter-input">
+                                <button tabindex="-1">–</button>
+                                <input
+                                    type="number"
+                                    id="post-count"
+                                    value="10"
+                                    min="3"
+                                    max="50"
+                                />
+                                <button tabindex="-1">+</button>
+                            </div>
 
                             <button type="button" id="addRandomContentButton">
                                 Post content
@@ -105,8 +115,12 @@
 
                     <section>
                         <h3>Simulate</h3>
-                        <button type="button" id="step">Step</button>
-                        <button type="button" id="reset">Reset</button>
+                        <button type="button" id="step">
+                            <img src="./images/start.svg" /> Step
+                        </button>
+                        <button type="button" id="reset">
+                            <img src="./images/reset.svg" alt="resets" /> Reset
+                        </button>
                     </section>
                 </div>
 
@@ -120,28 +134,96 @@
                 </div>
             </section>
 
-            <div id="selectedNodeOptions" class="hide">
-                <h3>Node Info <span></span></h3>
-                <img src="" alt="" id="selectedNodeImage" />
-                <!-- <p><strong id="selectedNodeId"></strong></p> -->
-                <!-- <p>X: <span id="selectedNodeX"></span></p> -->
-                <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
-                <div>
-                    <p>Type: <span id="selectedNodeType"></span></p>
-                    <p>Username: <span id="selectedNodeUserName"></span></p>
-                    <p>Friends: <span id="selectedNodeUserFriends"></span></p>
-                    <p>Popularity: <span id="totalPopularity"></span></p>
-                    <label
-                        >Increased Popularity
-                        <input
-                            type="number"
-                            id="nodePopularity"
-                            min="0"
-                            max="50"
-                    /></label>
+            <div id="phone">
+                <img src="../images/phone2.png" alt="phone" id="phoneImage"/>
+                <div id="selectedNodeOptions" class="hide">
+                    <section id="mobileTop">
+                        <h2 aria-label="Fakebook">
+                            <img src="./images/fakebook-logo.svg" alt="" />
+                        </h2>
+                        <img src="./images/plusIcon.svg" alt="" id="addFriend" />
+                        <img src="./images/settings.svg" alt="" id="settings" />
+                    </section>
+    
+                    <section id="mobileSecond">
+                        <button>
+                            <img src="./images/chevron-left.svg" alt="arrow-left" />
+                        </button>
+                        <img src="" alt="" id="selectedNodeImage" />
+                        <button>
+                            <img
+                                src="./images/chevron-right.svg"
+                                alt="arrow-right"
+                            />
+                        </button>
+                    </section>
+    
+                    <section id="selectedProfile">
+                        <!-- <h3>Node Info <span></span></h3> -->
+    
+                        <!-- <p><strong id="selectedNodeId"></strong></p> -->
+                        <!-- <p>X: <span id="selectedNodeX"></span></p> -->
+                        <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
+                        <div>
+                            <!-- <p>Type: <span id="selectedNodeType"></span></p> -->
+                            <p>Victoria <span id="selectedNodeUserName"></span></p>
+                            <div id="userData">
+                                <span id="selectedNodeUserFriends">5</span>
+                                <span id="totalPopularity">2</span>
+                                <p>Friends</p>
+                                <p>Popularity</p>
+                            </div>
+    
+                            <label style="display: none"
+                                >Increased Popularity
+                                <input
+                                    type="number"
+                                    id="nodePopularity"
+                                    min="0"
+                                    max="50"
+                            /></label>
+                        </div>
+                    </section>
+    
+                    <section class="friends">
+                        <h3>Friends</h3>
+                        <hr />
+                        <ul>
+                            <li>
+                                <img
+                                    src="./images/reset.svg"
+                                    alt=""
+                                    id="selectedNodeFriendImage"
+                                />
+                                <p>Christiana</p>
+                                <div>
+                                    <button>Unfriend</button>
+                                    <span>.</span>
+                                    <button>Block</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <hr />
+                    </section>
+    
+                    <button type="button" id="deleteNode">Delete Node</button>
+                    <!-- <h3>Friends</h3> -->
+    
+                    <nav id="phoneFooter">
+                        <ul>
+                            <li>
+                                <img src="./images/like.svg" alt="like" />
+                            </li>
+                            <li><img src="./images/home.svg" alt="home" /></li>
+                            <li>
+                                <img src="./images/friends.svg" alt="like" />
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                <button type="button" id="deleteNode">Delete Node</button>
             </div>
+
+            
 
             <div id="canvasContainer" class="canvas-container">
                 <canvas id="nodeCanvas"></canvas>

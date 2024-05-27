@@ -202,8 +202,8 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
 
 // Add random node based on the given label
 function drawRandom(label, count, userData) {
-    if (count === null && userData === null) {
-        for (var i = 0; i < 10; i++) {
+    if (userData === null) {
+        for (var i = 0; i < count; i++) {
             var x = Math.random() * canvasSize.width;
             var y = Math.random() * canvasSize.height;
             let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
