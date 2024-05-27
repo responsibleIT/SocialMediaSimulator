@@ -352,31 +352,29 @@ function checkInfoLinkRefs(nodeId) {
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
+let canvasRect;
 
 function showPreLink(from) {
-    linkStripe = document.createElement("div");
-    linkStripe.classList.add("followLink", "linkStripe");
-    let to;
-    let currentScrollY = 0;
-    let currentScrollX = 0;
-    mouseMoveHandler = (e) => {
-        let canvasRect = canvasContainer.getBoundingClientRect();
+    // linkStripe = document.createElement("div");
+    // linkStripe.classList.add("followLink", "linkStripe");
+    canvasRect = canvasContainer.getBoundingClientRect();
+    let to = {
+        x: from.x,
+        y: from.y,
+    };
 
-        to = {
+    const link = new Edge(from, to, "pre-link");
+    link.drawLink();
+    linkStripe = link.element;
+    let toCursor = { x: 0, y: 0 };
+    mouseMoveHandler = (e) => {
+        canvasRect = canvasContainer.getBoundingClientRect();
+        link.to = {
             x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
             y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
         };
-
-        let Ydifference = from.y - to.y;
-        let Xdifference = from.x - to.x;
-
-        let linkLength = Math.sqrt(Math.pow(Ydifference, 2) + Math.pow(Xdifference, 2));
-        let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
-
-        linkStripe.style.width = linkLength + "px";
-        linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
-        linkStripe.style.left = from.x + "px";
-        linkStripe.style.top = from.y + "px";
+        link.calcAngle();
+        toCursor = link.to;
     };
 
     scrollMoveHandler = () => {
@@ -385,16 +383,13 @@ function showPreLink(from) {
         // } else if (currentScrollX > canvasContainer.scrollLeft) {
         // } else if (currentScrollX < canvasContainer.scrollLeft) {
         // }
-        let Ydifference = from.y - (to.y + canvasContainer.scrollTop);
-        let Xdifference = from.x - (to.x + canvasContainer.scrollLeft);
+        canvasRect = canvasContainer.getBoundingClientRect();
 
-        let linkLength = Math.sqrt(Math.pow(Ydifference, 2) + Math.pow(Xdifference, 2));
-        let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
-
-        linkStripe.style.width = linkLength + "px";
-        linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
-        linkStripe.style.left = from.x + "px";
-        linkStripe.style.top = from.y + "px";
+        link.to = {
+            x: toCursor.x + canvasContainer.scrollLeft,
+            y: toCursor.y + canvasContainer.scrollTop,
+        };
+        link.calcAngle();
     };
     canvasContainer.addEventListener("mousemove", mouseMoveHandler);
     canvasContainer.addEventListener("scroll", scrollMoveHandler);

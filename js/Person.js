@@ -196,14 +196,14 @@ export default class Person extends Node {
 
     //Function for adding a friend link between the currently selected node and the node with the given id
     addFriend(node, links) {
-        let currentlySelected = this;
         let toBeFriend = node;
 
-        currentlySelected.friends.set(node.id, node);
+        this.friends.set(node.id, node);
         toBeFriend.friends.set(this.id, this);
 
         const link = new Edge(this, node, "friend");
-        link.drawLink(links, this.id, node.id);
+        links.set(this.id + "-" + toBeFriend.id, link);
+        link.drawLink();
     }
 
     removeFriend(node, links) {
@@ -243,7 +243,8 @@ export default class Person extends Node {
         currentEyedItem.readers.set(from.id, from);
 
         const link = new Edge(from, item, "itemlink");
-        link.drawLink(links, from.id, item.id);
+        links.set(from.id + "-" + item.id, link);
+        link.drawLink();
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
@@ -265,7 +266,8 @@ export default class Person extends Node {
         from.infoLinks.set(to.id, to);
 
         const link = new Edge(from, to, "infolink");
-        link.drawLink(links, from.id, to.id);
+        links.set(from.id + "-" + to.id, link);
+        link.drawLink();
     }
 
     //Function for removing an info link between the currently selected node and the node with the given id
