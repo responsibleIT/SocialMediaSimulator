@@ -101,8 +101,11 @@ export default class Node {
     itemHandler(node, links) {
         if (node.items.get(this.id)) {
             node.removeItemLink(this, links);
+            node.removeForwardButtons();
+            node.spawnForwardButtons(links);
         } else {
             node.addItemLink(this, node, links);
+            node.spawnForwardButtons(links);
         }
     }
 }
