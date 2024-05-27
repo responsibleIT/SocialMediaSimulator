@@ -3,7 +3,7 @@ import Edge from './Edge.js';
 
 export default class Person extends Node {
     constructor(id, label, x, y, user) {
-        super(id, label, x, y, 8);
+        super(id, label, x, y, 10);
         this.friends = new Map(); //Contains {friend: score} pairs
         this.items = new Map(); //Contains {item: score} pairs
         this.infoLinks = new Map(); //Contains {infoLink: score} pairs
