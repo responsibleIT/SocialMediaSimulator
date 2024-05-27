@@ -55,14 +55,14 @@ countInputs.forEach(input => {
 
     increaseButton.addEventListener("click", () => {
         count = Number(countInput.value);
-        if(count < maxValue) {
+        if (count < maxValue) {
             countInput.value = count + 1;
         }
     });
 
     decreaseButton.addEventListener("click", () => {
         count = Number(countInput.value);
-        if(count > minValue) {
+        if (count > minValue) {
             countInput.value = count - 1;
         }
     });
@@ -80,14 +80,24 @@ randomPeopleButton.addEventListener("click", async () => {
 
     drawRandom("Person", count, userData);
 
-    // change image
-    // const image = document.getElementById(`image`);
-    // image.src = userData.image;
 });
-randomContentButton.addEventListener("click", () => {
-    // drawRandomSocialMediaPostNodes();
-    drawRandom("Social Media Post", null, null);
+
+// count the posts
+randomContentButton.addEventListener("click", async () => {
+    // drawRandomPersonNodes();
+    const count = document.getElementById("post-count").value;
+
+    let userData = await fetchUsers(count);
+    // console.log(userData);
+
+    drawRandom("Social Media Post", count, null);
+
 });
+
+// randomContentButton.addEventListener("click", () => {
+//     // drawRandomSocialMediaPostNodes();
+//     drawRandom("Social Media Post", null, null);
+// });
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
 });

@@ -202,8 +202,8 @@ function addItemNode(id, label, x, y, readers, nodeLabelRef, postRadius = standa
 
 // Add random node based on the given label
 function drawRandom(label, count, userData) {
-    if (count === null && userData === null) {
-        for (var i = 0; i < 10; i++) {
+    if (userData === null) {
+        for (var i = 0; i < count; i++) {
             var x = Math.random() * canvasSize.width;
             var y = Math.random() * canvasSize.height;
             let nodeLabelRef = addNodeLabel({ x, y }, nodes.size, label);
@@ -273,12 +273,12 @@ function showSelectedNodeOptions() {
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNodeData.image;
-    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
-    div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
+    // div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
+    // div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
 
-    div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
-    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
-    div.querySelector("label input").value = selectedNodeData.increasedPopularity;
+    // div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
+    // div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
+    // div.querySelector("label input").value = selectedNodeData.increasedPopularity;
 
     selectedNodeOptions.classList.remove("hide");
 }
