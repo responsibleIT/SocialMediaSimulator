@@ -188,10 +188,10 @@ function resizeNodes(nodes) {
     console.log("RESIZE NODES", nodes);
     nodes.forEach((node, id) => {
         if (node.label === "Person") {
-            node.popularity = calculatePersonPopularity(node.friends?.length || 0, checkInfoLinkRefs(id).length || 0);
+            node.popularity = calculatePersonPopularity(node.friends?.size || 0, checkInfoLinkRefs(id).size || 0);
             // console.log("PERSON POPU", node.popularity);
         } else if (node.label === "Social Media Post") {
-            node.popularity = calculatePostPopularity(node.readers?.length || 0);
+            node.popularity = calculatePostPopularity(node.readers?.size || 0);
         }
         // console.log(node);
         node.element.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
@@ -240,7 +240,6 @@ function drawRandom(label, count, userData) {
                         const nodeHovered = nodes.get(hoveredNode);
                         const nodeSelected = nodes.get(selectedNode);
                         nodeHovered.linkHandler(nodeSelected, links);
-                        console.log("LINK");
                         resizeNodes(nodes);
                 }
             });

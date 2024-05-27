@@ -205,7 +205,7 @@ export default class Person extends Node {
         const link = new Edge(this, node, "friend");
         console.log(links, this.id, node.id);
         link.drawLink(links, this.id, node.id);
-        // const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
+         // const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
         // addLink(from, to, "friend", linkElement);
         // resizeNodes(nodes);
     }
@@ -248,7 +248,7 @@ export default class Person extends Node {
         currentEyedItem.readers.set(from.id, from);
 
         const link = new Edge(from, item, "itemlink");
-        console.log(from, item);
+        // console.log(from, item);
         link.drawLink(links, from.id, item.id);
     }
 
