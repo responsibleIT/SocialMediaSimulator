@@ -82,60 +82,9 @@ export default class Node {
         return nodeLabel;
     }
 
-    //Function to spawn a node on the canvas given the position of the cursor
-    async spawnNode(evt) {
-        // console.log(addPersonCheckbox, addSocialMediaPostCheckbox.checked); // Hoe kan ie m vinden
-        let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
-
-        if (label === "") {
-            return;
-        }
-
-        let nodeLabelRef;
-        let nodeId = nodes.size;
-        var mousePos = getMousePosOnCanvas(canvas, evt);
-        console.log(label);
-        switch (label) {
-            case "Person":
-                // drawNode(mousePos.x, mousePos.y, label);
-                let userData = await fetchUsers(1);
-                const image = userData[0].image;
-                const username = userData[0].username;
-
-                nodeLabelRef = addNodeLabel(mousePos, nodeId, label, image, username); // Pass node ID to label function
-
-                nodeId = nodes.size;
-                addPersonNode(
-                    nodeId,
-                    label,
-                    mousePos.x,
-                    mousePos.y,
-                    [],
-                    [],
-                    [],
-                    nodeLabelRef,
-                    (personRadius = standardPersonRadius),
-                    (popularity = 0),
-                    (increasedPopularity = 0),
-                    image,
-                    username
-                );
-                break;
-            case "Social Media Post":
-                var mousePos = getMousePosOnCanvas(canvas, evt);
-                // drawNode(mousePos.x, mousePos.y, label);
-                nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
-                nodeId = nodes.size;
-                addItemNode(nodeId, label, mousePos.x, mousePos.y, [], nodeLabelRef);
-                break;
-            default:
-                break;
-        }
-    }
-
     //Function for handling link actions
     linkHandler(node, links) {
-		console.log("linkhandler");
+        console.log("linkhandler");
         if (this.label === "Person") {
             this.friendsHandler(node, links);
         } else if (this.label === "Social Media Post") {
@@ -162,9 +111,158 @@ export default class Node {
         console.log(this, node.items);
         if (node.items.get(this.id)) {
             console.log("REMOVE");
-            node.removeItemLink(this, node, links);
+            node.removeItemLink(this, links);
         } else {
             node.addItemLink(this, node, links);
         }
     }
+
+    // setEventListeners(hoveredNode, selectedNode, links, nodes) {
+    //     this.element.addEventListener("mouseover", function () {
+    //         hoveredNode = this.id;
+    //         // console.log("Data:", nodes.get(this.id));
+    //         if (this.label === "Person") {
+    //             this.showNodeDataContainer();
+    //         }
+    //     });
+
+    //     this.element.addEventListener("mouseout", function () {
+    //         hoveredNode = null;
+    //         nodeDataContainer.style.display = "none";
+    //     });
+
+    //     this.element.addEventListener("click", function () {
+    //         //Check whether the node is a person node or a social media post node
+    //         switch (selectedNode) {
+    //             case null:
+    //                 this.selectNode();
+    //                 this.showSelectedNodeOptions();
+    //                 generalOptions.classList.add("hide");
+    //                 break;
+    //             case this:
+    //                 this.deselectNode(selectedNode, this.id);
+    //                 selectedNodeOptions.classList.add("hide");
+    //                 generalOptions.classList.remove("hide");
+    //                 break;
+    //             default:
+    //                 const type = this.label === "Person" ? "friend" : "item";
+    //                 this.linkHandler(this, links);
+    //                 resizeNodes(nodes);
+    //         }
+    //     });
+
+    //     nodeCanvas.addEventListener("click", () => {
+    //         if (selectedNode === this.id) {
+    //             this.deselectNode();
+    //             selectedNodeOptions.classList.add("hide");
+    //             generalOptions.classList.remove("hide");
+    //         }
+    //     });
+    // }
+
+    // showNodeDataContainer() {
+    //     nodeDataContainer.children[0].innerHTML = "NodeId:" + this.id;
+    //     nodeDataContainer.style.display = "grid";
+    //     //Move the nodeDataContainer to the position of the node label
+    //     nodeDataContainer.style.left = this.x + 10 + "px";
+    //     nodeDataContainer.style.top = this.y + 10 + "px";
+    // }
+
+    // //Function for selecting a node and highlight it and its data
+    // selectNode() {
+    //     this.element.classList.add("selected");
+
+    //     if (this.label === "Person") {
+    //         this.showPreLink();
+    //     }
+
+    //     selectedNode = selectedNodeId;
+    //     if (nodes.get(this.id).label === "Person") {
+    //         this.spawnForwardButtons(links);
+    //     }
+    // }
+
+    // //Function for deselecting a node and remove the highlight
+    // deselectNode(selectedNode) {
+    //     console.log("DESELECT");
+
+    //     this.element.classList.remove("selected");
+
+    //     // Assuming that mouseMoveHandler is now a named function
+    //     canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
+    //     canvasContainer.removeEventListener("scroll", scrollMoveHandler);
+    //     if (linkStripe) {
+    //         linkStripe.remove();
+    //     }
+
+    //     selectedNodeOptions.classList.add("hide");
+    //     // let selectedNodeData = nodes.get(selectedNode);
+    //     // const div = document.querySelector("#selectedNodeOptions > div");
+    //     // selectedNodeData.increasedPopularity = div.querySelector("label input").value;
+
+    //     selectedNode = null;
+    //     this.removeForwardButtons();
+    //     //redrawCanvas(); // Redraws the links
+    // }
+
+    // showPreLink() {
+    //     linkStripe = document.createElement("div");
+    //     linkStripe.classList.add("followLink", "linkStripe");
+    //     let to;
+    //     let currentScrollY = 0;
+    //     let currentScrollX = 0;
+    //     mouseMoveHandler = (e) => {
+    //         let canvasRect = canvasContainer.getBoundingClientRect();
+
+    //         to = {
+    //             x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
+    //             y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
+    //         };
+
+    //         let Ydifference = this.y - to.y;
+    //         let Xdifference = this.x - to.x;
+
+    //         let linkLength = Math.sqrt(Math.pow(Ydifference, 2) + Math.pow(Xdifference, 2));
+    //         let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
+
+    //         linkStripe.style.width = linkLength + "px";
+    //         linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
+    //         linkStripe.style.left = this.x + "px";
+    //         linkStripe.style.top = this.y + "px";
+    //         // console.log("From: x:", from.x, "y:", from.y, "To x:", to.x, "y:", to.y, linkStripe);
+    //     };
+
+    //     scrollMoveHandler = () => {
+    //         if (currentScrollY < canvasContainer.scrollTop) {
+    //             console.log("to bottom");
+    //         } else if (currentScrollY > canvasContainer.scrollTop) {
+    //             console.log("to top");
+    //         } else if (currentScrollX > canvasContainer.scrollLeft) {
+    //             console.log("to right");
+    //         } else if (currentScrollX < canvasContainer.scrollLeft) {
+    //             console.log("to left");
+    //         }
+    //         let Ydifference = this.y - (to.y + canvasContainer.scrollTop);
+    //         let Xdifference = this.x - (to.x + canvasContainer.scrollLeft);
+
+    //         let linkLength = Math.sqrt(Math.pow(Ydifference, 2) + Math.pow(Xdifference, 2));
+    //         let linkAngle = Math.atan2(Ydifference, Xdifference) + Math.PI;
+
+    //         linkStripe.style.width = linkLength + "px";
+    //         linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
+    //         linkStripe.style.left = this.x + "px";
+    //         linkStripe.style.top = this.y + "px";
+    //     };
+    //     canvasContainer.addEventListener("mousemove", mouseMoveHandler);
+    //     canvasContainer.addEventListener("scroll", scrollMoveHandler);
+
+    //     linkStripe.addEventListener("click", () => {
+    //         console.log("CLICK");
+    //         canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
+    //         linkStripe.remove();
+    //         this.deselectNode();
+    //     });
+
+    //     canvasContainer.appendChild(linkStripe);
+    // }
 }

@@ -205,7 +205,7 @@ export default class Person extends Node {
         const link = new Edge(this, node, "friend");
         console.log(links, this.id, node.id);
         link.drawLink(links, this.id, node.id);
-         // const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
+        // const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
         // addLink(from, to, "friend", linkElement);
         // resizeNodes(nodes);
     }
@@ -253,23 +253,18 @@ export default class Person extends Node {
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
-    removeItemLink(item, itemId, links) {
-        console.log("removeItemLink");
+    removeItemLink(item, links) {
+        console.log("removeItemLink", item, this);
         const personId = this.id;
 
         let personIdData = this;
         let itemIdData = item;
 
-        personIdData.items.delete(itemId);
+        personIdData.items.delete(item.id);
         itemIdData.readers.delete(personId);
-        // personIdData.items = personIdData.items.filter((id) => id !== itemId);
-        // itemIdData.readers = itemIdData.readers.filter((id) => id !== personId);
-        // console.log(links, personId + "-" + itemId);
-        // console.log(links.get(personId + "-" + itemId));
-        links.get(personId + "-" + itemId).element.remove();
-        links.delete(personId + "-" + itemId);
-        // resizeNodes(nodes);
-        //redrawCanvas(); // Redraws the links
+
+        links.get(personId + "-" + item.id).element.remove();
+        links.delete(personId + "-" + item.id);
     }
 
     //Function for adding an info link between the currently selected node and the node with the given id

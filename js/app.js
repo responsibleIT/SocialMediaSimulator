@@ -100,7 +100,7 @@ deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
 });
 canvas.addEventListener("click", (event) => {
-    //spawnNode(event);
+    spawnNode(event);
 });
 calcClosenessCentrality.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
@@ -209,40 +209,7 @@ function drawRandom(label, count, userData) {
             node.addNodeLabel({ x, y }, id, label);
             nodes.set(id, node);
 
-            node.element.addEventListener("mouseover", function () {
-                hoveredNode = node.id;
-                console.log("Data:", nodes.get(node.id));
-                if (nodes.get(node.id).label === "Person") {
-                    showNodeDataContainer(node.id, nodes.get(node.id));
-                }
-            });
-
-            node.element.addEventListener("mouseout", function () {
-                hoveredNode = null;
-                nodeDataContainer.style.display = "none";
-            });
-
-            node.element.addEventListener("click", function () {
-                //Check whether the node is a person node or a social media post node
-                switch (selectedNode) {
-                    case null:
-                        selectNode(node.id);
-                        showSelectedNodeOptions();
-                        generalOptions.classList.add("hide");
-                        break;
-                    case node.id:
-                        deselectNode(node.id);
-                        selectedNodeOptions.classList.add("hide");
-                        generalOptions.classList.remove("hide");
-                        break;
-                    default:
-                        const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
-                        const nodeHovered = nodes.get(hoveredNode);
-                        const nodeSelected = nodes.get(selectedNode);
-                        nodeHovered.linkHandler(nodeSelected, links);
-                        resizeNodes(nodes);
-                }
-            });
+            setEventListeners(node);
         }
     } else {
         for (var i = 0; i < count; i++) {
@@ -266,43 +233,105 @@ function drawRandom(label, count, userData) {
 
             node.addNodeLabel({ x, y }, id, label, image, username);
 
-            node.element.addEventListener("mouseover", function () {
-                hoveredNode = node.id;
-                console.log("Data:", nodes.get(node.id));
-                if (nodes.get(node.id).label === "Person") {
-                    showNodeDataContainer(node.id, nodes.get(node.id));
-                }
-            });
-
-            node.element.addEventListener("mouseout", function () {
-                hoveredNode = null;
-                nodeDataContainer.style.display = "none";
-            });
-
-            node.element.addEventListener("click", function () {
-                //Check whether the node is a person node or a social media post node
-                switch (selectedNode) {
-                    case null:
-                        selectNode(node.id);
-                        showSelectedNodeOptions();
-                        generalOptions.classList.add("hide");
-                        break;
-                    case node.id:
-                        deselectNode(node.id);
-                        selectedNodeOptions.classList.add("hide");
-                        generalOptions.classList.remove("hide");
-                        break;
-                    default:
-                        const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
-                        const nodeHovered = nodes.get(hoveredNode);
-                        const nodeSelected = nodes.get(selectedNode);
-                        nodeHovered.linkHandler(nodeSelected, links);
-                        resizeNodes(nodes);
-                }
-            });
+            setEventListeners(node);
         }
     }
 }
+
+//Function to spawn a node on the canvas given the position of the cursor
+async function spawnNode(evt) {
+    // console.log(addPersonCheckbox, addSocialMediaPostCheckbox.checked); // Hoe kan ie m vinden
+    let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
+
+    if (label === "") {
+        return;
+    }
+
+    let nodeLabelRef;
+    let nodeId = nodes.size;
+    var mousePos = getMousePosOnCanvas(canvas, evt);
+    let node;
+    console.log(label);
+    switch (label) {
+        case "Person":
+            // drawNode(mousePos.x, mousePos.y, label);
+            let userData = await fetchUsers(1);
+            const image = userData[0].image;
+            const username = userData[0].username;
+            // const id = nodes.size;
+            node = new Person(nodeId, "Person", mousePos.x, mousePos.y, { image, username });
+
+            nodes.set(nodes.size, node);
+
+            node.addNodeLabel(mousePos, nodeId, label, image, username); // Pass node ID to label function
+
+            break;
+        case "Social Media Post":
+            var mousePos = getMousePosOnCanvas(canvas, evt);
+
+            // const id = nodes.size;
+            node = new Post(nodeId, "Social Media Post", mousePos.x, mousePos.y);
+            nodes.set(nodes.size, node);
+
+            node.addNodeLabel(mousePos, nodeId, label);
+
+            // drawNode(mousePos.x, mousePos.y, label);
+            // nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
+            // nodeId = nodes.size;
+            // addItemNode(nodeId, label, mousePos.x, mousePos.y, [], nodeLabelRef);
+            break;
+        default:
+            break;
+    }
+
+    setEventListeners(node);
+}
+
+function setEventListeners(node) {
+    node.element.addEventListener("mouseover", function () {
+        hoveredNode = node.id;
+        console.log("Data:", nodes.get(node.id));
+        if (nodes.get(node.id).label === "Person") {
+            showNodeDataContainer(node.id, nodes.get(node.id));
+        }
+    });
+
+    node.element.addEventListener("mouseout", function () {
+        hoveredNode = null;
+        nodeDataContainer.style.display = "none";
+    });
+
+    node.element.addEventListener("click", function () {
+        //Check whether the node is a person node or a social media post node
+        switch (selectedNode) {
+            case null:
+                selectNode(node.id);
+                showSelectedNodeOptions();
+                generalOptions.classList.add("hide");
+                break;
+            case node.id:
+                deselectNode(node.id);
+                selectedNodeOptions.classList.add("hide");
+                generalOptions.classList.remove("hide");
+                break;
+            default:
+                const type = nodes.get(hoveredNode).label === "Person" ? "friend" : "item";
+                const nodeHovered = nodes.get(hoveredNode);
+                const nodeSelected = nodes.get(selectedNode);
+                nodeHovered.linkHandler(nodeSelected, links);
+                resizeNodes(nodes);
+        }
+    });
+
+    canvas.addEventListener("click", () => {
+        if (selectedNode === node.id) {
+            deselectNode(node.id);
+            selectedNodeOptions.classList.add("hide");
+            generalOptions.classList.remove("hide");
+        }
+    });
+}
+
 
 //Function to get the position of the cursor on the canvas
 // This is needed to place the nodes based on where you click
