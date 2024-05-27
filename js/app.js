@@ -1,8 +1,8 @@
-import Person from './Person.js';
-import Post from './Post.js';
-import Edge from './Edge.js';
+import Person from "./Person.js";
+import Post from "./Post.js";
+import Edge from "./Edge.js";
 import Cursor from "./cursor.js";
-import fetchUsers from './api.js';
+import fetchUsers from "./api.js";
 
 const cursor = new Cursor();
 
@@ -73,8 +73,9 @@ randomPeopleButton.addEventListener("click", async () => {
     drawRandom("Person", count, userData);
 });
 
-randomContentButton.addEventListener("click", () => {
-    drawRandom("Social Media Post", null, null);
+randomContentButton.addEventListener("click", async () => {
+    const count = document.getElementById("post-count").value;
+    drawRandom("Social Media Post", count, null);
 });
 
 deleteNodeButton.addEventListener("click", () => {
@@ -179,7 +180,7 @@ function resizeNodes(nodes) {
 }
 
 function drawRandom(label, count, userData) {
-    if (count === null && userData === null) {
+    if (userData === null) {
         for (var i = 0; i < 10; i++) {
             var x = Math.random() * canvasSize.width;
             var y = Math.random() * canvasSize.height;
@@ -197,7 +198,6 @@ function drawRandom(label, count, userData) {
 
             const x = Math.random() * canvasSize.width;
             const y = Math.random() * canvasSize.height;
-
             const image = userData[i].image;
             const username = userData[i].username;
 

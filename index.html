@@ -8,100 +8,120 @@
     </head>
     <body>
         <main>
-            <h1>Social Network Simulation</h1>
-            <div id="canvasContainer" class="canvas-container">
-                <canvas id="nodeCanvas"></canvas>
-                <div id="nodeDataContainer" popover class="hide">
-                    <p></p>
-                    <img src="" alt="">
-                    <p>Friends:<span class="friendsSpan">1</span><span class="dot">and</span>Popularity:<span class="popularitySpan">2</span></p>                </div>
-            </div>
-
             <section id="controlPanel">
                 <h2 class="visually-hidden">Simulation container</h2>
+                <img src="images/logo.svg" alt="icon" class="logo" />
                 <div id="generalOptions" class="person">
-                    <h3>Tools</h3>
-                    <!-- radio button for empty state, don't add a person or post. Just use the mouse as usual -->
-                    <label for="emptyStateCheckbox" class="label-with-icon"
-                        ><input
-                            type="radio"
-                            id="emptyStateCheckbox"
-                            name="group1"
-                            checked
-                            value="select"
-                        />
-                        <img src="images/sns_icons_Select.svg" alt="icon" />
-                        Select</label
-                    >
+                    <section>
+                        <h3>Tools</h3>
+                        <!-- radio button for empty state, don't add a person or post. Just use the mouse as usual -->
+                        <div class="tools">
+                            <label
+                                for="emptyStateCheckbox"
+                                class="label-with-icon"
+                                ><input
+                                    type="radio"
+                                    id="emptyStateCheckbox"
+                                    name="group1"
+                                    checked
+                                    value="select"
+                                />
+                                <img
+                                    src="images/sns_icons_Select.svg"
+                                    alt="icon"
+                                />
+                            </label>
 
-                    <label for="addPersonCheckbox" class="label-with-icon"
-                        ><input
-                            type="radio"
-                            id="addPersonCheckbox"
-                            name="group1"
-                            value="add-person"
-
-                        /><img src="images/sns_icons_User.svg" alt="icon" />
-                        Add person</label                    >
-                    <label
-                        for="addSocialMediaPostCheckbox"
-                        class="label-with-icon"
-                    >
-                        <input
-                            type="radio"
-                            id="addSocialMediaPostCheckbox"
-                            name="group1"
-                            value="add-post"
-                        />
-                        <img src="images/sns_icons_Post.svg" alt="icon" />
-                        Add Post
-                    </label>
-
-                    <h3>Automatic Tools</h3>
-                    <div class="coupled-inputs">
-                        <div class="counter-input">
-                            <button tabindex="-1">–</button>
-                            <input type="number" id="people-count" value="10" min="3" max="50" />
-                            <button tabindex="-1">+</button>
+                            <label
+                                for="addPersonCheckbox"
+                                class="label-with-icon"
+                                ><input
+                                    type="radio"
+                                    id="addPersonCheckbox"
+                                    name="group1"
+                                    value="add-person" /><img
+                                    src="images/sns_icons_User.svg"
+                                    alt="icon"
+                            /></label>
+                            <label
+                                for="addSocialMediaPostCheckbox"
+                                class="label-with-icon"
+                            >
+                                <input
+                                    type="radio"
+                                    id="addSocialMediaPostCheckbox"
+                                    name="group1"
+                                    value="add-post"
+                                />
+                                <img
+                                    src="images/sns_icons_Post.svg"
+                                    alt="icon"
+                                />
+                            </label>
                         </div>
+                    </section>
 
-                        <button type="button" id="addRandomPeopleButton">
-                            Add people
+                    <div class="vertical-line"></div>
+
+                    <section>
+                        <h3>Automatic Tools</h3>
+
+                        <div class="tools">
+                            <div class="counter-input">
+                                <button tabindex="-1">–</button>
+                                <input
+                                    type="number"
+                                    id="people-count"
+                                    value="10"
+                                    min="3"
+                                    max="50"
+                                />
+                                <button tabindex="-1">+</button>
+                            </div>
+                            <button type="button" id="addRandomPeopleButton">
+                                Add people
+                            </button>
+
+                            <!-- <div class="vertical-line"></div> -->
+                            <div class="counter-input">
+                                <button tabindex="-1">–</button>
+                                <input
+                                    type="number"
+                                    id="post-count"
+                                    value="10"
+                                    min="3"
+                                    max="50"
+                                />
+                                <button tabindex="-1">+</button>
+                            </div>
+
+                            <button type="button" id="addRandomContentButton">
+                                Post content
+                            </button>
+                        </div>
+                    </section>
+
+                    <div class="vertical-line"></div>
+
+                    <section>
+                        <h3>Calculate</h3>
+                        <button type="button" id="calcClosenessCentrality">
+                            Closeness Centrality
                         </button>
-                    </div>
+                        <button type="button" id="calcGroups">Groups</button>
+                    </section>
 
-                    <button type="button" id="addRandomContentButton">
-                        Post content
-                    </button>
+                    <div class="vertical-line"></div>
 
-                    <h3>Simulate</h3>
-                    <button type="button" id="calcClosenessCentrality">
-                        Calculate Closeness Centrality
-                    </button>
-                    <button type="button" id="calcGroups">Calculate Groups</button>
-                </div>
-
-                <div id="selectedNodeOptions" class="hide">
-                    <h3>Node Info <span></span></h3>
-                    <img src="" alt="" id="selectedNodeImage" />
-                    <!-- <p><strong id="selectedNodeId"></strong></p> -->
-                    <!-- <p>X: <span id="selectedNodeX"></span></p> -->
-                    <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
-                    <div>
-                        <p>Type: <span id="selectedNodeType"></span></p>
-                        <p>Username: <span id="selectedNodeUserName"></span></p>
-                        <p>Friends: <span id="selectedNodeUserFriends"></span></p>
-                        <p>Popularity: <span id="totalPopularity"></span></p>
-                        <label
-                            >Increased Popularity
-                            <input
-                                type="number"
-                                id="nodePopularity"
-                                min="0"
-                                max="50"
-                        /></label>
-                    </div>
-                    <button type="button" id="deleteNode">Delete Node</button>
+                    <section>
+                        <h3>Simulate</h3>
+                        <button type="button" id="step">
+                            <img src="./images/start.svg" /> Step
+                        </button>
+                        <button type="button" id="reset">
+                            <img src="./images/reset.svg" alt="resets" /> Reset
+                        </button>
+                    </section>
                 </div>
 
                 <div class="legend">
@@ -113,6 +133,119 @@
                     </ul>
                 </div>
             </section>
+
+            <div id="phone">
+                <img src="../images/phone.png" alt="phone" id="phoneImage" />
+                <div id="selectedNodeOptions" class="hide">
+                    <section id="mobileTop">
+                        <h2 aria-label="Fakebook">
+                            <img src="./images/fakebook-logo.svg" alt="" />
+                        </h2>
+                        <img
+                            src="./images/plusIcon.svg"
+                            alt=""
+                            id="addFriend"
+                        />
+                        <img src="./images/settings.svg" alt="" id="settings" />
+                    </section>
+
+                    <section id="mobileSecond">
+                        <button>
+                            <img
+                                src="./images/chevron-left.svg"
+                                alt="arrow-left"
+                            />
+                        </button>
+                        <img src="" alt="" id="selectedNodeImage" />
+                        <button>
+                            <img
+                                src="./images/chevron-right.svg"
+                                alt="arrow-right"
+                            />
+                        </button>
+                    </section>
+
+                    <section id="selectedProfile">
+                        <!-- <h3>Node Info <span></span></h3> -->
+
+                        <!-- <p><strong id="selectedNodeId"></strong></p> -->
+                        <!-- <p>X: <span id="selectedNodeX"></span></p> -->
+                        <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
+                        <div>
+                            <!-- <p>Type: <span id="selectedNodeType"></span></p> -->
+                            <p>
+                                Victoria <span id="selectedNodeUserName"></span>
+                            </p>
+                            <div id="userData">
+                                <span id="selectedNodeUserFriends">5</span>
+                                <span id="totalPopularity">2</span>
+                                <p>Friends</p>
+                                <p>Popularity</p>
+                            </div>
+
+                            <label style="display: none"
+                                >Increased Popularity
+                                <input
+                                    type="number"
+                                    id="nodePopularity"
+                                    min="0"
+                                    max="50"
+                            /></label>
+                        </div>
+                    </section>
+
+                    <section class="friends">
+                        <h3>Friends</h3>
+                        <hr />
+                        <ul>
+                            <li>
+                                <img
+                                    src="./images/reset.svg"
+                                    alt=""
+                                    id="selectedNodeFriendImage"
+                                />
+                                <p>Christiana</p>
+                                <div>
+                                    <button>Unfriend</button>
+                                    <span>.</span>
+                                    <button>Block</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <hr />
+                    </section>
+
+                    <button type="button" id="deleteNode">Delete Node</button>
+                    <!-- <h3>Friends</h3> -->
+
+                    <nav id="phoneFooter">
+                        <ul>
+                            <li>
+                                <img src="./images/like.svg" alt="like" />
+                            </li>
+                            <li><img src="./images/home.svg" alt="home" /></li>
+                            <li>
+                                <img src="./images/friends.svg" alt="like" />
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div id="canvasContainer" class="canvas-container">
+                <canvas id="nodeCanvas"></canvas>
+                <div id="nodeDataContainer" popover class="hide">
+                    <p></p>
+                    <img src="" alt="" />
+                    <p>
+                        Friends:<span class="friendsSpan">1</span
+                        ><span class="dot">and</span>Popularity:<span
+                            class="popularitySpan"
+                            >2</span
+                        >
+                    </p>
+                </div>
+            </div>
         </main>
         <script src="js/app.js" type="module"></script>
         <!-- <script src="js/createNode.js" defer></script>
