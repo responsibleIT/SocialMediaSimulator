@@ -9,19 +9,14 @@ const cursor = new Cursor();
 // const socket = new WebSocket('ws://localhost:8765');
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
-const ctx = canvas.getContext("2d"); // Only used now for the links
 let canvasSize = { width: canvas.width, height: canvas.height };
 
 const nodeDataContainer = document.getElementById("nodeDataContainer");
 nodeDataContainer.style.display = "none";
-const gridRange = { min: -1, max: 1 };
 // const addPersonCheckbox = document.getElementById("addPersonCheckbox");
 // const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
 const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
-const standardPersonRadius = 10;
-const standardPostRadius = 5;
-
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
 const deleteNodeButton = document.getElementById("deleteNode");
@@ -44,16 +39,10 @@ let selectedNode = null;
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
 
-//Node colours in rgba format (blue, red) with 100% opacity
-const labelColors = {
-    Person: "blue",
-    "Social Media Post": "red",
-};
-
 // function for counter inputs
 const countInputs = document.querySelectorAll(".counter-input");
 
-countInputs.forEach(input => {
+countInputs.forEach((input) => {
     const increaseButton = input.children[2];
     const decreaseButton = input.children[0];
     const countInput = input.children[1];
@@ -63,45 +52,39 @@ countInputs.forEach(input => {
 
     increaseButton.addEventListener("click", () => {
         count = Number(countInput.value);
-        if(count < maxValue) {
+        if (count < maxValue) {
             countInput.value = count + 1;
         }
     });
 
     decreaseButton.addEventListener("click", () => {
         count = Number(countInput.value);
-        if(count > minValue) {
+        if (count > minValue) {
             countInput.value = count - 1;
         }
     });
-
 });
 
 // api picture and data
 
 randomPeopleButton.addEventListener("click", async () => {
-    // drawRandomPersonNodes();
     const count = document.getElementById("people-count").value;
-
     let userData = await fetchUsers(count);
-    console.log(userData);
-
     drawRandom("Person", count, userData);
-
-    // change image
-    // const image = document.getElementById(`image`);
-    // image.src = userData.image;
 });
+
 randomContentButton.addEventListener("click", () => {
-    // drawRandomSocialMediaPostNodes();
     drawRandom("Social Media Post", null, null);
 });
+
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
 });
+
 canvas.addEventListener("click", (event) => {
     spawnNode(event);
 });
+
 calcClosenessCentrality.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
 });
@@ -133,7 +116,6 @@ function resizeCanvas() {
         canvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     }
 }
-
 // Initial resize to set canvas size
 resizeCanvas();
 
@@ -185,15 +167,12 @@ function findAllConnectedComponents() {
 }
 
 function resizeNodes(nodes) {
-    console.log("RESIZE NODES", nodes);
     nodes.forEach((node, id) => {
         if (node.label === "Person") {
             node.popularity = calculatePersonPopularity(node.friends?.size || 0, checkInfoLinkRefs(id).size || 0);
-            // console.log("PERSON POPU", node.popularity);
         } else if (node.label === "Social Media Post") {
             node.popularity = calculatePostPopularity(node.readers?.size || 0);
         }
-        // console.log(node);
         node.element.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
     });
 }
@@ -240,57 +219,39 @@ function drawRandom(label, count, userData) {
 
 //Function to spawn a node on the canvas given the position of the cursor
 async function spawnNode(evt) {
-    // console.log(addPersonCheckbox, addSocialMediaPostCheckbox.checked); // Hoe kan ie m vinden
     let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
 
     if (label === "") {
         return;
     }
 
-    let nodeLabelRef;
     let nodeId = nodes.size;
     var mousePos = getMousePosOnCanvas(canvas, evt);
     let node;
-    console.log(label);
     switch (label) {
         case "Person":
-            // drawNode(mousePos.x, mousePos.y, label);
             let userData = await fetchUsers(1);
             const image = userData[0].image;
             const username = userData[0].username;
-            // const id = nodes.size;
             node = new Person(nodeId, "Person", mousePos.x, mousePos.y, { image, username });
-
             nodes.set(nodes.size, node);
-
             node.addNodeLabel(mousePos, nodeId, label, image, username); // Pass node ID to label function
-
             break;
         case "Social Media Post":
             var mousePos = getMousePosOnCanvas(canvas, evt);
-
-            // const id = nodes.size;
             node = new Post(nodeId, "Social Media Post", mousePos.x, mousePos.y);
             nodes.set(nodes.size, node);
-
             node.addNodeLabel(mousePos, nodeId, label);
-
-            // drawNode(mousePos.x, mousePos.y, label);
-            // nodeLabelRef = addNodeLabel(mousePos, nodeId, label); // Pass node ID to label function
-            // nodeId = nodes.size;
-            // addItemNode(nodeId, label, mousePos.x, mousePos.y, [], nodeLabelRef);
             break;
         default:
             break;
     }
-
     setEventListeners(node);
 }
 
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        console.log("Data:", nodes.get(node.id));
         if (nodes.get(node.id).label === "Person") {
             showNodeDataContainer(node.id, nodes.get(node.id));
         }
@@ -331,8 +292,6 @@ function setEventListeners(node) {
         }
     });
 }
-
-
 //Function to get the position of the cursor on the canvas
 // This is needed to place the nodes based on where you click
 function getMousePosOnCanvas(canvas, evt) {
@@ -382,7 +341,6 @@ function checkInfoLinkRefs(nodeId) {
     let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
     //Loop over all nodes in the map and check if the given node has an info link with them
     personNodes.forEach((node, id) => {
-        // console.log(node);
         if (node.infoLinks.get(nodeId)) {
             refs.push(id);
         }
@@ -418,19 +376,14 @@ function showPreLink(from) {
         linkStripe.style.transform = "translateY(-50%) rotate(" + linkAngle + "rad)";
         linkStripe.style.left = from.x + "px";
         linkStripe.style.top = from.y + "px";
-        // console.log("From: x:", from.x, "y:", from.y, "To x:", to.x, "y:", to.y, linkStripe);
     };
 
     scrollMoveHandler = () => {
-        if (currentScrollY < canvasContainer.scrollTop) {
-            console.log("to bottom");
-        } else if (currentScrollY > canvasContainer.scrollTop) {
-            console.log("to top");
-        } else if (currentScrollX > canvasContainer.scrollLeft) {
-            console.log("to right");
-        } else if (currentScrollX < canvasContainer.scrollLeft) {
-            console.log("to left");
-        }
+        // if (currentScrollY < canvasContainer.scrollTop) {
+        // } else if (currentScrollY > canvasContainer.scrollTop) {
+        // } else if (currentScrollX > canvasContainer.scrollLeft) {
+        // } else if (currentScrollX < canvasContainer.scrollLeft) {
+        // }
         let Ydifference = from.y - (to.y + canvasContainer.scrollTop);
         let Xdifference = from.x - (to.x + canvasContainer.scrollLeft);
 
@@ -446,7 +399,6 @@ function showPreLink(from) {
     canvasContainer.addEventListener("scroll", scrollMoveHandler);
 
     linkStripe.addEventListener("click", () => {
-        console.log("CLICK");
         canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
         linkStripe.remove();
         deselectNode();
@@ -473,7 +425,6 @@ function selectNode(selectedNodeId) {
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
-    console.log("DESELECT");
     const node = nodes.get(selectedNode);
 
     node.element.classList.remove("selected");
@@ -486,13 +437,8 @@ function deselectNode() {
     }
 
     selectedNodeOptions.classList.add("hide");
-    // let selectedNodeData = nodes.get(selectedNode);
-    // const div = document.querySelector("#selectedNodeOptions > div");
-    // selectedNodeData.increasedPopularity = div.querySelector("label input").value;
-
     selectedNode = null;
     node.removeForwardButtons();
-    //redrawCanvas(); // Redraws the links
 }
 
 //Function for performing all behaviors of the agent in one step
@@ -520,8 +466,6 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
-
-    console.log(centralities);
 }
 
 //Function for calculating the shortest paths between all nodes

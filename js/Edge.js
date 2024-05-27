@@ -10,8 +10,6 @@ export default class Edge {
         let linkStripe = document.createElement("div");
         this.element = linkStripe;
         links.set(name1 + "-" + name2, this);
-        console.log("THIS ELEMENT", this.element);
-        console.log(linkStripe);
         linkStripe.className = "linkStripe";
         linkStripe.style.position = "absolute";
         linkStripe.style.height = "1px";
@@ -27,7 +25,6 @@ export default class Edge {
 
         linkStripe.style.left = this.from.x + "px";
         linkStripe.style.top = this.from.y + "px";
-        console.log("TYPE", this.type);
         if (this.type === "itemlink") {
             linkStripe.classList.add("link-item");
         } else if (this.type === "friend") {

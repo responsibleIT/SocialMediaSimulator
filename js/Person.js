@@ -203,11 +203,7 @@ export default class Person extends Node {
         toBeFriend.friends.set(this.id, this);
 
         const link = new Edge(this, node, "friend");
-        console.log(links, this.id, node.id);
         link.drawLink(links, this.id, node.id);
-        // const linkElement = drawLink(currentlySelected, toBeFriend, "friend", 4);
-        // addLink(from, to, "friend", linkElement);
-        // resizeNodes(nodes);
     }
 
     removeFriend(node, links) {
@@ -241,20 +237,17 @@ export default class Person extends Node {
 
     //Function for adding an item link between the currently selected node and the node with the given id
     addItemLink(item, from, links) {
-        console.log("addItemLink", from, item);
         let currentlySelectedPerson = from;
         let currentEyedItem = item;
         currentlySelectedPerson.items.set(item.id, item);
         currentEyedItem.readers.set(from.id, from);
 
         const link = new Edge(from, item, "itemlink");
-        // console.log(from, item);
         link.drawLink(links, from.id, item.id);
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
     removeItemLink(item, links) {
-        console.log("removeItemLink", item, this);
         const personId = this.id;
 
         let personIdData = this;
@@ -269,26 +262,15 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links) {
-        // console.log(from, to);
         from.infoLinks.set(to.id, to);
 
-        // console.log(from.infoLinks);
-        // console.log(from, this, to);
         const link = new Edge(from, to, "infolink");
         link.drawLink(links, from.id, to.id);
-
-        // const linkElement = this.drawLink(from, to, "infolink", 4);
-        // addLink(from, to, "infolink", linkElement);
-
-        // resizeNodes(nodes);
     }
 
     //Function for removing an info link between the currently selected node and the node with the given id
     removeInfoLink(from, to, links) {
-        console.log("removeInfoLink");
         links.get(from + "-" + to).element.remove();
         links.delete(`${from}-${to}`);
-        // resizeNodes(nodes);
-        // redrawCanvas();
     }
 }
