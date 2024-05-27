@@ -327,18 +327,38 @@ h3:nth-of-type(3) {
 
 .linkStripe {
     transform-origin: center left;
+    height: 1px;
+
+    &.info-link {
+        background-color: #0075ff;
+    }
+
+    &.friend-link {
+        background-color: #00b000;
+
+    }
+
+    &.item-link {
+        background-color: #ff9900;
+    }
+
+    &.pre-link {
+        background-color: #999;
+    }
 }
 
-.link-info {
-    background-color: #0075ff;
+.canvas-container:has(.personNode:hover) {
+    & .pre-link {
+        background-color: #00b000;
+        height: 2px;
+    }
 }
 
-.link-friend {
-    background-color: #00b000;
-}
-
-.link-item {
-    background-color: #ff9900;
+.canvas-container:has(.postNode:hover) {
+    & .pre-link {
+        background-color: #ff9900;
+        height: 2px;
+    }
 }
 
 header {
@@ -490,15 +510,6 @@ div.followLink {
         outline: 2px solid orange;
         outline-offset: 2px;
     }
-}
-
-.canvas-container:has(div.personNode:hover) div.followLink {
-    height: 2px;
-    background-color: #00b000;
-}
-.canvas-container:has(div.postNode:hover) div.followLink {
-    height: 2px;
-    background-color: #ff9900;
 }
 
 .legend {

@@ -201,7 +201,7 @@ export default class Person extends Node {
         this.friends.set(node.id, node);
         toBeFriend.friends.set(this.id, this);
 
-        const link = new Edge(this, node, "friend");
+        const link = new Edge(this, node, "friend-link");
         links.set(this.id + "-" + toBeFriend.id, link);
         link.drawLink();
     }
@@ -242,7 +242,7 @@ export default class Person extends Node {
         currentlySelectedPerson.items.set(item.id, item);
         currentEyedItem.readers.set(from.id, from);
 
-        const link = new Edge(from, item, "itemlink");
+        const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
         link.drawLink();
     }
@@ -265,7 +265,7 @@ export default class Person extends Node {
     addInfoLink(from, to, links) {
         from.infoLinks.set(to.id, to);
 
-        const link = new Edge(from, to, "infolink");
+        const link = new Edge(from, to, "info-link");
         links.set(from.id + "-" + to.id, link);
         link.drawLink();
     }

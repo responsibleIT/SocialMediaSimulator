@@ -11,19 +11,10 @@ export default class Edge {
         this.element = linkStripe;
         linkStripe.className = "linkStripe";
         linkStripe.style.position = "absolute";
-        linkStripe.style.height = "1px";
 
         this.calcAngle();
 
-        if (this.type === "itemlink") {
-            linkStripe.classList.add("link-item");
-        } else if (this.type === "friend") {
-            linkStripe.classList.add("link-friend");
-        } else if (this.type === "infolink") {
-            linkStripe.classList.add("link-info");
-        } else if (this.type === "pre-link") {
-            linkStripe.classList.add("followLink", "linkStripe");
-        }
+        linkStripe.classList.add(this.type);
 
         canvasContainer.appendChild(linkStripe);
 

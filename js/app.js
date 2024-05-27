@@ -355,8 +355,6 @@ let scrollMoveHandler;
 let canvasRect;
 
 function showPreLink(from) {
-    // linkStripe = document.createElement("div");
-    // linkStripe.classList.add("followLink", "linkStripe");
     canvasRect = canvasContainer.getBoundingClientRect();
     let to = {
         x: from.x,
