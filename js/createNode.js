@@ -273,12 +273,12 @@ function showSelectedNodeOptions() {
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNodeData.image;
-    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
-    div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
+    // div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNodeData.label;
+    // div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNodeData.username;
 
-    div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
-    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
-    div.querySelector("label input").value = selectedNodeData.increasedPopularity;
+    // div.querySelector("p:nth-of-type(3) span").innerHTML = "No friends";
+    // div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNodeData.popularity) + Number(selectedNodeData.increasedPopularity);
+    // div.querySelector("label input").value = selectedNodeData.increasedPopularity;
 
     selectedNodeOptions.classList.remove("hide");
 }
