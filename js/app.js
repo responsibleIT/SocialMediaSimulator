@@ -181,7 +181,7 @@ function resizeNodes(nodes) {
 
 function drawRandom(label, count, userData) {
     if (userData === null) {
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < count; i++) {
             var x = Math.random() * canvasSize.width;
             var y = Math.random() * canvasSize.height;
             const id = nodes.size;
