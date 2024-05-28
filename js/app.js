@@ -1,25 +1,29 @@
-// const socket = new WebSocket('ws://localhost:8765');
+import Person from "./Person.js";
+import Post from "./Post.js";
+import Edge from "./Edge.js";
+import Cursor from "./cursor.js";
+import fetchUsers from "./api.js";
+
+const cursor = new Cursor();
+
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
-const ctx = canvas.getContext("2d"); // Only used now for the links
 let canvasSize = { width: canvas.width, height: canvas.height };
-
 const nodeDataContainer = document.getElementById("nodeDataContainer");
 nodeDataContainer.style.display = "none";
-const gridRange = { min: -1, max: 1 };
-// const addPersonCheckbox = document.getElementById("addPersonCheckbox");
-// const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
 const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
-const standardPersonRadius = 10;
-const standardPostRadius = 5;
-
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
 const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
+const countInputs = document.querySelectorAll(".counter-input");
+let linkStripe;
+let mouseMoveHandler;
+let scrollMoveHandler;
+let canvasRect;
 
 //Global map of nodes
 let nodes = new Map();
@@ -27,25 +31,21 @@ let nodes = new Map();
 //Global map of links
 let links = new Map();
 
-//Global map of node labels
-let nodeLabelMap = new Map();
-
 //Variable to keep track of which node is selected
 let selectedNode = null;
 
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
 
-//Node colours in rgba format (blue, red) with 100% opacity
-const labelColors = {
-    Person: "blue",
-    "Social Media Post": "red",
-};
+// Initial resize to set canvas size
+resizeCanvas();
+
+///////////////////////////
+///// Event listeners /////
+///////////////////////////
 
 // function for counter inputs
-const countInputs = document.querySelectorAll(".counter-input");
-
-countInputs.forEach(input => {
+countInputs.forEach((input) => {
     const increaseButton = input.children[2];
     const decreaseButton = input.children[0];
     const countInput = input.children[1];
@@ -66,63 +66,62 @@ countInputs.forEach(input => {
             countInput.value = count - 1;
         }
     });
-
 });
-
-// api picture and data
 
 randomPeopleButton.addEventListener("click", async () => {
-    // drawRandomPersonNodes();
     const count = document.getElementById("people-count").value;
-
     let userData = await fetchUsers(count);
-    console.log(userData);
-
     drawRandom("Person", count, userData);
-
 });
 
-// count the posts
 randomContentButton.addEventListener("click", async () => {
-    // drawRandomPersonNodes();
     const count = document.getElementById("post-count").value;
-
-    let userData = await fetchUsers(count);
-    // console.log(userData);
-
     drawRandom("Social Media Post", count, null);
-
 });
 
-// randomContentButton.addEventListener("click", () => {
-//     // drawRandomSocialMediaPostNodes();
-//     drawRandom("Social Media Post", null, null);
-// });
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
 });
+
 canvas.addEventListener("click", (event) => {
     spawnNode(event);
 });
+
 calcClosenessCentrality.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
 });
 
 increasedPopularityInput.addEventListener("change", () => {
-    let selectedNodeData = nodes.get(selectedNode);
-    selectedNodeData.increasedPopularity = increasedPopularityInput.value;
+    // let selectedNodeData = nodes.get(selectedNode);
+    selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
+    showSelectedNodeOptions();
 });
 
 calcGroupsButton.addEventListener("click", () => {
     findAllConnectedComponents();
 });
 
-//Function for calculating social media post popularity based on the number of readers
+// Add event listener for window resize
+window.addEventListener("resize", resizeCanvas);
+
+///////////////////////////
+//////// Functions ////////
+///////////////////////////
+
+/**
+ * Function to calculate the popularity of the post
+ * @param {Number} numOfReaders - number of readers of the post
+ */
 function calculatePostPopularity(numOfReaders) {
     return numOfReaders * 1.5;
 }
-//Function for calculating popularity based on the number of friends and info links
+
+/**
+ * Function for calculating popularity of the person based on the number of friends and info-links
+ * @param {Number} numOfFriends - number of friends of the person
+ * @param {Number} numOfInfoRefs - number of info-links of the person
+ */
 function calculatePersonPopularity(numOfFriends, numOfInfoRefs) {
     return numOfInfoRefs > 0 ? numOfFriends * 1.5 + numOfInfoRefs * 2 : numOfFriends * 1.5;
 }
@@ -136,12 +135,7 @@ function resizeCanvas() {
     }
 }
 
-// Initial resize to set canvas size
-resizeCanvas();
-
-// Add event listener for window resize
-window.addEventListener("resize", resizeCanvas);
-
+// ...
 function findAllConnectedComponents() {
     let visited = new Set();
     let components = [];
@@ -184,4 +178,354 @@ function findAllConnectedComponents() {
 
     console.log("Total number of connected components:", components.length);
     console.log("Connected components:", components);
+}
+
+/**
+ * ...
+ * @param {map} nodes - ...
+ */
+function resizeNodes(nodes) {
+    nodes.forEach((node, id) => {
+        if (node.label === "Person") {
+            node.popularity = calculatePersonPopularity(node.friends?.size || 0, checkInfoLinkRefs(id).size || 0);
+        } else if (node.label === "Social Media Post") {
+            node.popularity = calculatePostPopularity(node.readers?.size || 0);
+        }
+        node.element.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
+    });
+}
+
+/**
+ * ...
+ * @param {String} label - ...
+ * @param {Number} count - ...
+ * @param {Array} userData - ...
+ */
+function drawRandom(label, count, userData) {
+    if (userData === null) {
+        for (var i = 0; i < count; i++) {
+            var x = Math.random() * canvasSize.width;
+            var y = Math.random() * canvasSize.height;
+            const id = nodes.size;
+            const node = new Post(id, "Social Media Post", x, y);
+
+            node.addNodeLabel({ x, y }, label);
+            nodes.set(id, node);
+
+            setEventListeners(node);
+        }
+    } else {
+        for (var i = 0; i < count; i++) {
+            let node;
+
+            const x = Math.random() * canvasSize.width;
+            const y = Math.random() * canvasSize.height;
+            const image = userData[i].image;
+            const username = userData[i].username;
+
+            const id = nodes.size;
+
+            if (label === "Person") {
+                node = new Person(id, "Person", x, y, { image, username });
+                nodes.set(nodes.size, node);
+            }
+            // else if (label === "Social Media Post") {
+            //     addItemNode(id, label, x, y, [], nodeLabelRef);
+            // }
+
+            node.addNodeLabel({ x, y }, label, image, username);
+
+            setEventListeners(node);
+        }
+    }
+}
+
+/**
+ * Function to spawn a node on the canvas given the position of the cursor
+ * @param {Event} evt - ...
+ */
+async function spawnNode(evt) {
+    let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
+
+    if (label === "") {
+        return;
+    }
+
+    let nodeId = nodes.size;
+    var mousePos = getMousePosOnCanvas(canvas, evt);
+    let node;
+    switch (label) {
+        case "Person":
+            let userData = await fetchUsers(1);
+            const image = userData[0].image;
+            const username = userData[0].username;
+            node = new Person(nodeId, "Person", mousePos.x, mousePos.y, { image, username });
+            nodes.set(nodes.size, node);
+            node.addNodeLabel(mousePos, label, image, username); // Pass node ID to label function
+            break;
+        case "Social Media Post":
+            var mousePos = getMousePosOnCanvas(canvas, evt);
+            node = new Post(nodeId, "Social Media Post", mousePos.x, mousePos.y);
+            nodes.set(nodes.size, node);
+            node.addNodeLabel(mousePos, label);
+            break;
+        default:
+            break;
+    }
+    setEventListeners(node);
+}
+
+/**
+ * ...
+ * @param {Map} nodes - ...
+ */
+function setEventListeners(node) {
+    node.element.addEventListener("mouseover", function () {
+        hoveredNode = node.id;
+        if (nodes.get(node.id).label === "Person") {
+            showNodeDataContainer(node.id, nodes.get(node.id));
+        }
+    });
+
+    node.element.addEventListener("mouseout", function () {
+        hoveredNode = null;
+        nodeDataContainer.style.display = "none";
+    });
+
+    node.element.addEventListener("click", function () {
+        //Check whether the node is a person node or a social media post node
+        switch (selectedNode) {
+            case null:
+                selectNode(node);
+                showSelectedNodeOptions();
+                generalOptions.classList.add("hide");
+                break;
+            case node:
+                deselectNode(node);
+                selectedNodeOptions.classList.add("hide");
+                generalOptions.classList.remove("hide");
+                break;
+            default:
+                const nodeHovered = nodes.get(hoveredNode);
+                nodeHovered.linkHandler(selectedNode, links);
+                resizeNodes(nodes);
+                showSelectedNodeOptions();
+        }
+    });
+
+    canvas.addEventListener("click", () => {
+        if (selectedNode === node) {
+            deselectNode(node);
+            selectedNodeOptions.classList.add("hide");
+            generalOptions.classList.remove("hide");
+        }
+    });
+}
+
+/**
+ * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click 
+ * @param {Element} canvas - ...
+ * @param {Event} evt - ...
+ */
+function getMousePosOnCanvas(canvas, evt) {
+    var rect = canvas.getBoundingClientRect(), // abs. size of element
+        scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
+        scaleY = canvas.height / rect.height; // relationship bitmap vs. element for y
+
+    return {
+        x: (evt.clientX - rect.left) * scaleX, // scale mouse coordinates after they have
+        y: (evt.clientY - rect.top) * scaleY, // been adjusted to be relative to element
+    };
+}
+
+/**
+ * Showdata function to display the nodeDataContainer with therein the node data when hovering over it
+ * @param {Number} nodeId - ...
+ * @param {Object} noteData - ...
+ */
+function showNodeDataContainer(nodeId, nodeData) {
+    nodeDataContainer.children[0].textContent = nodeData.userName;
+    nodeDataContainer.children[1].src = nodeData.profileImage;
+    nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
+    nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
+    nodeDataContainer.style.display = "grid";
+    //Move the nodeDataContainer to the position of the node label
+    nodeDataContainer.style.left = nodeData.x + 10 + "px";
+    nodeDataContainer.style.top = nodeData.y + 10 + "px";
+}
+
+//Function for showing the selectedNodeOptions container with the right data when a node is selected
+function showSelectedNodeOptions() {
+    const div = document.querySelector("#selectedNodeOptions > div");
+    const image = document.getElementById("selectedNodeImage");
+
+    image.src = selectedNode.profileImage;
+    selectedNodeUserName.textContent = selectedNode.userName;
+
+    selectedNodeUserFriends.textContent = selectedNode.friends.size;
+    totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
+
+    selectedNodeOptions.classList.remove("hide");
+}
+
+/**
+ * Function for checking who has an info link with a given node
+ * @param {Number} nodeId - ...
+ */
+function checkInfoLinkRefs(nodeId) {
+    let refs = [];
+    //Get all person nodes
+    let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
+    //Loop over all nodes in the map and check if the given node has an info link with them
+    personNodes.forEach((node, id) => {
+        if (node.infoLinks.get(nodeId)) {
+            refs.push(id);
+        }
+    });
+    return refs;
+}
+
+/**
+ * Show the link that follows the cursor
+ * @param {Object} from - ...
+ */
+function showPreLink(from) {
+    canvasRect = canvasContainer.getBoundingClientRect();
+    let to = {
+        x: from.x,
+        y: from.y,
+    };
+
+    const link = new Edge(from, to, "pre-link");
+    link.drawLink();
+    linkStripe = link.element;
+    let toCursor = { x: 0, y: 0 };
+    mouseMoveHandler = (e) => {
+        canvasRect = canvasContainer.getBoundingClientRect();
+        link.to = {
+            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
+            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
+        };
+        link.calcAngle();
+        toCursor = link.to;
+    };
+
+    scrollMoveHandler = () => {
+        // if (currentScrollY < canvasContainer.scrollTop) {
+        // } else if (currentScrollY > canvasContainer.scrollTop) {
+        // } else if (currentScrollX > canvasContainer.scrollLeft) {
+        // } else if (currentScrollX < canvasContainer.scrollLeft) {
+        // }
+        canvasRect = canvasContainer.getBoundingClientRect();
+
+        link.to = {
+            x: toCursor.x + canvasContainer.scrollLeft,
+            y: toCursor.y + canvasContainer.scrollTop,
+        };
+        link.calcAngle();
+    };
+    canvasContainer.addEventListener("mousemove", mouseMoveHandler);
+    canvasContainer.addEventListener("scroll", scrollMoveHandler);
+
+    linkStripe.addEventListener("click", () => {
+        canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
+        linkStripe.remove();
+        deselectNode();
+    });
+
+    canvasContainer.appendChild(linkStripe);
+}
+
+/**
+ * Function for selecting a node and highlight it and its data
+ * @param {Object} node - ...
+ */
+function selectNode(node) {
+    node.element.classList.add("selected");
+
+    if (node.label === "Person") {
+        showPreLink(node);
+    }
+
+    selectedNode = node;
+    if (node.label === "Person") {
+        node.spawnForwardButtons(links);
+    }
+}
+
+//Function for deselecting a node and remove the highlight
+function deselectNode() {
+    const node = selectedNode;
+
+    node.element.classList.remove("selected");
+
+    // Assuming that mouseMoveHandler is now a named function
+    canvasContainer.removeEventListener("mousemove", mouseMoveHandler);
+    canvasContainer.removeEventListener("scroll", scrollMoveHandler);
+    if (linkStripe) {
+        linkStripe.remove();
+    }
+
+    selectedNodeOptions.classList.add("hide");
+    selectedNode = null;
+    node.removeForwardButtons();
+}
+
+/**
+ * Function for performing all behaviors of the agent in one step
+ * @param {Object} node - ...
+ */
+function step(node) {
+    node.readSocialMediaPost();
+    node.forwardSocialMediaPost();
+    node.manageRelationships();
+    node.addFriendThroughContent();
+    node.moveAgent();
+}
+
+//Function for calculating the closeness centrality of all nodes
+function calculateAdjustedClosenessCentrality() {
+    let centralities = {};
+    let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
+    personNodes.forEach((value, node) => {
+        let shortestPaths = bfsShortestPath(nodes, node);
+        let reachableNodes = Object.values(shortestPaths).filter((dist) => dist < Infinity).length;
+        let totalDistance = Object.values(shortestPaths).reduce((acc, d) => (d < Infinity ? acc + d : acc), 0);
+
+        if (reachableNodes > 1) {
+            // Avoid division by zero if no nodes are reachable
+            centralities[node] = (reachableNodes - 1) / totalDistance;
+        } else {
+            centralities[node] = 0; // Or consider another approach for isolated nodes
+        }
+    });
+}
+
+
+
+/**
+ * Function for calculating the shortest paths between all nodes
+ * @param {Map} graph - ... (nodes)
+ * @param {Object} startNode - ...
+ */
+function bfsShortestPath(graph, startNode) {
+    let distances = {};
+    let queue = [startNode];
+    graph.forEach((_, node) => (distances[node] = Infinity)); // Initialize distances
+    distances[startNode] = 0;
+
+    while (queue.length > 0) {
+        let currentNode = queue.shift();
+        let currentDistance = distances[currentNode];
+        let neighbors = graph.get(currentNode).friends; // Assuming 'friends' is the adjacency list
+        console.log(neighbors);
+        neighbors.forEach((neighbor) => {
+            if (distances[neighbor] === Infinity) {
+                // Node has not been visited
+                queue.push(neighbor);
+                distances[neighbor] = currentDistance + 1;
+            }
+        });
+    }
+    return distances;
 }
