@@ -360,12 +360,10 @@ function showSelectedNodeOptions() {
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNode.profileImage;
-    div.querySelector("p:nth-of-type(1) span").innerHTML = selectedNode.label;
-    div.querySelector("p:nth-of-type(2) span").innerHTML = selectedNode.username;
+    selectedNodeUserName.textContent = selectedNode.userName;
 
-    div.querySelector("p:nth-of-type(3) span").innerHTML = selectedNode.friends.size;
-    div.querySelector("p:nth-of-type(4) span").innerHTML = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
-    div.querySelector("label input").value = selectedNode.increasedPopularity;
+    selectedNodeUserFriends.textContent = selectedNode.friends.size;
+    totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
     selectedNodeOptions.classList.remove("hide");
 }
