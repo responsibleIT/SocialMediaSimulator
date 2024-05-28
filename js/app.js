@@ -6,15 +6,11 @@ import fetchUsers from "./api.js";
 
 const cursor = new Cursor();
 
-// const socket = new WebSocket('ws://localhost:8765');
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
 let canvasSize = { width: canvas.width, height: canvas.height };
-
 const nodeDataContainer = document.getElementById("nodeDataContainer");
 nodeDataContainer.style.display = "none";
-// const addPersonCheckbox = document.getElementById("addPersonCheckbox");
-// const addSocialMediaPostCheckbox = document.getElementById("addSocialMediaPostCheckbox");
 const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
@@ -23,6 +19,11 @@ const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
+const countInputs = document.querySelectorAll(".counter-input");
+let linkStripe;
+let mouseMoveHandler;
+let scrollMoveHandler;
+let canvasRect;
 
 //Global map of nodes
 let nodes = new Map();
@@ -30,18 +31,20 @@ let nodes = new Map();
 //Global map of links
 let links = new Map();
 
-//Global map of node labels
-// let nodeLabelMap = new Map();
-
 //Variable to keep track of which node is selected
 let selectedNode = null;
 
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
 
-// function for counter inputs
-const countInputs = document.querySelectorAll(".counter-input");
+// Initial resize to set canvas size
+resizeCanvas();
 
+///////////////////////////
+///// Event listeners /////
+///////////////////////////
+
+// function for counter inputs
 countInputs.forEach((input) => {
     const increaseButton = input.children[2];
     const decreaseButton = input.children[0];
@@ -64,8 +67,6 @@ countInputs.forEach((input) => {
         }
     });
 });
-
-// api picture and data
 
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
@@ -101,11 +102,26 @@ calcGroupsButton.addEventListener("click", () => {
     findAllConnectedComponents();
 });
 
-//Function for calculating social media post popularity based on the number of readers
+// Add event listener for window resize
+window.addEventListener("resize", resizeCanvas);
+
+///////////////////////////
+//////// Functions ////////
+///////////////////////////
+
+/**
+ * Function to calculate the popularity of the post
+ * @param {Number} numOfReaders - number of readers of the post
+ */
 function calculatePostPopularity(numOfReaders) {
     return numOfReaders * 1.5;
 }
-//Function for calculating popularity based on the number of friends and info links
+
+/**
+ * Function for calculating popularity of the person based on the number of friends and info-links
+ * @param {Number} numOfFriends - number of friends of the person
+ * @param {Number} numOfInfoRefs - number of info-links of the person
+ */
 function calculatePersonPopularity(numOfFriends, numOfInfoRefs) {
     return numOfInfoRefs > 0 ? numOfFriends * 1.5 + numOfInfoRefs * 2 : numOfFriends * 1.5;
 }
@@ -118,11 +134,6 @@ function resizeCanvas() {
         canvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     }
 }
-// Initial resize to set canvas size
-resizeCanvas();
-
-// Add event listener for window resize
-window.addEventListener("resize", resizeCanvas);
 
 function findAllConnectedComponents() {
     let visited = new Set();
@@ -319,7 +330,6 @@ function showNodeDataContainer(nodeId, noteData) {
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
-// TODO can be written differently
 function showSelectedNodeOptions() {
     const div = document.querySelector("#selectedNodeOptions > div");
     const image = document.getElementById("selectedNodeImage");
@@ -349,11 +359,7 @@ function checkInfoLinkRefs(nodeId) {
     return refs;
 }
 
-let linkStripe;
-let mouseMoveHandler;
-let scrollMoveHandler;
-let canvasRect;
-
+// Show the link
 function showPreLink(from) {
     canvasRect = canvasContainer.getBoundingClientRect();
     let to = {
