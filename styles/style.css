@@ -548,7 +548,6 @@ div.followLink {
 }
 
 .legend {
-    /* display: flex; */
     display: none;
     flex-direction: column;
     padding: 1em;
