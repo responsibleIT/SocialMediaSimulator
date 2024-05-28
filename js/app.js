@@ -102,6 +102,13 @@ calcGroupsButton.addEventListener("click", () => {
     findAllConnectedComponents();
 });
 
+stepButton.addEventListener("click", () => {
+    console.log(selectedNode);
+    if (selectedNode !== null) {
+        step(selectedNode);
+    }
+});
+
 // Add event listener for window resize
 window.addEventListener("resize", resizeCanvas);
 
@@ -323,7 +330,7 @@ function setEventListeners(node) {
 }
 
 /**
- * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click 
+ * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click
  * @param {Element} canvas - ...
  * @param {Event} evt - ...
  */
@@ -476,11 +483,11 @@ function deselectNode() {
  * @param {Object} node - ...
  */
 function step(node) {
-    node.readSocialMediaPost();
+    node.readSocialMediaPost(nodes);
     node.forwardSocialMediaPost();
     node.manageRelationships();
     node.addFriendThroughContent();
-    node.moveAgent();
+    node.moveNode();
 }
 
 //Function for calculating the closeness centrality of all nodes

@@ -13,24 +13,28 @@ export default class Person extends Node {
     }
 
     //Function for choosing a random social media post to read
-    readSocialMediaPost() {
+    readSocialMediaPost(nodes) {
+        console.log("readSocialMediaPost function");
         //Pick a random node from the nodes map that has label of Social Media Post
         const socialMediaPosts = Array.from(nodes.values()).filter((node) => node.label === "Social Media Post");
         const randomPost = socialMediaPosts[Math.floor(Math.random() * socialMediaPosts.length)];
 
         //Get the friends who have also read the post by checking the readers map of the post and see if it contains my friends
-        const friendsThatReadPost = randomPost.readers.filter((reader) => this.friends.has(reader));
+        // const friendsThatReadPost = randomPost.readers.filter((reader) => this.friends.has(reader));
+        const friendsThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.friends.has(reader));
         //From my friends who have read the post, get the scores they have with the post
         const friendScores = friendsThatReadPost.map((friend) => randomPost.readers.get(friend));
 
         //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
-        const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
+        // const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
+        const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader));
+
         //From my infolinks who have read the post, get the scores they have with the post
         const infoLinkScores = infoLinksThatReadPost.map((infoLink) => randomPost.readers.get(infoLink));
 
         //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
         //The score will be -1, 0 or 1 based on the average of the scores
-        const myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
+        let myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
         //Calculate the distance from me to the post
         const distance = Math.sqrt(Math.pow(this.x - randomPost.x, 2) + Math.pow(this.y - randomPost.y, 2));
         //Adjust the score based on the distance
@@ -43,12 +47,13 @@ export default class Person extends Node {
 
         //Add myself to the readers of the post
         randomPost.readers.set(this, myScore);
-
+        console.log("POST", randomPost, "READER", this);
         return myScore;
     }
 
     //Function for forwarding a social media post to friends
     forwardSocialMediaPost() {
+        console.log("forwardSocialMediaPost function");
         //Get a random post from my items
         const myPosts = Array.from(this.items.keys());
         const randomPost = myPosts[Math.floor(Math.random() * myPosts.length)];
@@ -69,6 +74,7 @@ export default class Person extends Node {
 
     //Function for receiving forwarded social media posts
     receiveSocialMediaPost(sender, post, relationship) {
+        console.log("receiveSocialMediaPost function");
         let relationshipScore = 0;
 
         //Check if I have already read the post
@@ -119,6 +125,7 @@ export default class Person extends Node {
 
     //Function for managing relationships with friends and infolinks
     manageRelationships() {
+        console.log("manageRelationships function");
         this.friends.forEach((score, friend) => {
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
@@ -142,6 +149,7 @@ export default class Person extends Node {
 
     //Function for adding friends through content
     addFriendThroughContent() {
+        console.log("add friend function");
         //Get an array of all posts I have read and liked
         const positivePosts = Array.from(this.items.keys()).filter((post) => this.items.get(post) > 0);
 
@@ -156,6 +164,7 @@ export default class Person extends Node {
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
                 this.friends.set(randomPerson, 0);
                 randomPerson.friends.set(this, 0);
+                console.log("ADDED FRIEND", randomPerson, " TO ", this);
             }
         });
     }
