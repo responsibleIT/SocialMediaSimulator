@@ -135,6 +135,7 @@ function resizeCanvas() {
     }
 }
 
+// ...
 function findAllConnectedComponents() {
     let visited = new Set();
     let components = [];
@@ -179,6 +180,10 @@ function findAllConnectedComponents() {
     console.log("Connected components:", components);
 }
 
+/**
+ * ...
+ * @param {map} nodes - ...
+ */
 function resizeNodes(nodes) {
     nodes.forEach((node, id) => {
         if (node.label === "Person") {
@@ -190,6 +195,12 @@ function resizeNodes(nodes) {
     });
 }
 
+/**
+ * ...
+ * @param {String} label - ...
+ * @param {Number} count - ...
+ * @param {Array} userData - ...
+ */
 function drawRandom(label, count, userData) {
     if (userData === null) {
         for (var i = 0; i < count; i++) {
@@ -229,7 +240,10 @@ function drawRandom(label, count, userData) {
     }
 }
 
-//Function to spawn a node on the canvas given the position of the cursor
+/**
+ * Function to spawn a node on the canvas given the position of the cursor
+ * @param {Event} evt - ...
+ */
 async function spawnNode(evt) {
     let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
 
@@ -261,6 +275,10 @@ async function spawnNode(evt) {
     setEventListeners(node);
 }
 
+/**
+ * ...
+ * @param {Map} nodes - ...
+ */
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
@@ -303,8 +321,12 @@ function setEventListeners(node) {
         }
     });
 }
-//Function to get the position of the cursor on the canvas
-// This is needed to place the nodes based on where you click
+
+/**
+ * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click 
+ * @param {Element} canvas - ...
+ * @param {Event} evt - ...
+ */
 function getMousePosOnCanvas(canvas, evt) {
     var rect = canvas.getBoundingClientRect(), // abs. size of element
         scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
@@ -316,17 +338,20 @@ function getMousePosOnCanvas(canvas, evt) {
     };
 }
 
-//Showdata function to display the nodeDataContainer with therein the node data when hovering over it
-
-function showNodeDataContainer(nodeId, noteData) {
-    nodeDataContainer.children[0].textContent = noteData.userName;
-    nodeDataContainer.children[1].src = noteData.profileImage;
-    nodeDataContainer.children[2].children[0].textContent = noteData.friends.size;
-    nodeDataContainer.children[2].children[2].textContent = noteData.popularity;
+/**
+ * Showdata function to display the nodeDataContainer with therein the node data when hovering over it
+ * @param {Number} nodeId - ...
+ * @param {Object} noteData - ...
+ */
+function showNodeDataContainer(nodeId, nodeData) {
+    nodeDataContainer.children[0].textContent = nodeData.userName;
+    nodeDataContainer.children[1].src = nodeData.profileImage;
+    nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
+    nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
     //Move the nodeDataContainer to the position of the node label
-    nodeDataContainer.style.left = noteData.x + 10 + "px";
-    nodeDataContainer.style.top = noteData.y + 10 + "px";
+    nodeDataContainer.style.left = nodeData.x + 10 + "px";
+    nodeDataContainer.style.top = nodeData.y + 10 + "px";
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
@@ -345,7 +370,10 @@ function showSelectedNodeOptions() {
     selectedNodeOptions.classList.remove("hide");
 }
 
-//Function for checking who has an info link with a given node
+/**
+ * Function for checking who has an info link with a given node
+ * @param {Number} nodeId - ...
+ */
 function checkInfoLinkRefs(nodeId) {
     let refs = [];
     //Get all person nodes
@@ -359,7 +387,10 @@ function checkInfoLinkRefs(nodeId) {
     return refs;
 }
 
-// Show the link
+/**
+ * Show the link that follows the cursor
+ * @param {Object} from - ...
+ */
 function showPreLink(from) {
     canvasRect = canvasContainer.getBoundingClientRect();
     let to = {
@@ -407,7 +438,10 @@ function showPreLink(from) {
     canvasContainer.appendChild(linkStripe);
 }
 
-//Function for selecting a node and highlight it and its data
+/**
+ * Function for selecting a node and highlight it and its data
+ * @param {Object} node - ...
+ */
 function selectNode(node) {
     node.element.classList.add("selected");
 
@@ -439,7 +473,10 @@ function deselectNode() {
     node.removeForwardButtons();
 }
 
-//Function for performing all behaviors of the agent in one step
+/**
+ * Function for performing all behaviors of the agent in one step
+ * @param {Object} node - ...
+ */
 function step(node) {
     node.readSocialMediaPost();
     node.forwardSocialMediaPost();
@@ -466,7 +503,13 @@ function calculateAdjustedClosenessCentrality() {
     });
 }
 
-//Function for calculating the shortest paths between all nodes
+
+
+/**
+ * Function for calculating the shortest paths between all nodes
+ * @param {Map} graph - ... (nodes)
+ * @param {Object} startNode - ...
+ */
 function bfsShortestPath(graph, startNode) {
     let distances = {};
     let queue = [startNode];
