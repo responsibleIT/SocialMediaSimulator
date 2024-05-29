@@ -67,6 +67,7 @@ export default class Person extends Node {
         const myScore = this.items.get(randomPost);
         console.log("myScore", myScore);
 
+        // TODO myScore is een node, wat is hier de bedoeling?
         //If the score is positive, forward the post to all my friends.
         if (myScore > 0) {
             console.log("myScore > 0", myScore);
@@ -119,7 +120,7 @@ export default class Person extends Node {
         //if the postScore was negative, reduce the score between me and the sender by 1
         if (postScore < 0) {
             if (relationship === "friend") {
-                this.friends.set(sender, relationshipScore - 1);
+                this.friends.set(sender, relationshipScore - 1); // TODO relationshipScore zit niet in de friends map
             } else if (relationship === "infoLink") {
                 this.infoLinks.set(sender, relationshipScore - 1);
             }
@@ -137,7 +138,9 @@ export default class Person extends Node {
     manageRelationships() {
         console.log("manageRelationships function");
         this.friends.forEach((score, friend) => {
-            console.log("Score:", score);
+            console.log("Score:", score, friend);
+            // TODO score is node
+            
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
                 friend.friends.delete(this);
