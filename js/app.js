@@ -483,7 +483,7 @@ function deselectNode() {
  * @param {Object} node - ...
  */
 function step(node) {
-    node.readSocialMediaPost(nodes);
+    node.readSocialMediaPost(nodes, links);
     node.forwardSocialMediaPost();
     node.manageRelationships();
     node.addFriendThroughContent();

@@ -13,7 +13,7 @@ export default class Person extends Node {
     }
 
     //Function for choosing a random social media post to read
-    readSocialMediaPost(nodes) {
+    readSocialMediaPost(nodes, links) {
         console.log("readSocialMediaPost function");
         //Pick a random node from the nodes map that has label of Social Media Post
         const socialMediaPosts = Array.from(nodes.values()).filter((node) => node.label === "Social Media Post");
@@ -48,6 +48,11 @@ export default class Person extends Node {
         //Add myself to the readers of the post
         randomPost.readers.set(this, myScore);
         console.log("POST", randomPost, "READER", this);
+
+        const link = new Edge(this, randomPost, "item-link");
+        links.set(this.id + "-" + randomPost.id, link);
+        link.drawLink();
+
         return myScore;
     }
 
@@ -57,18 +62,22 @@ export default class Person extends Node {
         //Get a random post from my items
         const myPosts = Array.from(this.items.keys());
         const randomPost = myPosts[Math.floor(Math.random() * myPosts.length)];
-
+        console.log("RANDOMPOST", randomPost, "MYPOSTS", myPosts);
         //Check what my score is with the post
         const myScore = this.items.get(randomPost);
+        console.log("myScore", myScore);
 
         //If the score is positive, forward the post to all my friends.
         if (myScore > 0) {
+            console.log("myScore > 0", myScore);
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
                     friend.receiveSocialMediaPost(this, randomPost, "friend");
                 });
             }
+        } else {
+            console.log("myScore < 0", myScore);
         }
     }
 
@@ -95,6 +104,7 @@ export default class Person extends Node {
         const amountSimilarPosts = Array.from(this.items.keys()).filter(
             (item) => Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold
         ).length;
+        console.log("amountSimilarPosts", amountSimilarPosts);
         let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false;
 
         //Calculate a score for the post based on the relationship score and the similarity
@@ -127,6 +137,7 @@ export default class Person extends Node {
     manageRelationships() {
         console.log("manageRelationships function");
         this.friends.forEach((score, friend) => {
+            console.log("Score:", score);
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
                 friend.friends.delete(this);
@@ -152,10 +163,11 @@ export default class Person extends Node {
         console.log("add friend function");
         //Get an array of all posts I have read and liked
         const positivePosts = Array.from(this.items.keys()).filter((post) => this.items.get(post) > 0);
-
+        console.log("positivePosts", positivePosts);
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
             if (Math.random() > 0.5) {
+                console.log("Math.random() > 0.5", post);
                 //Get all people who have read the post and liked it
                 const peopleThatReadPost = Array.from(post.readers.keys()).filter(
                     (reader) => post.readers.get(reader) > 0 && reader !== this && !this.friends.has(reader)

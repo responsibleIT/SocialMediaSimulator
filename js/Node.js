@@ -11,28 +11,35 @@ export default class Node {
     }
 
     //Function for moving the agent to a new position
-    moveNode() {
+    moveNode(friend, infoLink) {
+        // TODO krijgt nergers een friend of infolink toegewezen
         //Get all friends and infolinks with a score higher than 0
+        console.log(this.friends.get(friend), this.infoLinks.get(infoLink));
         const positiveFriends = Array.from(this.friends.keys()).filter((friend) => this.friends.get(friend) > 0);
         const positiveInfoLinks = Array.from(this.infoLinks.keys()).filter((infoLink) => this.infoLinks.get(infoLink) > 0);
-
+        console.log("posFriends:", positiveFriends, "posInfolinks", positiveInfoLinks);
         //Get all items with a score higher than 0
         const positiveItems = Array.from(this.items.keys()).filter((item) => this.items.get(item) > 0);
 
         //Calculate the average position of all friends, infolinks and items
         let averageX = this.x;
         let averageY = this.y;
+
+        console.log("PLACE", averageX, averageY, "THIS", this);
         positiveFriends.forEach((friend) => {
             averageX += friend.x;
             averageY += friend.y;
+            console.log("FRIEND X + Y", friend.x, friend.y);
         });
         positiveInfoLinks.forEach((infoLink) => {
             averageX += infoLink.x;
             averageY += infoLink.y;
+            console.log("infoLink X + Y", infoLink.x, infoLink.y);
         });
         positiveItems.forEach((item) => {
             averageX += item.x;
             averageY += item.y;
+            console.log("item X + Y", item.x, item.y);
         });
         averageX = averageX / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
         averageY = averageY / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
@@ -43,6 +50,7 @@ export default class Node {
         let distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance > 0) {
+            console.log("DISTANCE", distance);
             this.x += dx / distance;
             this.y += dy / distance;
         }
