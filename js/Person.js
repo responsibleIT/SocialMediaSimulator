@@ -27,23 +27,29 @@ export default class Person extends Node {
 
         //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
         // const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
+        console.log("randomPost.readers", randomPost.readers, "this.friends", this.friends, );
         const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader));
-
         //From my infolinks who have read the post, get the scores they have with the post
         const infoLinkScores = infoLinksThatReadPost.map((infoLink) => randomPost.readers.get(infoLink));
+
+        console.log("infoLinksThatReadPost", infoLinksThatReadPost, "friendsThatReadPost", friendsThatReadPost); // TODO empty arrays
+        console.log("friendScores", friendScores, "infoLinkScores", infoLinkScores); // TODO empty arrays
 
         //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
         //The score will be -1, 0 or 1 based on the average of the scores
         let myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
+        // TODO gives not a number
+
         //Calculate the distance from me to the post
         const distance = Math.sqrt(Math.pow(this.x - randomPost.x, 2) + Math.pow(this.y - randomPost.y, 2));
         //Adjust the score based on the distance
+        console.log("myScore", myScore, "-", distance, "/", 100);
         myScore = myScore - distance / 100;
         //Change the score to -1, 0 or 1
         myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
-
+        console.log("MY SCORE", myScore);
         //Add the post to my items with the calculated score
-        this.items.set(randomPost, myScore);
+        this.items.set(randomPost.id, {post: randomPost, score: myScore}); // add the my score
 
         //Add myself to the readers of the post
         randomPost.readers.set(this, myScore);
@@ -64,13 +70,15 @@ export default class Person extends Node {
         const randomPost = myPosts[Math.floor(Math.random() * myPosts.length)];
         console.log("RANDOMPOST", randomPost, "MYPOSTS", myPosts);
         //Check what my score is with the post
+        console.log(this.items);
         const myScore = this.items.get(randomPost);
-        console.log("myScore", myScore);
+        // myScore.id
+        console.log("myScore", myScore); // get the score of the post
 
         // TODO myScore is een node, wat is hier de bedoeling?
         //If the score is positive, forward the post to all my friends.
         if (myScore > 0) {
-            console.log("myScore > 0", myScore);
+            console.log("myScore > 0", myScore.id);
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
@@ -183,6 +191,54 @@ export default class Person extends Node {
             }
         });
     }
+
+      // get(friend.id) en movenode moet naar person
+    //Function for moving the agent to a new position
+    moveNode() {
+        // TODO krijgt nergers een friend of infolink toegewezen
+        //Get all friends and infolinks with a score higher than 0
+        // console.log(this.friends.get(friend), this.infoLinks.get(infoLink));
+        const positiveFriends = Array.from(this.friends.keys()).filter((friend) => this.friends.get(friend.id) > 0);
+        const positiveInfoLinks = Array.from(this.infoLinks.keys()).filter((infoLink) => this.infoLinks.get(infoLink.id) > 0);
+        console.log("posFriends:", positiveFriends, "posInfolinks", positiveInfoLinks);
+        //Get all items with a score higher than 0
+        const positiveItems = Array.from(this.items.keys()).filter((item) => this.items.get(item.id) > 0);
+
+        //Calculate the average position of all friends, infolinks and items
+        let averageX = this.x;
+        let averageY = this.y;
+
+        console.log("PLACE", averageX, averageY, "THIS", this);
+        positiveFriends.forEach((friend) => {
+            averageX += friend.x;
+            averageY += friend.y;
+            console.log("FRIEND X + Y", friend.x, friend.y);
+        });
+        positiveInfoLinks.forEach((infoLink) => {
+            averageX += infoLink.x;
+            averageY += infoLink.y;
+            console.log("infoLink X + Y", infoLink.x, infoLink.y);
+        });
+        positiveItems.forEach((item) => {
+            averageX += item.x;
+            averageY += item.y;
+            console.log("item X + Y", item.x, item.y);
+        });
+        averageX = averageX / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
+        averageY = averageY / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
+
+        //Move the agent towards the average position
+        let dx = averageX - this.x;
+        let dy = averageY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 0) {
+            console.log("DISTANCE", distance);
+            this.x += dx / distance;
+            this.y += dy / distance;
+        }
+    }
+
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links) {
