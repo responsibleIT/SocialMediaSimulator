@@ -4,6 +4,7 @@ export default class Edge {
         this.to = to;
         this.type = type;
         this.element = null;
+        this.drawLink();
     }
 
     drawLink() {
