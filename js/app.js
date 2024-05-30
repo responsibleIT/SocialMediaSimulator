@@ -243,7 +243,7 @@ async function spawnNode(evt) {
     let node;
 
     const id = nodes.size;
-    var mousePos = getMousePosOnCanvas(canvas, evt);
+    const mousePos = getMousePosOnCanvas(canvasContainer, evt);
 
     switch (label) {
         case "Person":
@@ -312,19 +312,23 @@ function setEventListeners(node) {
 }
 
 /**
- * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click 
+ * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click
  * @param {Element} canvas - ...
  * @param {Event} evt - ...
  */
-function getMousePosOnCanvas(canvas, evt) {
-    var rect = canvas.getBoundingClientRect(), // abs. size of element
-        scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
-        scaleY = canvas.height / rect.height; // relationship bitmap vs. element for y
-
-    return {
-        x: (evt.clientX - rect.left) * scaleX, // scale mouse coordinates after they have
-        y: (evt.clientY - rect.top) * scaleY, // been adjusted to be relative to element
-    };
+function getMousePosOnCanvas(canvas, e, scroll) {
+    let canvasRect = canvas.getBoundingClientRect();
+    if (scroll) {
+        return {
+            x: scroll.x + canvasContainer.scrollLeft,
+            y: scroll.y + canvasContainer.scrollTop,
+        };
+    } else {
+        return {
+            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
+            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
+        };
+    }
 }
 
 /**
@@ -345,7 +349,6 @@ function showNodeDataContainer(nodeId, nodeData) {
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions() {
-    const div = document.querySelector("#selectedNodeOptions > div");
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNode.profileImage;
@@ -380,36 +383,17 @@ function checkInfoLinkRefs(nodeId) {
  */
 function showPreLink(from) {
     canvasRect = canvasContainer.getBoundingClientRect();
-    let to = {
-        x: from.x,
-        y: from.y,
-    };
+    const link = new Edge(from, from, "pre-link");
 
-    const link = new Edge(from, to, "pre-link");
     linkStripe = link.element;
     let toCursor = { x: 0, y: 0 };
     mouseMoveHandler = (e) => {
-        canvasRect = canvasContainer.getBoundingClientRect();
-        link.to = {
-            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
-            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
-        };
+        link.to = getMousePosOnCanvas(canvasContainer, e);
         link.calcAngle();
         toCursor = link.to;
     };
-
     scrollMoveHandler = () => {
-        // if (currentScrollY < canvasContainer.scrollTop) {
-        // } else if (currentScrollY > canvasContainer.scrollTop) {
-        // } else if (currentScrollX > canvasContainer.scrollLeft) {
-        // } else if (currentScrollX < canvasContainer.scrollLeft) {
-        // }
-        canvasRect = canvasContainer.getBoundingClientRect();
-
-        link.to = {
-            x: toCursor.x + canvasContainer.scrollLeft,
-            y: toCursor.y + canvasContainer.scrollTop,
-        };
+        link.to = getMousePosOnCanvas(canvasContainer, 0, toCursor);
         link.calcAngle();
     };
     canvasContainer.addEventListener("mousemove", mouseMoveHandler);
