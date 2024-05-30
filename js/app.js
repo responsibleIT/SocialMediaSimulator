@@ -209,43 +209,32 @@ function resizeNodes(nodes) {
  * @param {Array} userData - ...
  */
 function drawRandom(label, count, userData) {
-    if (userData === null) {
-        for (var i = 0; i < count; i++) {
-            var x = Math.random() * canvasSize.width;
-            var y = Math.random() * canvasSize.height;
-            const id = nodes.size;
-            const node = new Post(id, "Social Media Post", x, y);
+for (var i = 0; i < count; i++) {
+        let node;
 
-            node.addNodeLabel({ x, y }, label);
-            nodes.set(id, node);
-
-            setEventListeners(node);
-        }
-    } else {
-        for (var i = 0; i < count; i++) {
-            let node;
-
-            const x = Math.random() * canvasSize.width;
-            const y = Math.random() * canvasSize.height;
-            const image = userData[i].image;
-            const username = userData[i].username;
-
-            const id = nodes.size;
-
-            if (label === "Person") {
+        const id = nodes.size;
+        const x = Math.random() * canvasSize.width;
+        const y = Math.random() * canvasSize.height;
+            
+        switch (label) {
+            case "Person":
+                const image = userData[i].image;
+                const username = userData[i].username;
                 node = new Person(id, "Person", x, y, { image, username });
-                nodes.set(nodes.size, node);
-            }
-            // else if (label === "Social Media Post") {
-            //     addItemNode(id, label, x, y, [], nodeLabelRef);
-            // }
-
-            node.addNodeLabel({ x, y }, label, image, username);
-
-            setEventListeners(node);
+                break;
+            case "Social Media Post":
+                node = new Post(id, "Social Media Post", x, y);
+                break;
+            default:
+                break;
         }
+
+        nodes.set(id, node);
+        node.draw();
+        setEventListeners(node);
     }
 }
+
 
 /**
  * Function to spawn a node on the canvas given the position of the cursor
@@ -258,27 +247,27 @@ async function spawnNode(evt) {
         return;
     }
 
-    let nodeId = nodes.size;
-    var mousePos = getMousePosOnCanvas(canvas, evt);
     let node;
+
+    const id = nodes.size;
+    const mousePos = getMousePosOnCanvas(canvasContainer, evt);
+
     switch (label) {
         case "Person":
             let userData = await fetchUsers(1);
             const image = userData[0].image;
             const username = userData[0].username;
-            node = new Person(nodeId, "Person", mousePos.x, mousePos.y, { image, username });
-            nodes.set(nodes.size, node);
-            node.addNodeLabel(mousePos, label, image, username); // Pass node ID to label function
+            node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
             break;
         case "Social Media Post":
-            var mousePos = getMousePosOnCanvas(canvas, evt);
-            node = new Post(nodeId, "Social Media Post", mousePos.x, mousePos.y);
-            nodes.set(nodes.size, node);
-            node.addNodeLabel(mousePos, label);
+            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y);
             break;
         default:
             break;
     }
+
+    nodes.set(id, node);
+    node.draw();
     setEventListeners(node);
 }
 
@@ -334,15 +323,19 @@ function setEventListeners(node) {
  * @param {Element} canvas - ...
  * @param {Event} evt - ...
  */
-function getMousePosOnCanvas(canvas, evt) {
-    var rect = canvas.getBoundingClientRect(), // abs. size of element
-        scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
-        scaleY = canvas.height / rect.height; // relationship bitmap vs. element for y
-
-    return {
-        x: (evt.clientX - rect.left) * scaleX, // scale mouse coordinates after they have
-        y: (evt.clientY - rect.top) * scaleY, // been adjusted to be relative to element
-    };
+function getMousePosOnCanvas(canvas, e, scroll) {
+    let canvasRect = canvas.getBoundingClientRect();
+    if (scroll) {
+        return {
+            x: scroll.x + canvasContainer.scrollLeft,
+            y: scroll.y + canvasContainer.scrollTop,
+        };
+    } else {
+        return {
+            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
+            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
+        };
+    }
 }
 
 /**
@@ -363,7 +356,6 @@ function showNodeDataContainer(nodeId, nodeData) {
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions() {
-    const div = document.querySelector("#selectedNodeOptions > div");
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNode.profileImage;
@@ -398,37 +390,17 @@ function checkInfoLinkRefs(nodeId) {
  */
 function showPreLink(from) {
     canvasRect = canvasContainer.getBoundingClientRect();
-    let to = {
-        x: from.x,
-        y: from.y,
-    };
+    const link = new Edge(from, from, "pre-link");
 
-    const link = new Edge(from, to, "pre-link");
-    link.drawLink();
     linkStripe = link.element;
     let toCursor = { x: 0, y: 0 };
     mouseMoveHandler = (e) => {
-        canvasRect = canvasContainer.getBoundingClientRect();
-        link.to = {
-            x: e.clientX - canvasRect.left + canvasContainer.scrollLeft,
-            y: e.clientY - canvasRect.top + canvasContainer.scrollTop,
-        };
+        link.to = getMousePosOnCanvas(canvasContainer, e);
         link.calcAngle();
         toCursor = link.to;
     };
-
     scrollMoveHandler = () => {
-        // if (currentScrollY < canvasContainer.scrollTop) {
-        // } else if (currentScrollY > canvasContainer.scrollTop) {
-        // } else if (currentScrollX > canvasContainer.scrollLeft) {
-        // } else if (currentScrollX < canvasContainer.scrollLeft) {
-        // }
-        canvasRect = canvasContainer.getBoundingClientRect();
-
-        link.to = {
-            x: toCursor.x + canvasContainer.scrollLeft,
-            y: toCursor.y + canvasContainer.scrollTop,
-        };
+        link.to = getMousePosOnCanvas(canvasContainer, 0, toCursor);
         link.calcAngle();
     };
     canvasContainer.addEventListener("mousemove", mouseMoveHandler);

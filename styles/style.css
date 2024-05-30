@@ -128,7 +128,6 @@ CANVAS STYLES
 }
 
 canvas {
-    width: 100%;
     height: 100%;
     position: relative;
     margin: 0 auto;
@@ -325,13 +324,13 @@ NODE STYLES
     z-index: 2;
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
+    position: absolute;
 }
 
 .personNode {
     background-color: blue;
     background-repeat: no-repeat;
     background-size: contain;
-    position: relative;
     overflow: hidden;
 
     &.selected {
