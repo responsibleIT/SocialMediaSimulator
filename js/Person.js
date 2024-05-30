@@ -200,9 +200,9 @@ export default class Person extends Node {
         this.friends.set(node.id, node);
         toBeFriend.friends.set(this.id, this);
 
-        const link = new Edge(this, node, "friend-link");
+        const link = new Edge(this, node, "friend-link", links);
         links.set(this.id + "-" + toBeFriend.id, link);
-        link.drawLink();
+        // link.drawLink();
     }
 
     removeFriend(node, links) {
@@ -240,13 +240,12 @@ export default class Person extends Node {
 
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
-        link.drawLink();
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
     removeItemLink(item, links) {
 		this.items.delete(item.id);
-        node.readers.delete(this.id);
+        item.readers.delete(this.id);
 
         links.get(this.id + "-" + item.id).element.remove();
         links.delete(this.id + "-" + item.id);
@@ -258,7 +257,6 @@ export default class Person extends Node {
 
         const link = new Edge(from, to, "info-link");
         links.set(from.id + "-" + to.id, link);
-        link.drawLink();
     }
 
     //Function for removing an info link between the currently selected node and the node with the given id

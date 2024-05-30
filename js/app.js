@@ -386,7 +386,6 @@ function showPreLink(from) {
     };
 
     const link = new Edge(from, to, "pre-link");
-    link.drawLink();
     linkStripe = link.element;
     let toCursor = { x: 0, y: 0 };
     mouseMoveHandler = (e) => {
