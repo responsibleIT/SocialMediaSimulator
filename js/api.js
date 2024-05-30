@@ -6,8 +6,8 @@ export default async function fetchUsers(count) {
     data.results.forEach(person => {
         let personData = {
             image: person.picture.large,
-            username: person.login.username,
-        }
+            username: person.name.first + " " + person.name.last,
+        };
         array.push(personData);
 
     });
