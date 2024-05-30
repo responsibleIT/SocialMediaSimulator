@@ -123,7 +123,7 @@
                         </button>
                     </header>
 
-                    <section id="mobileSecond" class="fakebook-profile">
+                    <section class="fakebook-profile">
                         <h3 class="visually-hidden">Profile</h3>
                         <button>
                             <img src="./images/chevron-left.svg" alt="arrow-left" />
@@ -135,30 +135,18 @@
 
 
                         <div id="selectedProfile">
-                            <!-- <h3>Node Info <span></span></h3> -->
-
-                            <!-- <p><strong id="selectedNodeId"></strong></p> -->
-                            <!-- <p>X: <span id="selectedNodeX"></span></p> -->
-                            <!-- <p>Y: <span id="selectedNodeY"></span></p> -->
-                            <div>
-                                <!-- <p>Type: <span id="selectedNodeType"></span></p> -->
-                                <p id="selectedNodeUserName">Name</p>
-                                <div id="userData">
-                                    <span id="selectedNodeUserFriends">5</span>
-                                    <span id="totalPopularity">2</span>
-                                    <p>Friends</p>
-                                    <p>Popularity</p>
-                                </div>
-
-                                <label style="display: none"
-                                    >Increased Popularity
-                                    <input
-                                        type="number"
-                                        id="nodePopularity"
-                                        min="0"
-                                        max="50"
-                                /></label>
+                            <p id="selectedNodeUserName" class="username">Name</p>
+                            <div id="userData" class="user-data">
+                                <span id="selectedNodeUserFriends">5</span>
+                                <span id="totalPopularity">2</span>
+                                <p>Friends</p>
+                                <p>Popularity</p>
                             </div>
+
+                            <label style="display: none">
+                                Increased Popularity
+                                <input type="number" id="nodePopularity" min="0" max="50" />
+                            </label>
                         </div>
                     </section>
 
@@ -167,75 +155,34 @@
 
                         <ul>
                             <li>
-                                <img
-                                    src="./images/reset.svg"
-                                    alt=""
-                                    id="selectedNodeFriendImage"
-                                />
+                                <img src="./images/reset.svg" alt="" />
                                 <p>Christiana</p>
-                                <div>
-                                    <button>Unfriend</button>
-                                    <span>.</span>
-                                    <button>Block</button>
-                                </div>
+                                <button>Unfriend</button>
                             </li>
                             <li>
-                                <img
-                                    src="./images/reset.svg"
-                                    alt=""
-                                    id="selectedNodeFriendImage"
-                                />
+                                <img src="./images/reset.svg" alt="" />
                                 <p>Christiana</p>
-                                <div>
-                                    <button>Unfriend</button>
-                                    <span>.</span>
-                                    <button>Block</button>
-                                </div>
+                                <button>Unfriend</button>
                             </li>
                             <li>
-                                <img
-                                    src="./images/reset.svg"
-                                    alt=""
-                                    id="selectedNodeFriendImage"
-                                />
+                                <img src="./images/reset.svg" alt="" />
                                 <p>Christiana</p>
-                                <div>
-                                    <button>Unfriend</button>
-                                    <span>.</span>
-                                    <button>Block</button>
-                                </div>
+                                <button>Unfriend</button>
                             </li>
                             <li>
-                                <img
-                                    src="./images/reset.svg"
-                                    alt=""
-                                    id="selectedNodeFriendImage"
-                                />
+                                <img src="./images/reset.svg" alt="" />
                                 <p>Christiana</p>
-                                <div>
-                                    <button>Unfriend</button>
-                                    <span>.</span>
-                                    <button>Block</button>
-                                </div>
+                                <button>Unfriend</button>
                             </li>
                             <li>
-                                <img
-                                    src="./images/reset.svg"
-                                    alt=""
-                                    id="selectedNodeFriendImage"
-                                />
+                                <img src="./images/reset.svg" alt="" />
                                 <p>Christiana</p>
-                                <div>
-                                    <button>Unfriend</button>
-                                    <span>.</span>
-                                    <button>Block</button>
-                                </div>
+                                <button>Unfriend</button>
                             </li>
                         </ul>
                     </section>
 
-                    <button type="button" id="deleteNode">Delete Node</button>
-                    <!-- <h3>Friends</h3> -->
+                    <button id="deleteNode" class="delete-button">Delete Node</button>
                 </div>
                 <nav id="phoneFooter" class="phone-navigation">
                     <ul>
@@ -256,24 +203,19 @@
 
             <div id="canvasContainer" class="canvas-container">
                 <canvas id="nodeCanvas"></canvas>
-                <div id="nodeDataContainer" popover class="hide">
+                <div id="nodeDataContainer" popover class="hide node-popover">
                     <p></p>
                     <img src="" alt="" />
                     <p>
-                        Friends:<span class="friendsSpan">1</span
-                        ><span class="dot">and</span>Popularity:<span
-                            class="popularitySpan"
-                            >2</span
-                        >
+                        Friends:
+                        <span class="friendsSpan">1</span>
+                        <span class="dot">and</span>
+                        Popularity:
+                        <span class="popularitySpan">2</span>
                     </p>
                 </div>
             </div>
         </main>
         <script src="js/app.js" type="module"></script>
-        <!-- <script src="js/createNode.js" defer></script>
-        <script src="js/linkNodes.js" defer></script>
-        <script src="js/api.js" defer></script>
-        <script src="js/centrality.js" defer></script>
-        <script src="js/cursor.js" defer></script> -->
     </body>
 </html>
