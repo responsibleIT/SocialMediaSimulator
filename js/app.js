@@ -202,43 +202,32 @@ function resizeNodes(nodes) {
  * @param {Array} userData - ...
  */
 function drawRandom(label, count, userData) {
-    if (userData === null) {
-        for (var i = 0; i < count; i++) {
-            var x = Math.random() * canvasSize.width;
-            var y = Math.random() * canvasSize.height;
-            const id = nodes.size;
-            const node = new Post(id, "Social Media Post", x, y);
+for (var i = 0; i < count; i++) {
+        let node;
 
-            node.addNodeLabel({ x, y }, label);
-            nodes.set(id, node);
-
-            setEventListeners(node);
-        }
-    } else {
-        for (var i = 0; i < count; i++) {
-            let node;
-
-            const x = Math.random() * canvasSize.width;
-            const y = Math.random() * canvasSize.height;
-            const image = userData[i].image;
-            const username = userData[i].username;
-
-            const id = nodes.size;
-
-            if (label === "Person") {
+        const id = nodes.size;
+        const x = Math.random() * canvasSize.width;
+        const y = Math.random() * canvasSize.height;
+            
+        switch (label) {
+            case "Person":
+                const image = userData[i].image;
+                const username = userData[i].username;
                 node = new Person(id, "Person", x, y, { image, username });
-                nodes.set(nodes.size, node);
-            }
-            // else if (label === "Social Media Post") {
-            //     addItemNode(id, label, x, y, [], nodeLabelRef);
-            // }
-
-            node.addNodeLabel({ x, y }, label, image, username);
-
-            setEventListeners(node);
+                break;
+            case "Social Media Post":
+                node = new Post(id, "Social Media Post", x, y);
+                break;
+            default:
+                break;
         }
+
+        nodes.set(id, node);
+        node.draw();
+        setEventListeners(node);
     }
 }
+
 
 /**
  * Function to spawn a node on the canvas given the position of the cursor
@@ -251,27 +240,27 @@ async function spawnNode(evt) {
         return;
     }
 
-    let nodeId = nodes.size;
-    var mousePos = getMousePosOnCanvas(canvas, evt);
     let node;
+
+    const id = nodes.size;
+    var mousePos = getMousePosOnCanvas(canvas, evt);
+
     switch (label) {
         case "Person":
             let userData = await fetchUsers(1);
             const image = userData[0].image;
             const username = userData[0].username;
-            node = new Person(nodeId, "Person", mousePos.x, mousePos.y, { image, username });
-            nodes.set(nodes.size, node);
-            node.addNodeLabel(mousePos, label, image, username); // Pass node ID to label function
+            node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
             break;
         case "Social Media Post":
-            var mousePos = getMousePosOnCanvas(canvas, evt);
-            node = new Post(nodeId, "Social Media Post", mousePos.x, mousePos.y);
-            nodes.set(nodes.size, node);
-            node.addNodeLabel(mousePos, label);
+            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y);
             break;
         default:
             break;
     }
+
+    nodes.set(id, node);
+    node.draw();
     setEventListeners(node);
 }
 

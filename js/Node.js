@@ -50,33 +50,34 @@ export default class Node {
 
     // Function to add a label to the node in the body of the page absolutely positioned on the exact position of the node on the screen
     // Add node label was the div above the drawn node
-    addNodeLabel(mousePos, label, image, username) {
-        let nodeLabel = document.createElement("div");
-        nodeLabel.className = "node";
-        nodeLabel.style.position = "absolute";
-        let classList;
+    draw() {
+        const nodeElement = document.createElement("div");
+        nodeElement.className = "node";   
 
-        switch (label) {
+        switch (this.label) {
             case "Person":
-                classList = "personNode";
-                nodeLabel.style.backgroundImage = `url(${image})`;
+                nodeElement.classList.add("personNode");
+
+                if (this.profileImage) {
+                    nodeElement.style.backgroundImage = `url(${this.profileImage})`;
+                }
+
                 break;
             case "Social Media Post":
-                classList = "postNode";
+                nodeElement.classList.add("postNode");
                 break;
             default:
                 break;
         }
 
-        nodeLabel.classList.add(classList);
-        nodeLabel.style.width = this.radius * 2 + "px";
-        nodeLabel.style.left = mousePos.x + "px";
-        nodeLabel.style.top = mousePos.y + "px";
+        nodeElement.style.width = this.radius * 2 + "px";
+        nodeElement.style.left = this.x + "px";
+        nodeElement.style.top = this.y + "px";
 
-        canvasContainer.appendChild(nodeLabel);
+        canvasContainer.appendChild(nodeElement);
 
-        this.element = nodeLabel;
-        return nodeLabel;
+        this.element = nodeElement;
+        return nodeElement;
     }
 
     //Function for handling link actions

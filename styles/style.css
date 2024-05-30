@@ -367,6 +367,7 @@ h3:nth-of-type(3) {
     z-index: 2;
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
+    position: absolute;
 }
 
 .linkStripe {
@@ -482,7 +483,6 @@ input[type="radio"] {
     background-color: blue;
     background-repeat: no-repeat;
     background-size: contain;
-    position: relative;
     overflow: hidden;
 
     &.selected {
