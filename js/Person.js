@@ -162,7 +162,6 @@ export default class Person extends Node {
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links) {
-        const thisNode = this;
         //Get the node ids of every social media post that the selected person node has read
         this.items.forEach((item) => {
             let svgIcon = document.createElement("img");
@@ -175,11 +174,11 @@ export default class Person extends Node {
             forwardButton.style.position = "absolute";
             forwardButton.style.left = itemNodeData.x + "px";
             forwardButton.style.top = itemNodeData.y + "px";
-            forwardButton.addEventListener("click", function () {
+            forwardButton.addEventListener("click", () => {
                 // const friendsArray = this.friends;
-                thisNode.friends.forEach((friend) => {
-                    thisNode.addItemLink(item, friend, links);
-                    thisNode.addInfoLink(friend, thisNode, links);
+                this.friends.forEach((friend) => {
+                    this.addItemLink(item, friend, links);
+                    this.addInfoLink(friend, thisNode, links);
                 });
             });
             canvasContainer.appendChild(forwardButton);
@@ -207,10 +206,7 @@ export default class Person extends Node {
     }
 
     removeFriend(node, links) {
-        let personIdData = this;
-        let friendIdData = node;
-
-        let linkKey1 = this.id + "-" + node.id;
+		let linkKey1 = this.id + "-" + node.id;
         let linkKey2 = node.id + "-" + this.id;
 
         let linkElement1 = links.get(linkKey1);
@@ -224,10 +220,10 @@ export default class Person extends Node {
             return;
         }
 
-        personIdData.friends.delete(node.id);
-        //  = personIdData.friends.filter((id) => id !== node.id);
-        friendIdData.friends.delete(this.id);
-        // = friendIdData.friends.filter((id) => id !== this.id);
+        this.friends.delete(node.id);
+        //  = this.friends.filter((id) => id !== node.id);
+        node.friends.delete(this.id);
+        // = node.friends.filter((id) => id !== this.id);
 
         links.delete(linkKey1);
         links.delete(linkKey2);
@@ -249,16 +245,11 @@ export default class Person extends Node {
 
     //Function for removing an item link between the currently selected node and the node with the given id
     removeItemLink(item, links) {
-        const personId = this.id;
+		this.items.delete(item.id);
+        node.readers.delete(this.id);
 
-        let personIdData = this;
-        let itemIdData = item;
-
-        personIdData.items.delete(item.id);
-        itemIdData.readers.delete(personId);
-
-        links.get(personId + "-" + item.id).element.remove();
-        links.delete(personId + "-" + item.id);
+        links.get(this.id + "-" + item.id).element.remove();
+        links.delete(this.id + "-" + item.id);
     }
 
     //Function for adding an info link between the currently selected node and the node with the given id
