@@ -72,16 +72,6 @@
                     <div class="vertical-line"></div>
 
                     <section>
-                        <h3>Calculate</h3>
-                        <div class="tools">
-                            <button type="button" id="calcClosenessCentrality">Closeness Centrality</button>
-                            <button type="button" id="calcGroups">Groups</button>
-                        </div>
-                    </section>
-
-                    <div class="vertical-line"></div>
-
-                    <section>
                         <h3>Simulate</h3>
                         <div class="tools">
                             <button type="button" id="stepButton">
@@ -203,7 +193,18 @@
                     </ul>
                 </nav>
             </section>
+            <section class="calculated">
+                <h3>Calculate</h3>
+                <div class="tools">
+                    <button type="button" id="calcClosenessCentrality">Closeness Centrality</button>
+                    <button type="button" id="calcGroups">Groups</button>
+                </div>
+            </section>
+            <section class="legend">
+                <h3>Legend</h3>
+            </section>
 
+            <div class="vertical-line"></div>
             <div id="canvasContainer" class="canvas-container">
                 <canvas id="nodeCanvas"></canvas>
                 <div id="nodeDataContainer" popover class="hide node-popover">
