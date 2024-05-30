@@ -55,7 +55,7 @@ button {
 }
 
 #nodeCanvas {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     height: 100%;
     position: relative;
     margin: 0 auto;
