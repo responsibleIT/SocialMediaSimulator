@@ -27,7 +27,7 @@ export default class Person extends Node {
 
         //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
         // const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
-        console.log("randomPost.readers", randomPost.readers, "this.friends", this.friends, );
+        console.log("randomPost.readers", randomPost.readers, "this.friends", this.friends);
         const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader));
         //From my infolinks who have read the post, get the scores they have with the post
         const infoLinkScores = infoLinksThatReadPost.map((infoLink) => randomPost.readers.get(infoLink));
@@ -49,7 +49,7 @@ export default class Person extends Node {
         myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
         console.log("MY SCORE", myScore);
         //Add the post to my items with the calculated score
-        this.items.set(randomPost.id, {post: randomPost, score: myScore}); // add the my score
+        this.items.set(randomPost.id, { post: randomPost, score: myScore }); // add the my score
 
         //Add myself to the readers of the post
         randomPost.readers.set(this, myScore);
