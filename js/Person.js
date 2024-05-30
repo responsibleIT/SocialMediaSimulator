@@ -224,7 +224,7 @@ export default class Person extends Node {
         this.friends.set(node.id, node);
         toBeFriend.friends.set(this.id, this);
 
-        const link = new Edge(this, node, "friend-link", links);
+        const link = new Edge(this, node, "friend-link");
         links.set(this.id + "-" + toBeFriend.id, link);
         // link.drawLink();
     }
