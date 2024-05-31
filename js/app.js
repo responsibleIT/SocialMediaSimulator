@@ -87,8 +87,8 @@ canvas.addEventListener("click", (event) => {
     spawnNode(event);
 });
 
-// calcClosenessCentrality.addEventListener("click", () => {
-//     calculateAdjustedClosenessCentrality();
+// calcGroups.addEventListener("click", () => {
+    // calculateAdjustedClosenessCentrality();
 // });
 
 increasedPopularityInput.addEventListener("change", () => {
@@ -99,7 +99,7 @@ increasedPopularityInput.addEventListener("change", () => {
 });
 
 // calcGroupsButton.addEventListener("click", () => {
-//     findAllConnectedComponents();
+findAllConnectedComponents();
 // });
 
 stepButton.addEventListener("click", () => {
@@ -183,8 +183,9 @@ function findAllConnectedComponents() {
         }
     });
 
-    console.log("Total number of connected components:", components.length);
-    console.log("Connected components:", components);
+    // console.log("Total number of connected components:", components.length);
+    calcGroups.textContent = components.length;
+    // console.log("Connected components:", components);
 }
 
 /**
@@ -209,13 +210,13 @@ function resizeNodes(nodes) {
  * @param {Array} userData - ...
  */
 function drawRandom(label, count, userData) {
-for (var i = 0; i < count; i++) {
+    for (var i = 0; i < count; i++) {
         let node;
 
         const id = nodes.size;
         const x = Math.random() * canvasSize.width;
         const y = Math.random() * canvasSize.height;
-            
+
         switch (label) {
             case "Person":
                 const image = userData[i].image;
@@ -234,7 +235,6 @@ for (var i = 0; i < count; i++) {
         setEventListeners(node);
     }
 }
-
 
 /**
  * Function to spawn a node on the canvas given the position of the cursor
@@ -478,6 +478,7 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
+    console.log(centralities);
 }
 
 

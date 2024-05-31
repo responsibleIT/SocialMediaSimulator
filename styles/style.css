@@ -20,29 +20,6 @@ body {
     font-family: system-ui;
 }
 
-body > header {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    height: fit-content;
-    gap: 1em;
-    z-index: 999;
-    transition: 200ms;
-    &:hover {
-        opacity:0; 
-        filter:alpha(opacity=0); 
-     }
-    & h1 {
-        order: 1;
-        font-size: 1.4em;
-        height: fit-content;
-        user-select:none;
-    }
-    & .logo {
-        height: 100%;
-    }
-}
-
 main {
     display: grid;
     grid-template-columns: 1fr 16em;
@@ -133,6 +110,39 @@ button {
     height: 24px; /* Adjust size as needed */
 }
 
+p span {
+    color: #0075ff;
+    font-weight: 700;
+}
+
+
+/*
+HEADER STYLES
+*/
+
+body > header {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    gap: 1em;
+    z-index: 999;
+    transition: 200ms;
+    &:hover {
+        opacity:0; 
+        filter:alpha(opacity=0); 
+     }
+    & h1 {
+        order: 1;
+        font-size: 1.4em;
+        height: fit-content;
+        user-select:none;
+    }
+    & .logo {
+        height: 100%;
+    }
+}
+
 
 /*
 CANVAS STYLES
@@ -187,11 +197,6 @@ canvas {
     & p {
         display: flex;
         gap: 8px;
-    }
-
-    & p span {
-        color: #0075ff;
-        font-weight: 700;
     }
 
     & p span:nth-of-type(2) {
