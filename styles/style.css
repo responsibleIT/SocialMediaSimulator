@@ -604,7 +604,7 @@ section#home {
     display: block;
 }
 
-#phoneNav button{
+.phone-navigation button{
     padding: 0;
     box-shadow: none;
 }
@@ -713,11 +713,11 @@ section#home {
 
 
 
-#selectedProfile {
+.selectedProfile {
     display: none;
 }
 
-#selectedNodeUserName{
+.username{
     grid-column: 2 / 3;
 }
 
@@ -732,7 +732,7 @@ section#home {
 
 
 
-#traitSelect{
+.traitSelect{
     /* padding: .5em; */
     border-radius: 1em;
     /* border: 1px solid #0075ff; */
