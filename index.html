@@ -103,12 +103,16 @@
 
             <section id="phone" class="phone">
                 <h2 class="visually-hidden">Phone control</h2>
-                <img src="../images/phone.png" alt="" class="phone-border" />
+                <!-- <img src="../images/phone.png" alt="" class="phone-border" /> -->
 
-                <div class="phone-status-bar"></div>
+                <div class="phone-status-bar">
+                    <!-- <img src="./images/batteryIcon.svg" alt="" />
+                    <img src="./images/networkIcon.svg" alt="" />
+                    <img src="./images/wifiIcon.svg" alt="" /> -->
+                </div>
 
                 <div id="selectedNodeOptions" class="hide fakebook">
-                    <header class="fakebook-header">
+                    <!-- <header class="fakebook-header">
                         <h2>
                             <img src="./images/fakebook-logo.svg" alt="" />
                             <span class="visually-hidden">Fakebook</span>
@@ -121,7 +125,7 @@
                             <img src="./images/settings.svg" alt="" />
                             <span class="visually-hidden">Settings</span>
                         </button>
-                    </header>
+                    </header> -->
 
                     <section class="fakebook-profile">
                         <h3 class="visually-hidden">Profile</h3>
@@ -132,25 +136,28 @@
                         <button>
                             <img src="./images/chevron-right.svg" alt="arrow-right" />
                         </button>
+                        <p id="selectedNodeUserName" class="username">Name</p>
 
 
                         <div id="selectedProfile">
-                            <p id="selectedNodeUserName" class="username">Name</p>
+                            
                             <div id="userData" class="user-data">
                                 <span id="selectedNodeUserFriends">5</span>
                                 <span id="totalPopularity">2</span>
                                 <p>Friends</p>
                                 <p>Popularity</p>
                             </div>
+                            
+                            
 
-                            <label style="display: none">
+                            <!-- <label style="display: none">
                                 Increased Popularity
                                 <input type="number" id="nodePopularity" min="0" max="50" />
-                            </label>
+                            </label> -->
                         </div>
                     </section>
 
-                    <section class="friends">
+                    <section class="friends" id="friends">
                         <h3>Friends</h3>
 
                         <ul>
@@ -181,21 +188,77 @@
                             </li>
                         </ul>
                     </section>
+                    
+                    <section class="profile" id="profile">
+                        <div class="profileInfo">
+                            <div class="fakeFollowers">
+                                <p>Fake followers: </p>
+                                <div class="counter-input">
+                                    
+                                    <button tabindex="-1">–</button>
+                                    <input type="number" id="nodePopularity" value="0" min="1" max="50" />
+                                    <button tabindex="-1">+</button>
+                                </div>
+                            </div>
+                            <div class="trait">
+                                <p>Trait: </p>
+                                <select id="traitSelect">
+                                    <option value="1">Social</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <button id="deleteNode" class="delete-button">Delete Account</button>
+                        </div>
+                    </section>
 
-                    <button id="deleteNode" class="delete-button">Delete Node</button>
+                    <section class="liked" id="liked">
+                        <h3>Liked Post</h3>
+                        <ul>
+                            <li>
+                                <img src="./images/reset.svg" alt="" />
+                                <p>Jop's birthday</p>
+                                <button>Unlike</button>
+                            </li>
+                            <li>
+                                <img src="./images/reset.svg" alt="" />
+                                <p>CSS day</p>
+                                <button>Unlike</button>
+                            </li>
+                            
+                        </ul>
+                    </section>
+
+                    
                 </div>
-                <nav id="phoneFooter" class="phone-navigation">
+
+                <nav id="phoneNav" class="phone-navigation">
                     <ul>
                         <li>
-                            <img src="./images/like.svg" alt="" />
-                            <span class="visually-hidden">Liked</span>
+                            <button data-page="home">
+                            <img src="./images/homeIcon.svg" alt="" />
+                            <span class="visually-hidden">Home</span>
+                        </button>
                         </li>
                         <li>
-                            <img src="./images/home.svg" alt="" /></li>
-                            <span class="visually-hidden">Home</span>
+                            <button data-page="liked">
+                            <img src="./images/likedIcon.svg" alt="" />
+                            <span class="visually-hidden">Liked</span>
+                        </button>
+                        </li>
                         <li>
-                            <img src="./images/friends.svg" alt="" />
+                            <button data-page="friends">
+                            <img src="./images/friendsIcon.svg" alt="" />
                             <span class="visually-hidden">Friends</span>
+                        </button>
+                        </li>
+                        <li>
+                            <button data-page="profile">
+                            <img src="./images/profile.svg" alt="" />
+                            <span class="visually-hidden">Profile</span>
+                        </button>
                         </li>
                     </ul>
                 </nav>
