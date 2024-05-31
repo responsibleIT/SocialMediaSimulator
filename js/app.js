@@ -358,21 +358,37 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
 
     // friends
-    const ul = friends.querySelector("ul");
-    const template = document.querySelector("#friendsTemplate");
-    console.log(nodeData.friends);
+    const ulFriends = friends.querySelector("ul");
+    const templateFriends = document.querySelector("#friendsTemplate");
     if (nodeData.friends.size !== 0) {
-        ul.innerHTML = "";
+        ulFriends.innerHTML = "";
         nodeData.friends.forEach((friend) => {
-            console.log(friend);
-            const clone = template.content.cloneNode(true);
+            const clone = templateFriends.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
             p.textContent = friend.userName;
             img.src = friend.profileImage;
-            ul.appendChild(clone);
+            ulFriends.appendChild(clone);
         });
     }
+
+    // feedSection
+
+    const ulFeed = feedSection.querySelector("ul");
+    const templateFeed = document.querySelector("#feedSectionTemplate");
+    // if (nodeData.friends.size !== 0) {
+    ulFeed.innerHTML = "";
+    nodes.forEach((node) => {
+        if (node.label === "Social Media Post") {
+            const clone = templateFeed.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            const p = clone.querySelector("p");
+            p.textContent = "Post " + node.id;
+            // img.src = friend.profileImage;
+            ulFeed.appendChild(clone);
+        }
+    });
+    // }
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
