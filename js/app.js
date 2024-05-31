@@ -361,16 +361,18 @@ function showNodeDataContainer(nodeData) {
     const ul = friends.querySelector("ul");
     const template = document.querySelector("#friendsTemplate");
     console.log(nodeData.friends);
-    ul.innerHTML = "";
-    nodeData.friends.forEach((friend) => {
-        console.log(friend);
-        const clone = template.content.cloneNode(true);
-        const img = clone.querySelector("img");
-        const p = clone.querySelector("p");
-        p.textContent = friend.userName;
-        img.src = friend.profileImage;
-        ul.appendChild(clone);
-    });
+    if (nodeData.friends.size !== 0) {
+        ul.innerHTML = "";
+        nodeData.friends.forEach((friend) => {
+            console.log(friend);
+            const clone = template.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            const p = clone.querySelector("p");
+            p.textContent = friend.userName;
+            img.src = friend.profileImage;
+            ul.appendChild(clone);
+        });
+    }
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
