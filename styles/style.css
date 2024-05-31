@@ -711,7 +711,7 @@ section#home {
     background-color: #d70000;
 }
 
-
+/* account  */
 
 .selectedProfile {
     display: none;
@@ -729,8 +729,6 @@ section#home {
     padding: .25em 0;
     }
 }
-
-
 
 .traitSelect{
     /* padding: .5em; */
