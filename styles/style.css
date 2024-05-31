@@ -8,7 +8,6 @@ RESET
     padding: 0;
 }
 
-
 /* 
 GENERAL STYLING
 */
@@ -72,20 +71,12 @@ button {
     &:hover,
     &:focus-visible {
         box-shadow: 0 0 2px 1px #0009;
-        background-color: color-mix(
-            in srgb,
-            var(--background-color),
-            #ffffff 30%
-        );
+        background-color: color-mix(in srgb, var(--background-color), #ffffff 30%);
     }
 
     &:active {
         box-shadow: inset 0 0 3px 1px #0009;
-        background-color: color-mix(
-            in srgb,
-            var(--background-color),
-            #000000 30%
-        );
+        background-color: color-mix(in srgb, var(--background-color), #000000 30%);
     }
 }
 
@@ -115,7 +106,6 @@ p span {
     font-weight: 700;
 }
 
-
 /*
 HEADER STYLES
 */
@@ -129,20 +119,19 @@ body > header {
     z-index: 999;
     transition: 200ms;
     &:hover {
-        opacity:0; 
-        filter:alpha(opacity=0); 
-     }
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
     & h1 {
         order: 1;
         font-size: 1.4em;
         height: fit-content;
-        user-select:none;
+        user-select: none;
     }
     & .logo {
         height: 100%;
     }
 }
-
 
 /*
 CANVAS STYLES
@@ -251,7 +240,6 @@ canvas {
     display: none;
 }
 
-
 /* 
 TOOLBAR STYLES
 */
@@ -271,7 +259,7 @@ TOOLBAR STYLES
     display: flex;
     flex-direction: row;
     padding-inline: 1em;
-    padding-block: .5em;
+    padding-block: 0.5em;
     background-color: white;
     border-radius: 0.75rem;
     top: 0;
@@ -384,7 +372,6 @@ NODE STYLES
     background-color: color-mix(in srgb, red, #d9dfe2 50%);
 }
 
-
 /* LINK STYLES */
 
 .linkStripe {
@@ -397,7 +384,6 @@ NODE STYLES
 
     &.friend-link {
         background-color: #00b000;
-
     }
 
     &.item-link {
@@ -433,7 +419,6 @@ input[type="radio"] {
     position: absolute;
     left: -9999px;
 }
-
 
 /* 
 LEGEND STYLES
@@ -482,7 +467,6 @@ LEGEND STYLES
     }
 }
 
-
 /* 
 CALCULATE STYLES
 */
@@ -515,8 +499,10 @@ PHONE STYLES
     justify-self: right;
     align-self: end;
     position: relative;
-    aspect-ratio: 1 / 1;
-    padding: 1.1em 1.2em 1.2em 1.3em;
+    aspect-ratio: 272 / 554;
+    border: 0.5em solid #234;
+    border-radius: 28px;
+    overflow: hidden;
 }
 
 .phone-border {
@@ -535,7 +521,6 @@ PHONE STYLES
     background-color: grey;
 }
 
-
 /*
 FAKEBOOK STYLES
 */
@@ -549,29 +534,27 @@ FAKEBOOK STYLES
 
     column-gap: 1em;
     row-gap: 1rem;
-    
+
     background-color: white;
-    border-radius: 0.75rem;
-   
-    width: 100%; 
+
+    width: 100%;
     aspect-ratio: 1 / 2.08;
     overflow-y: auto;
-    
-    padding: .5em;
+
+    padding: 0.5em;
     padding-bottom: 5em;
-    
+
     &::-webkit-scrollbar {
         display: none;
     }
-    
-     & h3 {
-        padding: .5rem 1rem;
+
+    & h3 {
+        padding: 0.5rem 1rem;
         font-size: 1.2rem;
         margin: 0;
     }
 
     & > div:nth-of-type(1) {
-
         & > p:nth-of-type(1) {
             padding-top: 0;
         }
@@ -604,9 +587,8 @@ FAKEBOOK STYLES
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: .5em;
-    gap: .5em;
-
+    padding: 0.5em;
+    gap: 0.5em;
 
     & h2 {
         margin-right: auto;
@@ -614,7 +596,7 @@ FAKEBOOK STYLES
 
     & button {
         background-color: transparent;
-        padding: .5em;
+        padding: 0.5em;
         display: grid;
         place-items: center;
     }
@@ -625,14 +607,13 @@ FAKEBOOK STYLES
     position: absolute;
     gap: 1rem;
     list-style: none;
-    padding: 1rem 3.5rem;
+    padding: 0.25rem 0 0.5rem 0;
     justify-content: center;
     background-color: #0075ff;
     color: white;
-    bottom: 1rem;
-    border-radius: 0 0 2rem 2rem;
-    right: 1rem;
-    left: 1rem;
+    bottom: 0;
+    right: 0;
+    left: 0;
 
     & ul {
         display: flex;
@@ -640,8 +621,23 @@ FAKEBOOK STYLES
         list-style: none;
         padding: 0;
         margin: 0;
-        gap: 3rem;
+        gap: 1rem;
     }
+
+    & button.active {
+        --background-color: #ffffff 20%;
+    }
+}
+
+.friends,
+.liked,
+.profile {
+    display: none;
+}
+
+.phone-navigation button {
+    padding: 0;
+    box-shadow: none;
 }
 
 .fakebook-profile {
@@ -649,7 +645,7 @@ FAKEBOOK STYLES
     grid-template-columns: max-content 1fr max-content;
     text-align: center;
     justify-items: center;
-    gap: .5em;
+    gap: 0.5em;
 
     & > img {
         width: 4rem;
@@ -676,7 +672,7 @@ FAKEBOOK STYLES
     }
 
     & .username {
-        margin-bottom: .5em;
+        margin-bottom: 0.5em;
         font-weight: bold;
     }
 
@@ -693,7 +689,6 @@ FAKEBOOK STYLES
 }
 
 .friends {
-
     & img {
         width: 3rem;
         height: 3rem;
@@ -731,7 +726,7 @@ FAKEBOOK STYLES
         grid-column: 2 / 2;
         grid-row: 2 / 2;
         display: flex;
-        gap: .5rem;
+        gap: 0.5rem;
     }
 
     & button {
@@ -744,4 +739,44 @@ FAKEBOOK STYLES
 
 .delete-button {
     background-color: #d70000;
+}
+
+/* account  */
+
+.selectedProfile {
+    display: none;
+}
+
+.username {
+    grid-column: 2 / 3;
+}
+
+.trait {
+    display: flex;
+    margin: 0.5em 0;
+
+    & p {
+        padding: 0.25em 0;
+    }
+}
+
+.traitSelect {
+    /* padding: .5em; */
+    border-radius: 1em;
+    /* border: 1px solid #0075ff; */
+    background-color: #c3c3c3;
+    width: 100%;
+    margin: 0 0.5em;
+    padding: 0.25rem;
+}
+
+.profileInfo {
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.fakeFollowers {
+    display: flex;
+    gap: 1em;
 }
