@@ -280,9 +280,9 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        if (nodes.get(node.id).label === "Person") {
-            showNodeDataContainer(node.id, nodes.get(node.id));
-        }
+        // if (nodes.get(node.id).label === "Person") {
+        //     showNodeDataContainer(node.id, nodes.get(node.id));
+        // }
     });
 
     node.element.addEventListener("mouseout", function () {
@@ -296,6 +296,7 @@ function setEventListeners(node) {
             case null:
                 selectNode(node);
                 showSelectedNodeOptions();
+                showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
             case node:
@@ -308,6 +309,7 @@ function setEventListeners(node) {
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
                 showSelectedNodeOptions();
+                showNodeDataContainer(selectedNode);
         }
     });
 
@@ -345,7 +347,7 @@ function getMousePosOnCanvas(canvas, e, scroll) {
  * @param {Number} nodeId - ...
  * @param {Object} noteData - ...
  */
-function showNodeDataContainer(nodeId, nodeData) {
+function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[0].textContent = nodeData.userName;
     nodeDataContainer.children[1].src = nodeData.profileImage;
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
@@ -354,6 +356,21 @@ function showNodeDataContainer(nodeId, nodeData) {
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = nodeData.x + 10 + "px";
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
+
+    // friends
+    const ul = friends.querySelector("ul");
+    const template = document.querySelector("#friendsTemplate");
+    console.log(nodeData.friends);
+    ul.innerHTML = "";
+    nodeData.friends.forEach((friend) => {
+        console.log(friend);
+        const clone = template.content.cloneNode(true);
+        const img = clone.querySelector("img");
+        const p = clone.querySelector("p");
+        p.textContent = friend.userName;
+        img.src = friend.profileImage;
+        ul.appendChild(clone);
+    });
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
