@@ -87,9 +87,9 @@ canvas.addEventListener("click", (event) => {
     spawnNode(event);
 });
 
-calcClosenessCentrality.addEventListener("click", () => {
-    calculateAdjustedClosenessCentrality();
-});
+// calcClosenessCentrality.addEventListener("click", () => {
+//     calculateAdjustedClosenessCentrality();
+// });
 
 increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
@@ -98,9 +98,9 @@ increasedPopularityInput.addEventListener("change", () => {
     showSelectedNodeOptions();
 });
 
-calcGroupsButton.addEventListener("click", () => {
-    findAllConnectedComponents();
-});
+// calcGroupsButton.addEventListener("click", () => {
+//     findAllConnectedComponents();
+// });
 
 stepButton.addEventListener("click", () => {
     console.log(selectedNode);
