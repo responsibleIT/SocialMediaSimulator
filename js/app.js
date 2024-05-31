@@ -512,7 +512,6 @@ function bfsShortestPath(graph, startNode) {
 }
 
 // switch in the phone between tabs
-const phoneTabs = document.querySelectorAll(".phone-tab");
 const phoneNav = document.getElementById("phoneNav");
 phoneNav.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -520,9 +519,6 @@ phoneNav.querySelectorAll("button").forEach((button) => {
             button.classList.remove("active");
         });
         button.classList.add("active");
-        phoneTabs.forEach((tab) => {
-            tab.classList.add("hide");
-        });
     });
 });
 
@@ -535,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     buttons.forEach(button => {
         button.addEventListener('click', function () {
-            const page = this.getAttribute('data-page');
+            const page = this.dataset.page;
 
             if (page === 'friends') {
                 friendsSection.style.display = 'block';
