@@ -459,11 +459,13 @@ PHONE STYLES
 .phone {
     grid-column: 2 / 2;
     grid-row: 2 / 3;
-    width: 20em;
+    width: 16em;
     justify-self: right;
     position: relative;
-    aspect-ratio: 1 / 1;
-    padding: 1.1em 1.2em 1.2em 1.3em;
+    aspect-ratio: 272 / 554 ; ;
+    border: 0.5em solid #234;
+    border-radius: 28px;
+    overflow: hidden;
 }
 
 .phone-border {
@@ -498,7 +500,6 @@ FAKEBOOK STYLES
     row-gap: 1rem;
     
     background-color: white;
-    border-radius: 0.75rem;
    
     width: 100%; 
     aspect-ratio: 1 / 2.08;
@@ -572,14 +573,13 @@ FAKEBOOK STYLES
     position: absolute;
     gap: 1rem;
     list-style: none;
-    padding: 1rem 3.5rem;
+    padding: .25rem 0 .5rem 0;
     justify-content: center;
     background-color: #0075ff;
     color: white;
-    bottom: 1rem;
-    border-radius: 0 0 2rem 2rem;
-    right: 1rem;
-    left: 1rem;
+    bottom: 0;
+    right: 0;
+    left: 0;
 
     & ul {
         display: flex;
@@ -587,8 +587,26 @@ FAKEBOOK STYLES
         list-style: none;
         padding: 0;
         margin: 0;
-        gap: 3rem;
+        gap: 1rem;
     }
+
+    & button.active{
+        --background-color: #ffffff 20%;
+        
+    }
+}
+
+.friends, .liked, .profile {
+    display: none;
+}
+
+section#home {
+    display: block;
+}
+
+#phoneNav button{
+    padding: 0;
+    box-shadow: none;
 }
 
 .fakebook-profile {
@@ -640,7 +658,8 @@ FAKEBOOK STYLES
 }
 
 .friends {
-
+    margin-left: -0.5em;
+    width: 110%;
     & img {
         width: 3rem;
         height: 3rem;
@@ -691,4 +710,46 @@ FAKEBOOK STYLES
 
 .delete-button {
     background-color: #d70000;
+}
+
+
+
+#selectedProfile {
+    display: none;
+}
+
+#selectedNodeUserName{
+    grid-column: 2 / 3;
+}
+
+.trait{
+    display: flex;
+    margin: .5em 0;
+
+    & p{
+    padding: .25em 0;
+    }
+}
+
+
+
+#traitSelect{
+    /* padding: .5em; */
+    border-radius: 1em;
+    /* border: 1px solid #0075ff; */
+    background-color: #C3C3C3;
+    width: 100%;
+    margin: 0 .5em;
+    padding: .25rem;
+}
+
+.profileInfo{
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.fakeFollowers{
+    display: flex;
+    gap: 1em;
 }

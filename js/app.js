@@ -209,13 +209,13 @@ function resizeNodes(nodes) {
  * @param {Array} userData - ...
  */
 function drawRandom(label, count, userData) {
-for (var i = 0; i < count; i++) {
+    for (var i = 0; i < count; i++) {
         let node;
 
         const id = nodes.size;
         const x = Math.random() * canvasSize.width;
         const y = Math.random() * canvasSize.height;
-            
+
         switch (label) {
             case "Person":
                 const image = userData[i].image;
@@ -508,3 +508,57 @@ function bfsShortestPath(graph, startNode) {
     }
     return distances;
 }
+
+// switch in the phone between tabs
+phoneNav.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+        phoneNav.querySelectorAll("button").forEach((button) => {
+            button.classList.remove("active");
+        });
+        button.classList.add("active");
+        phoneTabs.forEach((tab) => {
+            tab.classList.add("hide");
+        });
+        document.getElementById(button.dataset.tab).classList.remove("hide");
+    });
+
+})
+
+// navigation in phone
+document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('#phoneNav button');
+    const friendsSection = document.getElementById('friends');
+    const profileSection = document.getElementById('profile');
+    const likedSection = document.getElementById('liked');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const page = this.getAttribute('data-page');
+
+            if (page === 'friends') {
+                friendsSection.style.display = 'block';
+                profileSection.style.display = 'none';
+                likedSection.style.display = 'none';
+                selectedProfile.style.display = 'none';
+
+            } else if (page === 'profile') {
+                profileSection.style.display = 'block';
+                selectedProfile.style.display = 'block';
+                friendsSection.style.display = 'none';
+                likedSection.style.display = 'none';
+            }
+            else if (page === 'liked') {
+                likedSection.style.display = 'block';
+                profileSection.style.display = 'none';
+                friendsSection.style.display = 'none';
+                selectedProfile.style.display = 'none';
+            }
+            else {
+                friendsSection.style.display = 'none';
+                profileSection.style.display = 'none';
+                likedSection.style.display = 'none';
+                selectedProfile.style.display = 'none';
+            }
+        });
+    });
+});
