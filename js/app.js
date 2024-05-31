@@ -89,9 +89,9 @@ canvas.addEventListener("click", (event) => {
     spawnNode(event);
 });
 
-calcClosenessCentrality.addEventListener("click", () => {
-    calculateAdjustedClosenessCentrality();
-});
+// calcGroups.addEventListener("click", () => {
+    // calculateAdjustedClosenessCentrality();
+// });
 
 increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
@@ -100,9 +100,9 @@ increasedPopularityInput.addEventListener("change", () => {
     showSelectedNodeOptions();
 });
 
-calcGroupsButton.addEventListener("click", () => {
-    findAllConnectedComponents();
-});
+// calcGroupsButton.addEventListener("click", () => {
+findAllConnectedComponents();
+// });
 
 stepButton.addEventListener("click", () => {
     console.log(selectedNode);
@@ -185,8 +185,9 @@ function findAllConnectedComponents() {
         }
     });
 
-    console.log("Total number of connected components:", components.length);
-    console.log("Connected components:", components);
+    // console.log("Total number of connected components:", components.length);
+    calcGroups.textContent = components.length;
+    // console.log("Connected components:", components);
 }
 
 /**
@@ -236,7 +237,6 @@ function drawRandom(label, count, userData) {
         setEventListeners(node);
     }
 }
-
 
 /**
  * Function to spawn a node on the canvas given the position of the cursor
@@ -480,6 +480,7 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
+    console.log(centralities);
 }
 
 

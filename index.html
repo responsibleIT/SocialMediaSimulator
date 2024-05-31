@@ -7,10 +7,13 @@
         <link rel="stylesheet" href="styles/style.css" />
     </head>
     <body>
+        <header>
+            <h1>Social Media Simulator</h1>
+            <img src="images/logo.svg" alt="" class="logo" />
+        </header>
         <main>
             <div class="top-bar">
-                <h1 class="visually-hidden">Social Media Simulator</h1>
-                <img src="images/logo.svg" alt="" class="logo" />
+
                 <section id="generalOptions" class="toolbar">
                     <h2 class="visually-hidden">Toolbar</h2>
                     <section>
@@ -69,16 +72,6 @@
                     <div class="vertical-line"></div>
 
                     <section>
-                        <h3>Calculate</h3>
-                        <div class="tools">
-                            <button type="button" id="calcClosenessCentrality">Closeness Centrality</button>
-                            <button type="button" id="calcGroups">Groups</button>
-                        </div>
-                    </section>
-
-                    <div class="vertical-line"></div>
-
-                    <section>
                         <h3>Simulate</h3>
                         <div class="tools">
                             <button type="button" id="stepButton">
@@ -90,15 +83,6 @@
                         </div>
                     </section>
                 </section>
-
-                <section class="legend">
-                    <h2>Legend</h2>
-                    <ul>
-                        <li>Friends: <span class="friendLink"></span></li>
-                        <li>Data link: <span class="dataLink"></span></li>
-                        <li>Liked: <span class="likedLink"></span></li>
-                    </ul>
-                </div>
             </div>
 
             <section id="phone" class="phone">
@@ -262,6 +246,24 @@
                         </li>
                     </ul>
                 </nav>
+            </section>
+            <section class="calculated">
+                <h2>Calculations</h2>
+                <p>Most important person: <span id="calcMostImportantPerson"> Unknown</span></p>
+                <p>Number of groups: <span id="calcGroups"></span></p>
+                <!-- <div class="tools"> -->
+                    <!-- <button type="button" id="calcClosenessCentrality">Closeness Centrality</button> -->
+                    <!-- <button type="button" id="calcGroups">Groups</button> -->
+
+                <!-- </div> -->
+            </section>
+            <section class="legend">
+                <h2>Legend</h2>
+                <ul>
+                    <li>Friends<span class="friendLink"></span></li>
+                    <li>Info link<span class="dataLink"></span></li>
+                    <li>Liked/seen<span class="likedLink"></span></li>
+                </ul>
             </section>
 
             <div id="canvasContainer" class="canvas-container">
