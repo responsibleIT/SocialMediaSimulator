@@ -2,9 +2,10 @@ import Person from "./Person.js";
 import Post from "./Post.js";
 import Edge from "./Edge.js";
 import Cursor from "./cursor.js";
-import fetchUsers from "./api.js";
+import UserData from "./UserData.js";
 
 const cursor = new Cursor();
+const userdata = new UserData();
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -70,11 +71,12 @@ countInputs.forEach((input) => {
 
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
-    let userData = await fetchUsers(count);
+    let userData = await userdata.get(count);
+    console.log(userData);
     drawRandom("Person", count, userData);
 });
 
-randomContentButton.addEventListener("click", async () => {
+randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
     drawRandom("Social Media Post", count, null);
 });
@@ -254,7 +256,7 @@ async function spawnNode(evt) {
 
     switch (label) {
         case "Person":
-            let userData = await fetchUsers(1);
+            let userData = await userdata.get(1);
             const image = userData[0].image;
             const username = userData[0].username;
             node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
