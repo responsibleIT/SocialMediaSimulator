@@ -372,24 +372,32 @@ function showNodeDataContainer(nodeData) {
         });
     }
 
-    // feedSection
-
     const ulFeed = feedSection.querySelector("ul");
     const templateFeed = document.querySelector("#feedSectionTemplate");
-    // if (nodeData.friends.size !== 0) {
-    ulFeed.innerHTML = "";
-    nodes.forEach((node) => {
-        if (node.label === "Social Media Post") {
+    const nodesWithReaderMaps = getNodesWithReaders(nodes);
+    if (nodesWithReaderMaps.length !== 0) {
+        ulFeed.innerHTML = "";
+        nodesWithReaderMaps.forEach((node) => {
             const clone = templateFeed.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
             p.textContent = "Post " + node.id;
             // img.src = friend.profileImage;
             ulFeed.appendChild(clone);
+        });
+    }
+}
+
+function getNodesWithReaders(nodes) {
+    const nodesWithReaders = [];
+    nodes.forEach((node) => {
+        if (node.readers) {
+            nodesWithReaders.push(node);
         }
     });
-    // }
+    return nodesWithReaders;
 }
+
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions() {
