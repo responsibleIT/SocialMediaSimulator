@@ -512,6 +512,8 @@ function bfsShortestPath(graph, startNode) {
 }
 
 // switch in the phone between tabs
+const phoneTabs = document.querySelectorAll(".phone-tab");
+const phoneNav = document.getElementById("phoneNav");
 phoneNav.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
         phoneNav.querySelectorAll("button").forEach((button) => {
@@ -521,10 +523,8 @@ phoneNav.querySelectorAll("button").forEach((button) => {
         phoneTabs.forEach((tab) => {
             tab.classList.add("hide");
         });
-        document.getElementById(button.dataset.tab).classList.remove("hide");
     });
-
-})
+});
 
 // navigation in phone
 document.addEventListener('DOMContentLoaded', function () {
