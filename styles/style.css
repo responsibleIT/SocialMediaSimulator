@@ -116,11 +116,11 @@ body > header {
     align-items: center;
     height: fit-content;
     gap: 1em;
-    z-index: 999;
     transition: 200ms;
     &:hover {
         opacity: 0;
         filter: alpha(opacity=0);
+        z-index: 12;
     }
     & h1 {
         order: 1;
@@ -328,7 +328,7 @@ NODE STYLES
 
 .node {
     border-radius: 50%;
-    z-index: 2;
+    z-index: 90;
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
     position: absolute;
