@@ -50,8 +50,8 @@ export default class Person extends Node {
         console.log("MY SCORE", myScore);
         //Add the post to my items with the calculated score
         randomPost.score = myScore;
-        console.log(randomPost.score);
-        this.score = myScore;
+        console.log("randomPost + score", randomPost, randomPost.score);
+        this.score = myScore; // TODO should be socialScore?
         this.items.set(randomPost.id, randomPost); // add the my score
         // this.items.set(randomPost, myScore); This adds the randomPost as a key and the score as the value of that key
 
@@ -77,7 +77,7 @@ export default class Person extends Node {
         console.log(this.items);
         const myScore = this.items.get(randomPost);
         // myScore.id
-        console.log("myScore", myScore); // get the score of the post
+        console.log("this", this, "random post", myScore); // get the score of the post
 
         // TODO myScore is een node, wat is hier de bedoeling?
         //If the score is positive, forward the post to all my friends.
@@ -151,7 +151,7 @@ export default class Person extends Node {
         console.log("manageRelationships function");
         this.friends.forEach((score, friend) => {
             console.log("Score:", score, friend);
-            // TODO score is node
+            // TODO score is node, and friend is id
 
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
