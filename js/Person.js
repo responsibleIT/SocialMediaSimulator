@@ -152,6 +152,7 @@ export default class Person extends Node {
         this.friends.forEach((score, friend) => {
             console.log("Score:", score, friend);
             // TODO score is node, and friend is id
+            // TODO friend has a social score
 
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
