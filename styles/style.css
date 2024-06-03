@@ -155,7 +155,7 @@ canvas {
 }
 
 .node-popover {
-    z-index: 99;
+    z-index: 13;
     position: absolute;
     width: fit-content;
     height: fit-content;
