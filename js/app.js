@@ -284,9 +284,7 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        // if (nodes.get(node.id).label === "Person") {
-        //     showNodeDataContainer(node.id, nodes.get(node.id));
-        // }
+        showNodeDataContainer(node);
     });
 
     node.element.addEventListener("mouseout", function () {
