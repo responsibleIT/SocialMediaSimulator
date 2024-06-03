@@ -55,7 +55,8 @@ button {
 button {
     font: inherit;
     --background-color: #0075ff;
-    background-color: var(--background-color);
+/*    background-color: var(--background-color);*/
+    background-color: color-mix(in srgb, var(--background-color), #ffffff 0%);
     color: white;
     border: none;
     width: fit-content;
