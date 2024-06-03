@@ -49,10 +49,14 @@ export default class Person extends Node {
         myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
         console.log("MY SCORE", myScore);
         //Add the post to my items with the calculated score
-        this.items.set(randomPost.id, { post: randomPost, score: myScore }); // add the my score
+        randomPost.score = myScore;
+        console.log(randomPost.score);
+        this.score = myScore;
+        this.items.set(randomPost.id, randomPost); // add the my score
+        // this.items.set(randomPost, myScore); This adds the randomPost as a key and the score as the value of that key
 
         //Add myself to the readers of the post
-        randomPost.readers.set(this, myScore);
+        randomPost.readers.set(this.id, this);
         console.log("POST", randomPost, "READER", this);
 
         const link = new Edge(this, randomPost, "item-link");
@@ -77,8 +81,8 @@ export default class Person extends Node {
 
         // TODO myScore is een node, wat is hier de bedoeling?
         //If the score is positive, forward the post to all my friends.
-        if (myScore > 0) {
-            console.log("myScore > 0", myScore.id);
+        if (myScore.score > 0) {
+            console.log("myScore > 0", myScore.score);
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
@@ -96,16 +100,16 @@ export default class Person extends Node {
         let relationshipScore = 0;
 
         //Check if I have already read the post
-        if (this.items.has(post)) {
+        if (this.items.has(post.id)) {
             return;
         }
 
         if (relationship === "friend") {
             //Check the relationship score between me and the sender
-            relationshipScore = this.friends.get(sender);
+            relationshipScore = this.friends.get(sender.id);
         } else if (relationship === "infoLink") {
             //Check the relationship score between me and the sender
-            relationshipScore = this.infoLinks.get(sender);
+            relationshipScore = this.infoLinks.get(sender.id);
         }
 
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
@@ -148,7 +152,7 @@ export default class Person extends Node {
         this.friends.forEach((score, friend) => {
             console.log("Score:", score, friend);
             // TODO score is node
-            
+
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
                 friend.friends.delete(this);
@@ -192,10 +196,10 @@ export default class Person extends Node {
         });
     }
 
-      // get(friend.id) en movenode moet naar person
+    // get(friend.id) en movenode moet naar person
     //Function for moving the agent to a new position
     moveNode() {
-        // TODO krijgt nergers een friend of infolink toegewezen
+        // TODO krijgt nergens een friend of infolink toegewezen
         //Get all friends and infolinks with a score higher than 0
         // console.log(this.friends.get(friend), this.infoLinks.get(infoLink));
         const positiveFriends = Array.from(this.friends.keys()).filter((friend) => this.friends.get(friend.id) > 0);
@@ -239,6 +243,17 @@ export default class Person extends Node {
         }
     }
 
+    /**
+     * Function for performing all behaviors of the agent in one step
+     * @param {Object} node - ...
+     */
+    step(nodes, links) {
+        this.readSocialMediaPost(nodes, links);
+        this.forwardSocialMediaPost();
+        this.manageRelationships();
+        this.addFriendThroughContent();
+        this.moveNode();
+    }
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links) {
@@ -286,7 +301,7 @@ export default class Person extends Node {
     }
 
     removeFriend(node, links) {
-		let linkKey1 = this.id + "-" + node.id;
+        let linkKey1 = this.id + "-" + node.id;
         let linkKey2 = node.id + "-" + this.id;
 
         let linkElement1 = links.get(linkKey1);
@@ -324,7 +339,7 @@ export default class Person extends Node {
 
     //Function for removing an item link between the currently selected node and the node with the given id
     removeItemLink(item, links) {
-		this.items.delete(item.id);
+        this.items.delete(item.id);
         item.readers.delete(this.id);
 
         links.get(this.id + "-" + item.id).element.remove();

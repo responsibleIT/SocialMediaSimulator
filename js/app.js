@@ -107,7 +107,8 @@ findAllConnectedComponents();
 stepButton.addEventListener("click", () => {
     console.log(selectedNode);
     if (selectedNode !== null) {
-        step(selectedNode);
+        // step(selectedNode);
+        selectedNode.step(nodes, links);
     }
 });
 
@@ -398,7 +399,6 @@ function getNodesWithReaders(nodes) {
     return nodesWithReaders;
 }
 
-
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions() {
     const image = document.getElementById("selectedNodeImage");
@@ -493,18 +493,6 @@ function deselectNode() {
     selectedNodeOptions.classList.add("hide");
     selectedNode = null;
     node.removeForwardButtons();
-}
-
-/**
- * Function for performing all behaviors of the agent in one step
- * @param {Object} node - ...
- */
-function step(node) {
-    node.readSocialMediaPost(nodes, links);
-    node.forwardSocialMediaPost();
-    node.manageRelationships();
-    node.addFriendThroughContent();
-    node.moveNode();
 }
 
 //Function for calculating the closeness centrality of all nodes
