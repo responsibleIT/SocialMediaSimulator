@@ -242,10 +242,11 @@ export default class Person extends Node {
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links) {
+    	this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
         this.items.forEach((item) => {
             let svgIcon = document.createElement("img");
-            svgIcon.src = "../images/sns_icons_Send.svg";
+            svgIcon.src = "./images/sns_icons_Send.svg";
             svgIcon.alt = "Forward";
             let itemNodeData = item;
             let forwardButton = document.createElement("button");
