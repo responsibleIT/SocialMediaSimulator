@@ -738,7 +738,7 @@ FAKEBOOK STYLES
 }
 
 .delete-button {
-    background-color: #d70000;
+    --background-color: #d70000;
 }
 
 /* account  */
