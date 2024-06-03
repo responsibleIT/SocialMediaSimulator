@@ -212,14 +212,12 @@ canvas {
     transition: transform 0.3s ease;
 
     &:hover {
-        background-color: lightblue;
-        color: white;
         transform: translateY(-1em);
     }
 
     & img {
         width: 2rem;
-        fill: white;
+        filter: invert(1);
     }
 
     &::after {
