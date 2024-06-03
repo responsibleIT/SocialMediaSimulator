@@ -90,9 +90,14 @@
                 <!-- <img src="../images/phone.png" alt="" class="phone-border" /> -->
 
                 <div class="phone-status-bar">
-                    <!-- <img src="./images/batteryIcon.svg" alt="" />
-                    <img src="./images/networkIcon.svg" alt="" />
-                    <img src="./images/wifiIcon.svg" alt="" /> -->
+                    <p>12:34</p>
+                    <div class="phoneIcon">
+                        
+                        <img src="./images/networkIcon.svg" alt="" />
+                        <img src="./images/wifiIcon.svg" alt="" />
+                        <img src="./images/batteryIcon.svg" alt="" />
+                    </div>
+                    
                 </div>
 
                 <div id="selectedNodeOptions" class="hide fakebook">
@@ -123,7 +128,7 @@
                         <p id="selectedNodeUserName" class="username">Name</p>
 
 
-                        <div id="selectedProfile">
+                        <div id="selectedProfile" class="selectedProfile">
                             
                             <div id="userData" class="user-data">
                                 <span id="selectedNodeUserFriends">5</span>
@@ -139,7 +144,8 @@
                                 <input type="number" id="nodePopularity" min="0" max="50" />
                             </label> -->
                         </div>
-                        <div id="feedSection">
+                        <div id="feedSection" class="feedSection">
+                            <h3>Feed</h3>
                             <ul>
                                 <li>Nothing is posted at the moment</li>
                             </ul>
@@ -148,9 +154,9 @@
                                     <p></p>
                                     <img src="" alt="">
                                     <div>
-                                        <p>Liked</p>
-                                        <p>Forward</p>
-                                        <p>Viewed</p>
+                                        <p><button><img src="./images/likePost.svg" alt=""></button></p>
+                                        <p><button><img src="./images/share.svg" alt=""></button></p>
+                                        <p><img src="./images/eye.svg" class="eye" alt=""><span aria-label="Seen by number of people: ">2</span></p>
                                     </div>
                                 </li>
                             </template>
@@ -158,7 +164,10 @@
                     </section>
 
                     <section class="friends" id="friends">
-                        <h3>Friends</h3>
+                        <div class="friendsList">
+                            <h3>Friends</h3>
+                            <button><img src="./images/addIcon.svg" alt="">Add Friends</button>
+                        </div>
 
                         <ul>
                             <li>
