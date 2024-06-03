@@ -116,6 +116,7 @@ body > header {
     align-items: center;
     height: fit-content;
     gap: 1em;
+    z-index: 12;
     transition: 200ms;
     &:hover {
         opacity: 0;
@@ -155,7 +156,7 @@ canvas {
 }
 
 .node-popover {
-    z-index: 13;
+    z-index: 99;
     position: absolute;
     width: fit-content;
     height: fit-content;
