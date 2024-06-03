@@ -280,9 +280,9 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        if (nodes.get(node.id).label === "Person") {
-            showNodeDataContainer(node.id, nodes.get(node.id));
-        }
+        // if (nodes.get(node.id).label === "Person") {
+        //     showNodeDataContainer(node.id, nodes.get(node.id));
+        // }
     });
 
     node.element.addEventListener("mouseout", function () {
@@ -296,6 +296,7 @@ function setEventListeners(node) {
             case null:
                 selectNode(node);
                 showSelectedNodeOptions();
+                showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
             case node:
@@ -308,6 +309,7 @@ function setEventListeners(node) {
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
                 showSelectedNodeOptions();
+                showNodeDataContainer(selectedNode);
         }
     });
 
@@ -345,7 +347,7 @@ function getMousePosOnCanvas(canvas, e, scroll) {
  * @param {Number} nodeId - ...
  * @param {Object} noteData - ...
  */
-function showNodeDataContainer(nodeId, nodeData) {
+function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[0].textContent = nodeData.userName;
     nodeDataContainer.children[1].src = nodeData.profileImage;
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
@@ -354,7 +356,48 @@ function showNodeDataContainer(nodeId, nodeData) {
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = nodeData.x + 10 + "px";
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
+
+    // friends
+    const ulFriends = friends.querySelector("ul");
+    const templateFriends = document.querySelector("#friendsTemplate");
+    if (nodeData.friends.size !== 0) {
+        ulFriends.innerHTML = "";
+        nodeData.friends.forEach((friend) => {
+            const clone = templateFriends.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            const p = clone.querySelector("p");
+            p.textContent = friend.userName;
+            img.src = friend.profileImage;
+            ulFriends.appendChild(clone);
+        });
+    }
+
+    const ulFeed = feedSection.querySelector("ul");
+    const templateFeed = document.querySelector("#feedSectionTemplate");
+    const nodesWithReaderMaps = getNodesWithReaders(nodes);
+    if (nodesWithReaderMaps.length !== 0) {
+        ulFeed.innerHTML = "";
+        nodesWithReaderMaps.forEach((node) => {
+            const clone = templateFeed.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            const p = clone.querySelector("p");
+            p.textContent = "Post " + node.id;
+            // img.src = friend.profileImage;
+            ulFeed.appendChild(clone);
+        });
+    }
 }
+
+function getNodesWithReaders(nodes) {
+    const nodesWithReaders = [];
+    nodes.forEach((node) => {
+        if (node.readers) {
+            nodesWithReaders.push(node);
+        }
+    });
+    return nodesWithReaders;
+}
+
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions() {
@@ -539,24 +582,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 profileSection.style.display = 'none';
                 likedSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
+                feedSection.style.display = "none";
 
             } else if (page === 'profile') {
                 profileSection.style.display = 'block';
                 selectedProfile.style.display = 'block';
                 friendsSection.style.display = 'none';
                 likedSection.style.display = 'none';
+                feedSection.style.display = "none";
             }
             else if (page === 'liked') {
                 likedSection.style.display = 'block';
                 profileSection.style.display = 'none';
                 friendsSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
+                feedSection.style.display = "none";
             }
             else {
                 friendsSection.style.display = 'none';
                 profileSection.style.display = 'none';
                 likedSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
+                feedSection.style.display = "block";
             }
         });
     });

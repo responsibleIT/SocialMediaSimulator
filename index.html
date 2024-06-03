@@ -139,6 +139,22 @@
                                 <input type="number" id="nodePopularity" min="0" max="50" />
                             </label> -->
                         </div>
+                        <div id="feedSection">
+                            <ul>
+                                <li>Nothing is posted at the moment</li>
+                            </ul>
+                            <template id="feedSectionTemplate">
+                                <li>
+                                    <p></p>
+                                    <img src="" alt="">
+                                    <div>
+                                        <p>Liked</p>
+                                        <p>Forward</p>
+                                        <p>Viewed</p>
+                                    </div>
+                                </li>
+                            </template>
+                        </div>
                     </section>
 
                     <section class="friends" id="friends">
@@ -146,31 +162,16 @@
 
                         <ul>
                             <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Christiana</p>
-                                <button>Unfriend</button>
-                            </li>
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Christiana</p>
-                                <button>Unfriend</button>
-                            </li>
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Christiana</p>
-                                <button>Unfriend</button>
-                            </li>
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Christiana</p>
-                                <button>Unfriend</button>
-                            </li>
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Christiana</p>
-                                <button>Unfriend</button>
+                                <p>No one is here</p>
                             </li>
                         </ul>
+                        <template id="friendsTemplate">
+                            <li>
+                                <img src="./images/reset.svg" alt="" />
+                                <p>Christiana</p>
+                                <button>Unfriend</button>
+                            </li>
+                        </template>
                     </section>
                     
                     <section class="profile" id="profile">
