@@ -61,7 +61,7 @@ button {
     color: white;
     border: none;
     width: fit-content;
-    padding: 0.7em;
+    padding: .5em 1em;
     cursor: pointer;
     transition: 100ms;
 
@@ -347,6 +347,7 @@ SPECIAL INPUTS
         appearance: none;
         border: none;
         outline: none;
+        width: 100%;
     }
 
     &::after {
@@ -589,7 +590,7 @@ FAKEBOOK STYLES
     }
 
     & h3 {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem;
         font-size: 1.2rem;
         margin: 0;
     }
@@ -794,9 +795,14 @@ FAKEBOOK STYLES
 .trait {
     display: flex;
     margin: 0.5em 0;
+    gap: .5em;
 
     & p {
         padding: 0.25em 0;
+    }
+
+    & .select {
+        width: 100%;
     }
 }
 
