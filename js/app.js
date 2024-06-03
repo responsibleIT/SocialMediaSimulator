@@ -582,24 +582,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 profileSection.style.display = 'none';
                 likedSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
+                feedSection.style.display = "none";
 
             } else if (page === 'profile') {
                 profileSection.style.display = 'block';
                 selectedProfile.style.display = 'block';
                 friendsSection.style.display = 'none';
                 likedSection.style.display = 'none';
+                feedSection.style.display = "none";
             }
             else if (page === 'liked') {
                 likedSection.style.display = 'block';
                 profileSection.style.display = 'none';
                 friendsSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
+                feedSection.style.display = "none";
             }
             else {
                 friendsSection.style.display = 'none';
                 profileSection.style.display = 'none';
                 likedSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
+                feedSection.style.display = "block";
             }
         });
     });
