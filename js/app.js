@@ -21,6 +21,7 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
+phone.classList.add("phoneNotSelected");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -58,7 +59,7 @@ countInputs.forEach((input) => {
         count = Number(countInput.value);
         if (count < maxValue) {
             countInput.value = count + 1;
-            countInput.dispatchEvent(new Event('change'));
+            countInput.dispatchEvent(new Event("change"));
         }
     });
 
@@ -66,7 +67,7 @@ countInputs.forEach((input) => {
         count = Number(countInput.value);
         if (count > minValue) {
             countInput.value = count - 1;
-            countInput.dispatchEvent(new Event('change'));
+            countInput.dispatchEvent(new Event("change"));
         }
     });
 });
@@ -92,7 +93,7 @@ canvas.addEventListener("click", (event) => {
 });
 
 // calcGroups.addEventListener("click", () => {
-    // calculateAdjustedClosenessCentrality();
+// calculateAdjustedClosenessCentrality();
 // });
 
 increasedPopularityInput.addEventListener("change", () => {
@@ -468,21 +469,18 @@ function showPreLink(from) {
  */
 function selectNode(node) {
     node.element.classList.add("selected");
-
     if (node.label === "Person") {
         showPreLink(node);
-    }
-
-    selectedNode = node;
-    if (node.label === "Person") {
+        phone.classList.remove("phoneNotSelected");
         node.spawnForwardButtons(links);
     }
+    selectedNode = node;
 }
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
     const node = selectedNode;
-
+    phone.classList.add("phoneNotSelected");
     node.element.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
