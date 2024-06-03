@@ -144,19 +144,23 @@
                                 <input type="number" id="nodePopularity" min="0" max="50" />
                             </label> -->
                         </div>
-                        <div id="feedSection" class="feedSection">
-                            <h3>Feed</h3>
+                        <div id="feed" class="feed">
+                            <div class="section-heading">
+                                <h3>Feed</h3>
+                            </div>
                             <ul>
-                                <li>Nothing is posted at the moment</li>
-                            </ul>
-                            <template id="feedSectionTemplate">
                                 <li>
-                                    <p></p>
-                                    <img src="" alt="">
-                                    <div>
-                                        <p><button><img src="./images/likePost.svg" alt=""></button></p>
-                                        <p><button><img src="./images/share.svg" alt=""></button></p>
-                                        <p><img src="./images/eye.svg" class="eye" alt=""><span aria-label="Seen by number of people: ">2</span></p>
+                                    <p>Nothing is posted at the moment</p>
+                                </li>
+                            </ul>
+                            <template id="feedTemplate">
+                                <li>
+                                    <h4 class="post-heading"></h4>
+                                    <img class="post-image" src="https://unsplash.it/640/425" alt="">
+                                    <div class="post-options">
+                                        <button><img src="./images/likePost.svg" alt=""></button>
+                                        <button><img src="./images/share.svg" alt=""></button>
+                                        <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
                                     </div>
                                 </li>
                             </template>
@@ -164,7 +168,7 @@
                     </section>
 
                     <section class="friends" id="friends">
-                        <div class="friendsList">
+                        <div class="section-heading">
                             <h3>Friends</h3>
                             <button><img src="./images/addIcon.svg" alt="">Add Friends</button>
                         </div>

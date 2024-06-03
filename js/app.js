@@ -358,32 +358,30 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
 
     // friends
-    const ulFriends = friends.querySelector("ul");
+    const friendsUl = friends.querySelector("ul");
     const templateFriends = document.querySelector("#friendsTemplate");
     if (nodeData.friends.size !== 0) {
-        ulFriends.innerHTML = "";
+        friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
             const clone = templateFriends.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
             p.textContent = friend.userName;
             img.src = friend.profileImage;
-            ulFriends.appendChild(clone);
+            friendsUl.appendChild(clone);
         });
     }
 
-    const ulFeed = feedSection.querySelector("ul");
-    const templateFeed = document.querySelector("#feedSectionTemplate");
+    const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
     if (nodesWithReaderMaps.length !== 0) {
-        ulFeed.innerHTML = "";
+        feedUl.innerHTML = "";
         nodesWithReaderMaps.forEach((node) => {
-            const clone = templateFeed.content.cloneNode(true);
+            const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
-            const p = clone.querySelector("p");
-            p.textContent = "Post " + node.id;
-            // img.src = friend.profileImage;
-            ulFeed.appendChild(clone);
+            const heading = clone.querySelector("h4");
+            heading.textContent = "Post " + node.id;
+            feedUl.appendChild(clone);
         });
     }
 }
@@ -582,28 +580,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 profileSection.style.display = 'none';
                 likedSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
-                feedSection.style.display = "none";
+                feed.style.display = "none";
 
             } else if (page === 'profile') {
                 profileSection.style.display = 'block';
                 selectedProfile.style.display = 'block';
                 friendsSection.style.display = 'none';
                 likedSection.style.display = 'none';
-                feedSection.style.display = "none";
+                feed.style.display = "none";
             }
             else if (page === 'liked') {
                 likedSection.style.display = 'block';
                 profileSection.style.display = 'none';
                 friendsSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
-                feedSection.style.display = "none";
+                feed.style.display = "none";
             }
             else {
                 friendsSection.style.display = 'none';
                 profileSection.style.display = 'none';
                 likedSection.style.display = 'none';
                 selectedProfile.style.display = 'none';
-                feedSection.style.display = "block";
+                feed.style.display = "block";
             }
         });
     });
