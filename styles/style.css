@@ -395,6 +395,12 @@ NODE STYLES
         background-color: #999;
     }
 }
+.pre-link {
+    opacity: 0;
+}
+.canvas-container:hover .pre-link {
+    opacity: 1;
+}
 
 /* pre link als een persoon wordt gehovered */
 .canvas-container:has(.personNode:hover) {
