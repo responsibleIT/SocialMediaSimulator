@@ -6,6 +6,7 @@ RESET
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+/*    outline: 1px solid lime;*/
 }
 
 /* 
@@ -279,6 +280,11 @@ TOOLBAR STYLES
     align-items: center;
 }
 
+
+/*
+SPECIAL INPUTS
+*/
+
 .counter-input {
     display: flex;
     gap: 0.25em;
@@ -318,6 +324,41 @@ TOOLBAR STYLES
     &:has(:focus-visible) {
         outline: 2px solid orange;
         outline-offset: 2px;
+    }
+}
+
+.select {
+    border: 2px solid #0075ff;
+    border-radius: .75em;
+    display: block;
+    position: relative;
+    overflow: hidden;
+
+    &:has(:focus-visible) {
+        outline: 2px solid orange;
+    }
+    
+
+    & select {
+        font: inherit;
+        padding-block: .25em;
+        padding-inline-start: .5em;
+        padding-inline-end: 2em;
+        appearance: none;
+        border: none;
+        outline: none;
+    }
+
+    &::after {
+        content: url('../images/circle-chevron-down.svg');
+        position: absolute;
+        right: .5em;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1em;
+        height: 1em;
+        pointer-events: none;
+        filter: invert(36%) sepia(63%) saturate(6710%) hue-rotate(205deg) brightness(106%) contrast(102%);
     }
 }
 
@@ -757,16 +798,6 @@ FAKEBOOK STYLES
     & p {
         padding: 0.25em 0;
     }
-}
-
-.traitSelect {
-    /* padding: .5em; */
-    border-radius: 1em;
-    /* border: 1px solid #0075ff; */
-    background-color: #c3c3c3;
-    width: 100%;
-    margin: 0 0.5em;
-    padding: 0.25rem;
 }
 
 .profileInfo {
