@@ -258,7 +258,7 @@ export default class Person extends Node {
                 // const friendsArray = this.friends;
                 this.friends.forEach((friend) => {
                     this.addItemLink(item, friend, links);
-                    this.addInfoLink(friend, thisNode, links);
+                    this.addInfoLink(friend, this, links);
                 });
             });
             canvasContainer.appendChild(forwardButton);
