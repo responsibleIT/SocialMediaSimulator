@@ -58,6 +58,7 @@ countInputs.forEach((input) => {
         count = Number(countInput.value);
         if (count < maxValue) {
             countInput.value = count + 1;
+            countInput.dispatchEvent(new Event('change'));
         }
     });
 
@@ -65,6 +66,7 @@ countInputs.forEach((input) => {
         count = Number(countInput.value);
         if (count > minValue) {
             countInput.value = count - 1;
+            countInput.dispatchEvent(new Event('change'));
         }
     });
 });
