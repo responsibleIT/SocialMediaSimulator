@@ -300,7 +300,7 @@ function setEventListeners(node) {
         switch (selectedNode) {
             case null:
                 selectNode(node);
-                showSelectedNodeOptions();
+                showSelectedNodeOptions(node);
                 showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
@@ -313,7 +313,7 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-                showSelectedNodeOptions();
+            // showSelectedNodeOptions(node);
             // showNodeDataContainer(selectedNode);
         }
     });
@@ -361,6 +361,27 @@ function showNodeDataContainer(nodeData) {
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = nodeData.x + 10 + "px";
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
+}
+
+function getNodesWithReaders(nodes) {
+    const nodesWithReaders = [];
+    nodes.forEach((node) => {
+        if (node.readers) {
+            nodesWithReaders.push(node);
+        }
+    });
+    return nodesWithReaders;
+}
+
+//Function for showing the selectedNodeOptions container with the right data when a node is selected
+function showSelectedNodeOptions(nodeData) {
+    const image = document.getElementById("selectedNodeImage");
+
+    image.src = selectedNode.profileImage;
+    selectedNodeUserName.textContent = selectedNode.userName;
+
+    selectedNodeUserFriends.textContent = selectedNode.friends.size;
+    totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
     // friends
     const friendsUl = friends.querySelector("ul");
@@ -388,8 +409,8 @@ function showNodeDataContainer(nodeData) {
             heading.textContent = "Post " + item.id;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', () => {
-                if(nodeData.items.has(item.id)) {
+            likeButton.addEventListener("click", () => {
+                if (nodeData.items.has(item.id)) {
                     nodeData.removeItemLink(item, links);
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
@@ -411,8 +432,8 @@ function showNodeDataContainer(nodeData) {
             heading.textContent = "Post " + item.post.id;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', () => {
-                if(nodeData.items.has(item.post.id)) {
+            likeButton.addEventListener("click", () => {
+                if (nodeData.items.has(item.post.id)) {
                     nodeData.removeItemLink(item.post, links);
                 } else {
                     nodeData.addItemLink(item.post, nodeData, links);
@@ -422,27 +443,6 @@ function showNodeDataContainer(nodeData) {
             likedUl.appendChild(clone);
         });
     }
-}
-
-function getNodesWithReaders(nodes) {
-    const nodesWithReaders = [];
-    nodes.forEach((node) => {
-        if (node.readers) {
-            nodesWithReaders.push(node);
-        }
-    });
-    return nodesWithReaders;
-}
-
-//Function for showing the selectedNodeOptions container with the right data when a node is selected
-function showSelectedNodeOptions() {
-    const image = document.getElementById("selectedNodeImage");
-
-    image.src = selectedNode.profileImage;
-    selectedNodeUserName.textContent = selectedNode.userName;
-
-    selectedNodeUserFriends.textContent = selectedNode.friends.size;
-    totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
     selectedNodeOptions.classList.remove("hide");
 }
