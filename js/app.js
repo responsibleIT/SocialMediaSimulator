@@ -313,7 +313,7 @@ function setEventListeners(node) {
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
                 showSelectedNodeOptions();
-                showNodeDataContainer(selectedNode);
+            // showNodeDataContainer(selectedNode);
         }
     });
 
