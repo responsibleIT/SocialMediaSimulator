@@ -101,20 +101,6 @@
                 </div>
 
                 <div id="selectedNodeOptions" class="hide fakebook">
-                    <!-- <header class="fakebook-header">
-                        <h2>
-                            <img src="./images/fakebook-logo.svg" alt="" />
-                            <span class="visually-hidden">Fakebook</span>
-                        </h2>
-                        <button>
-                            <img src="./images/plusIcon.svg" alt="" />
-                            <span class="visually-hidden">Add post</span>
-                        </button>
-                        <button>
-                            <img src="./images/settings.svg" alt="" />
-                            <span class="visually-hidden">Settings</span>
-                        </button>
-                    </header> -->
 
                     <section class="fakebook-profile">
                         <h3 class="visually-hidden">Profile</h3>
@@ -137,34 +123,29 @@
                                 <p>Popularity</p>
                             </div>
                             
-                            
-
-                            <!-- <label style="display: none">
-                                Increased Popularity
-                                <input type="number" id="nodePopularity" min="0" max="50" />
-                            </label> -->
                         </div>
-                        <div id="feed" class="feed">
-                            <div class="section-heading">
-                                <h3>Feed</h3>
-                            </div>
-                            <ul>
-                                <li>
-                                    <p>Nothing is posted at the moment</p>
-                                </li>
-                            </ul>
-                            <template id="feedTemplate">
-                                <li>
-                                    <h4 class="post-heading"></h4>
-                                    <img class="post-image" src="https://unsplash.it/640/425" alt="">
-                                    <div class="post-options">
-                                        <button><img src="./images/likePost.svg" alt=""></button>
-                                        <button><img src="./images/share.svg" alt=""></button>
-                                        <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
-                                    </div>
-                                </li>
-                            </template>
+                    </section>
+                        
+                    <section id="feed" class="feed">
+                        <div class="section-heading">
+                            <h3>Feed</h3>
                         </div>
+                        <ul>
+                            <li>
+                                <p>Nothing is posted at the moment</p>
+                            </li>
+                        </ul>
+                        <template id="feedTemplate">
+                            <li>
+                                <h4 class="post-heading"></h4>
+                                <img class="post-image" src="https://unsplash.it/640/425" alt="">
+                                <div class="post-options">
+                                    <button class="like-button"><img src="./images/likePost.svg" alt=""></button>
+                                    <button><img src="./images/share.svg" alt=""></button>
+                                    <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
+                                </div>
+                            </li>
+                        </template>
                     </section>
 
                     <section class="friends" id="friends">
@@ -215,23 +196,16 @@
                     </section>
 
                     <section class="liked" id="liked">
-                        <h3>Liked Post</h3>
+                        <div class="section-heading">
+                            <h3>Liked</h3>
+                        </div>
                         <ul>
                             <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Jop's birthday</p>
-                                <button>Unlike</button>
-                            </li>
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>CSS day</p>
-                                <button>Unlike</button>
+                                <p>You have not like anything yet</p>
                             </li>
                             
                         </ul>
                     </section>
-
-                    
                 </div>
 
                 <nav id="phoneNav" class="phone-navigation">
