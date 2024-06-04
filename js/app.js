@@ -82,6 +82,9 @@ randomPeopleButton.addEventListener("click", async () => {
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
     drawRandom("Social Media Post", count, null);
+    if (selectedNode !== null) {
+        showSelectedNodeOptions(selectedNode);
+    }
 });
 
 deleteNodeButton.addEventListener("click", () => {
@@ -313,7 +316,7 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-            // showSelectedNodeOptions(node);
+                showSelectedNodeOptions(selectedNode);
             // showNodeDataContainer(selectedNode);
         }
     });
@@ -375,6 +378,7 @@ function getNodesWithReaders(nodes) {
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions(nodeData) {
+    console.log(nodeData);
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNode.profileImage;
@@ -388,6 +392,7 @@ function showSelectedNodeOptions(nodeData) {
     if (nodeData.friends.size !== 0) {
         friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
+            console.log("update friend ul");
             const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
@@ -403,6 +408,7 @@ function showSelectedNodeOptions(nodeData) {
     if (nodesWithReaderMaps.length !== 0) {
         feedUl.innerHTML = "";
         nodesWithReaderMaps.forEach((item) => {
+            console.log("update feed ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const heading = clone.querySelector("h4");
@@ -426,6 +432,7 @@ function showSelectedNodeOptions(nodeData) {
     if (nodeData.items.size !== 0) {
         likedUl.innerHTML = "";
         nodeData.items.forEach((item) => {
+            console.log("update liked ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const heading = clone.querySelector("h4");
