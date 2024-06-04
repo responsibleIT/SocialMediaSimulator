@@ -82,6 +82,9 @@ randomPeopleButton.addEventListener("click", async () => {
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
     drawRandom("Social Media Post", count, null);
+    if (selectedNode !== null) {
+        showSelectedNodeOptions(selectedNode);
+    }
 });
 
 deleteNodeButton.addEventListener("click", () => {
