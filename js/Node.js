@@ -27,6 +27,9 @@ export default class Node {
                 break;
             case "Social Media Post":
                 nodeElement.classList.add("postNode");
+                if (this.image) {
+                    nodeElement.style.backgroundImage = `url(${this.image})`;
+                }
                 break;
             default:
                 break;

@@ -80,7 +80,8 @@ randomPeopleButton.addEventListener("click", async () => {
 
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
-    drawRandom("Social Media Post", count, null);
+    const data = userdata.getPosts(count);
+    drawRandom("Social Media Post", count, data);
     if (selectedNode !== null) {
         showSelectedNodeOptions(selectedNode);
     }
@@ -232,7 +233,10 @@ function drawRandom(label, count, userData) {
                 node = new Person(id, "Person", x, y, { image, username });
                 break;
             case "Social Media Post":
-                node = new Post(id, "Social Media Post", x, y);
+                const postImage = userData[i].image;
+                const title = userData[i].name;
+                console.log(postImage, title);
+                node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
             default:
                 break;
@@ -421,8 +425,9 @@ function showSelectedNodeOptions(nodeData) {
             console.log("update feed ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
+            img.src = item.image;
             const heading = clone.querySelector("h4");
-            heading.textContent = "Post " + item.id;
+            heading.textContent = item.title;
 
             const likeButton = clone.querySelector(".like-button");
             likeButton.addEventListener("click", () => {
