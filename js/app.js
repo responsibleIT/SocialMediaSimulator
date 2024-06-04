@@ -102,7 +102,7 @@ increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showSelectedNodeOptions();
+    showSelectedNodeOptions(selectedNode);
 });
 
 // calcGroupsButton.addEventListener("click", () => {
@@ -385,6 +385,8 @@ function showSelectedNodeOptions(nodeData) {
 
     selectedNodeUserFriends.textContent = selectedNode.friends.size;
     totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
+
+    increasedPopularityInput.value = nodeData.increasedPopularity;
 
     // friends
     const friendsUl = friends.querySelector("ul");
