@@ -22,7 +22,7 @@ body {
 main {
     display: grid;
     grid-template-columns: 1fr 16em;
-    grid-template-rows: 1fr min-content min-content;
+    grid-template-rows: 1fr min-content min-content min-content;
     gap: 1em;
     height: 100%;
 }
@@ -117,11 +117,12 @@ body > header {
     align-items: center;
     height: fit-content;
     gap: 1em;
-    z-index: 999;
+    z-index: 12;
     transition: 200ms;
     &:hover {
         opacity: 0;
         filter: alpha(opacity=0);
+        z-index: 12;
     }
     & h1 {
         order: 1;
@@ -143,7 +144,7 @@ CANVAS STYLES
     height: 100%;
     position: relative;
     grid-column: 1/2;
-    grid-row: 1/3;
+    grid-row: 1/4;
     overflow: auto;
     cursor: url("./../images/Select-cursor.png") 7 7, default;
 }
@@ -250,7 +251,7 @@ TOOLBAR STYLES
     overflow: auto;
     column-width: 340px;
     grid-column: 1 / 2;
-    grid-row: 3 / 4;
+    grid-row: 4 / 5;
     align-items: end;
 }
 
@@ -327,7 +328,7 @@ NODE STYLES
 
 .node {
     border-radius: 50%;
-    z-index: 2;
+    z-index: 90;
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
     position: absolute;
@@ -392,6 +393,12 @@ NODE STYLES
     &.pre-link {
         background-color: #999;
     }
+}
+.pre-link {
+    opacity: 0;
+}
+.canvas-container:hover .pre-link {
+    opacity: 1;
 }
 
 /* pre link als een persoon wordt gehovered */
@@ -472,7 +479,7 @@ CALCULATE STYLES
 
 .calculated {
     grid-column: 2 / 3;
-    grid-row: 3 / 4;
+    grid-row: 3 / 5;
     background-color: white;
     flex-direction: column;
     padding-block: 0.75em;
@@ -502,6 +509,15 @@ PHONE STYLES
     border: 0.5em solid #234;
     border-radius: 28px;
     overflow: hidden;
+    opacity: 1;
+    transition: 200ms;
+    transform: translate(0, 0);
+}
+
+.phoneNotSelected {
+    opacity: 0;
+    transition: 200ms;
+    transform: translate(6%, 0);
 }
 
 .phone-border {

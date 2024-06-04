@@ -21,6 +21,7 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
+phone.classList.add("phoneNotSelected");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -58,7 +59,7 @@ countInputs.forEach((input) => {
         count = Number(countInput.value);
         if (count < maxValue) {
             countInput.value = count + 1;
-            countInput.dispatchEvent(new Event('change'));
+            countInput.dispatchEvent(new Event("change"));
         }
     });
 
@@ -66,7 +67,7 @@ countInputs.forEach((input) => {
         count = Number(countInput.value);
         if (count > minValue) {
             countInput.value = count - 1;
-            countInput.dispatchEvent(new Event('change'));
+            countInput.dispatchEvent(new Event("change"));
         }
     });
 });
@@ -92,7 +93,7 @@ canvas.addEventListener("click", (event) => {
 });
 
 // calcGroups.addEventListener("click", () => {
-    // calculateAdjustedClosenessCentrality();
+// calculateAdjustedClosenessCentrality();
 // });
 
 increasedPopularityInput.addEventListener("change", () => {
@@ -109,7 +110,8 @@ findAllConnectedComponents();
 stepButton.addEventListener("click", () => {
     console.log(selectedNode);
     if (selectedNode !== null) {
-        step(selectedNode);
+        // step(selectedNode);
+        selectedNode.step(nodes, links);
     }
 });
 
@@ -282,9 +284,9 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        // if (nodes.get(node.id).label === "Person") {
-        //     showNodeDataContainer(node.id, nodes.get(node.id));
-        // }
+        if (node.label === "Person") {
+            showNodeDataContainer(node);
+        }
     });
 
     node.element.addEventListener("mouseout", function () {
@@ -398,7 +400,6 @@ function getNodesWithReaders(nodes) {
     return nodesWithReaders;
 }
 
-
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showSelectedNodeOptions() {
     const image = document.getElementById("selectedNodeImage");
@@ -466,21 +467,18 @@ function showPreLink(from) {
  */
 function selectNode(node) {
     node.element.classList.add("selected");
-
     if (node.label === "Person") {
         showPreLink(node);
-    }
-
-    selectedNode = node;
-    if (node.label === "Person") {
+        phone.classList.remove("phoneNotSelected");
         node.spawnForwardButtons(links);
     }
+    selectedNode = node;
 }
 
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
     const node = selectedNode;
-
+    phone.classList.add("phoneNotSelected");
     node.element.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
@@ -493,18 +491,6 @@ function deselectNode() {
     selectedNodeOptions.classList.add("hide");
     selectedNode = null;
     node.removeForwardButtons();
-}
-
-/**
- * Function for performing all behaviors of the agent in one step
- * @param {Object} node - ...
- */
-function step(node) {
-    node.readSocialMediaPost(nodes, links);
-    node.forwardSocialMediaPost();
-    node.manageRelationships();
-    node.addFriendThroughContent();
-    node.moveNode();
 }
 
 //Function for calculating the closeness centrality of all nodes
