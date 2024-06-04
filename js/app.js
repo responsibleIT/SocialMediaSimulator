@@ -408,6 +408,15 @@ function showSelectedNodeOptions(nodeData) {
     if (nodesWithReaderMaps.length !== 0) {
         feedUl.innerHTML = "";
         nodesWithReaderMaps.forEach((item) => {
+            // check if item is in
+
+            // const unreadPosts = Array.from(nodeData.items.values()).filter((post) => {
+            //     console.log("Post", post);
+            //     if (!post.post.readers.has(nodeData.id)) {
+            //         return post;
+            //     }
+            // });
+            // console.log("unreadPosts array", unreadPosts);
             console.log("update feed ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
@@ -425,6 +434,12 @@ function showSelectedNodeOptions(nodeData) {
 
             feedUl.appendChild(clone);
         });
+
+        // TODO use this method to remove friends from your friendlists
+        // console.log(item);
+        // const skip = nodeData.items.has(item.id);
+        // console.log(skip);
+        // if (!skip) {
     }
 
     // liked
@@ -449,6 +464,8 @@ function showSelectedNodeOptions(nodeData) {
 
             likedUl.appendChild(clone);
         });
+    } else {
+        likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
     }
 
     selectedNodeOptions.classList.remove("hide");
