@@ -329,11 +329,12 @@ export default class Person extends Node {
             console.log("this x and y", this.x, this.y);
             this.x += dx / distance;
             this.y += dy / distance;
+            this.element.style.left = this.x + "px";
+            this.element.style.top = this.y + "px";
             console.log("this x and y after adding distance", this.x, this.y);
         } else {
             console.log("DISTANCE < 0", distance);
         }
-        // TODO move the node to its new x and y
     }
 
     /**
