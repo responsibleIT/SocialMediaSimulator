@@ -21,7 +21,6 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
-phone.classList.add("phoneNotSelected");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -527,7 +526,7 @@ function selectNode(node) {
     node.element.classList.add("selected");
     if (node.label === "Person") {
         showPreLink(node);
-        phone.classList.remove("phoneNotSelected");
+        phone.classList.add("phone-selected");
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
@@ -536,7 +535,7 @@ function selectNode(node) {
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
     const node = selectedNode;
-    phone.classList.add("phoneNotSelected");
+    phone.classList.remove("phone-selected");
     node.element.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function

@@ -551,15 +551,15 @@ PHONE STYLES
     border: 0.5em solid #234;
     border-radius: 28px;
     overflow: hidden;
-    opacity: 1;
-    transition: 200ms;
-    transform: translate(0, 0);
-}
-
-.phoneNotSelected {
     opacity: 0;
     transition: 200ms;
     transform: translate(6%, 0);
+    
+}
+
+.phone-selected {
+    opacity: 1;
+    transform: translate(0, 0);
 }
 
 .phone-border {
