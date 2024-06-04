@@ -46,6 +46,7 @@ resizeCanvas();
 ///// Event listeners /////
 ///////////////////////////
 
+
 // function for counter inputs
 countInputs.forEach((input) => {
     const increaseButton = input.children[2];
@@ -369,8 +370,14 @@ function showNodeDataContainer(nodeData) {
             const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
+            const unfriendButton = clone.querySelector(".unfriend-button");
             p.textContent = friend.userName;
             img.src = friend.profileImage;
+            unfriendButton.addEventListener('click', () => {
+                nodeData.removeFriend(friend, links);
+                resizeNodes(nodes);
+                showNodeDataContainer(nodeData);
+            });
             friendsUl.appendChild(clone);
         });
     }
@@ -387,11 +394,13 @@ function showNodeDataContainer(nodeData) {
             heading.textContent = "Post " + item.id;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', () => {
-                if(nodeData.items.has(item.id)) {
+            likeButton.addEventListener('click', (e) => {
+                if (nodeData.items.has(item.id)) {
                     nodeData.removeItemLink(item, links);
+                    e.target.classList.remove("active");
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
+                    e.target.classList.add("active");
                 }
             });
 
@@ -411,10 +420,13 @@ function showNodeDataContainer(nodeData) {
 
             const likeButton = clone.querySelector(".like-button");
             likeButton.addEventListener('click', () => {
-                if(nodeData.items.has(item.post.id)) {
+                if (nodeData.items.has(item.post.id)) {
                     nodeData.removeItemLink(item.post, links);
+                    // transparent
+                    likeButtton.classList.remove("active");
                 } else {
                     nodeData.addItemLink(item.post, nodeData, links);
+                    likeButtton.classList.add("active");
                 }
             });
 
@@ -627,3 +639,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+
