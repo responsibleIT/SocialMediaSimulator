@@ -456,8 +456,9 @@ function showSelectedNodeOptions(nodeData) {
             console.log("update liked ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
+            img.src = item.post.image;
             const heading = clone.querySelector("h4");
-            heading.textContent = "Post " + item.post.id;
+            heading.textContent = item.post.title;
 
             const likeButton = clone.querySelector(".like-button");
             likeButton.addEventListener("click", () => {
