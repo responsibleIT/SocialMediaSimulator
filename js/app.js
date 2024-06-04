@@ -363,11 +363,10 @@ function showNodeDataContainer(nodeData) {
 
     // friends
     const friendsUl = friends.querySelector("ul");
-    const templateFriends = document.querySelector("#friendsTemplate");
     if (nodeData.friends.size !== 0) {
         friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
-            const clone = templateFriends.content.cloneNode(true);
+            const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
             p.textContent = friend.userName;
@@ -376,16 +375,50 @@ function showNodeDataContainer(nodeData) {
         });
     }
 
+    // feed
     const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
     if (nodesWithReaderMaps.length !== 0) {
         feedUl.innerHTML = "";
-        nodesWithReaderMaps.forEach((node) => {
+        nodesWithReaderMaps.forEach((item) => {
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const heading = clone.querySelector("h4");
-            heading.textContent = "Post " + node.id;
+            heading.textContent = "Post " + item.id;
+
+            const likeButton = clone.querySelector(".like-button");
+            likeButton.addEventListener('click', () => {
+                if(nodeData.items.has(item.id)) {
+                    nodeData.removeItemLink(item, links);
+                } else {
+                    nodeData.addItemLink(item, nodeData, links);
+                }
+            });
+
             feedUl.appendChild(clone);
+        });
+    }
+
+    // liked
+    const likedUl = liked.querySelector("ul");
+    if (nodeData.items.size !== 0) {
+        likedUl.innerHTML = "";
+        nodeData.items.forEach((item) => {
+            const clone = feedTemplate.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            const heading = clone.querySelector("h4");
+            heading.textContent = "Post " + item.post.id;
+
+            const likeButton = clone.querySelector(".like-button");
+            likeButton.addEventListener('click', () => {
+                if(nodeData.items.has(item.post.id)) {
+                    nodeData.removeItemLink(item.post, links);
+                } else {
+                    nodeData.addItemLink(item.post, nodeData, links);
+                }
+            });
+
+            likedUl.appendChild(clone);
         });
     }
 }

@@ -838,13 +838,7 @@ FAKEBOOK STYLES
     }
 }
 
-.friendsList{
-    font-size: 0.75rem;
-    text-decoration: none;
-
-}
-
-.feed {
+.feed, .liked {
 
     & li {
 
@@ -867,6 +861,11 @@ FAKEBOOK STYLES
                 align-items: center;
                 margin-left: auto;
                 gap: .5em;
+            }
+
+            & button {
+                --background-color: transparent;
+                padding: 0;
             }
         }
     }
