@@ -327,8 +327,9 @@ export default class Person extends Node {
         if (distance > 0) {
             console.log("DISTANCE", distance);
             console.log("this x and y", this.x, this.y);
-            this.x += dx / distance;
-            this.y += dy / distance;
+
+            this.x += (dx / distance) * 5;
+            this.y += (dy / distance) * 5;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
             console.log("this x and y after adding distance", this.x, this.y);

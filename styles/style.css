@@ -374,6 +374,7 @@ NODE STYLES
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
     position: absolute;
+    transition: 200ms;
 }
 
 .personNode {
