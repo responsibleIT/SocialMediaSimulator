@@ -21,7 +21,6 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
-phone.classList.add("phoneNotSelected");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -82,7 +81,11 @@ randomPeopleButton.addEventListener("click", async () => {
 
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
-    drawRandom("Social Media Post", count, null);
+    const data = userdata.getPosts(count);
+    drawRandom("Social Media Post", count, data);
+    if (selectedNode !== null) {
+        showSelectedNodeOptions(selectedNode);
+    }
 });
 
 deleteNodeButton.addEventListener("click", () => {
@@ -101,7 +104,7 @@ increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showSelectedNodeOptions();
+    showSelectedNodeOptions(selectedNode);
 });
 
 // calcGroupsButton.addEventListener("click", () => {
@@ -231,7 +234,10 @@ function drawRandom(label, count, userData) {
                 node = new Person(id, "Person", x, y, { image, username });
                 break;
             case "Social Media Post":
-                node = new Post(id, "Social Media Post", x, y);
+                const postImage = userData[i].image;
+                const title = userData[i].name;
+                console.log(postImage, title);
+                node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
             default:
                 break;
@@ -285,6 +291,7 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
+        console.log("HOVER", node);
         if (node.label === "Person") {
             showNodeDataContainer(node);
         }
@@ -300,7 +307,7 @@ function setEventListeners(node) {
         switch (selectedNode) {
             case null:
                 selectNode(node);
-                showSelectedNodeOptions();
+                showSelectedNodeOptions(node);
                 showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
@@ -313,8 +320,8 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-                showSelectedNodeOptions();
-                showNodeDataContainer(selectedNode);
+                showSelectedNodeOptions(selectedNode);
+            // showNodeDataContainer(selectedNode);
         }
     });
 
@@ -361,12 +368,40 @@ function showNodeDataContainer(nodeData) {
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = nodeData.x + 10 + "px";
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
+}
+
+function getNodesWithReaders(nodes) {
+    const nodesWithReaders = [];
+    nodes.forEach((node) => {
+        if (node.readers) {
+            nodesWithReaders.push(node);
+        }
+    });
+    return nodesWithReaders;
+}
+
+//Function for showing the selectedNodeOptions container with the right data when a node is selected
+function showSelectedNodeOptions(nodeData) {
+    console.log(nodeData);
+    const image = document.getElementById("selectedNodeImage");
+
+    image.src = selectedNode.profileImage;
+    selectedNodeUserName.textContent = selectedNode.userName;
+
+    selectedNodeUserFriends.textContent = selectedNode.friends.size;
+    totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
+
+    increasedPopularityInput.value = nodeData.increasedPopularity;
 
     // friends
     const friendsUl = friends.querySelector("ul");
     if (nodeData.friends.size !== 0) {
         friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
+            if (friend.person) {
+                friend = friend.person;
+            }
+            console.log("update friend ul");
             const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
@@ -374,7 +409,12 @@ function showNodeDataContainer(nodeData) {
             p.textContent = friend.userName;
             img.src = friend.profileImage;
             unfriendButton.addEventListener('click', () => {
+                if (nodeData.person) {
+                    nodeData = nodeData.person;
+                }
+                console.log(nodeData);
                 nodeData.removeFriend(friend, links);
+
                 resizeNodes(nodes);
                 showNodeDataContainer(nodeData);
             });
@@ -388,10 +428,21 @@ function showNodeDataContainer(nodeData) {
     if (nodesWithReaderMaps.length !== 0) {
         feedUl.innerHTML = "";
         nodesWithReaderMaps.forEach((item) => {
+            // check if item is in
+
+            // const unreadPosts = Array.from(nodeData.items.values()).filter((post) => {
+            //     console.log("Post", post);
+            //     if (!post.post.readers.has(nodeData.id)) {
+            //         return post;
+            //     }
+            // });
+            // console.log("unreadPosts array", unreadPosts);
+            console.log("update feed ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
+            img.src = item.image;
             const heading = clone.querySelector("h4");
-            heading.textContent = "Post " + item.id;
+            heading.textContent = item.title;
 
             const likeButton = clone.querySelector(".like-button");
             likeButton.addEventListener('click', (e) => {
@@ -406,6 +457,12 @@ function showNodeDataContainer(nodeData) {
 
             feedUl.appendChild(clone);
         });
+
+        // TODO use this method to remove friends from your friendlists
+        // console.log(item);
+        // const skip = nodeData.items.has(item.id);
+        // console.log(skip);
+        // if (!skip) {
     }
 
     // liked
@@ -413,10 +470,12 @@ function showNodeDataContainer(nodeData) {
     if (nodeData.items.size !== 0) {
         likedUl.innerHTML = "";
         nodeData.items.forEach((item) => {
+            console.log("update liked ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
+            img.src = item.post.image;
             const heading = clone.querySelector("h4");
-            heading.textContent = "Post " + item.post.id;
+            heading.textContent = item.post.title;
 
             const likeButton = clone.querySelector(".like-button");
             likeButton.addEventListener('click', () => {
@@ -432,28 +491,9 @@ function showNodeDataContainer(nodeData) {
 
             likedUl.appendChild(clone);
         });
+    } else {
+        likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
     }
-}
-
-function getNodesWithReaders(nodes) {
-    const nodesWithReaders = [];
-    nodes.forEach((node) => {
-        if (node.readers) {
-            nodesWithReaders.push(node);
-        }
-    });
-    return nodesWithReaders;
-}
-
-//Function for showing the selectedNodeOptions container with the right data when a node is selected
-function showSelectedNodeOptions() {
-    const image = document.getElementById("selectedNodeImage");
-
-    image.src = selectedNode.profileImage;
-    selectedNodeUserName.textContent = selectedNode.userName;
-
-    selectedNodeUserFriends.textContent = selectedNode.friends.size;
-    totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
     selectedNodeOptions.classList.remove("hide");
 }
@@ -514,7 +554,7 @@ function selectNode(node) {
     node.element.classList.add("selected");
     if (node.label === "Person") {
         showPreLink(node);
-        phone.classList.remove("phoneNotSelected");
+        phone.classList.add("phone-selected");
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
@@ -523,7 +563,7 @@ function selectNode(node) {
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
     const node = selectedNode;
-    phone.classList.add("phoneNotSelected");
+    phone.classList.remove("phone-selected");
     node.element.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
@@ -639,6 +679,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 
 
 

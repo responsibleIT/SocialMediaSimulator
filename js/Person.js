@@ -93,11 +93,11 @@ export default class Person extends Node {
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
-                    if(friend.person){
+                    if (friend.person) {
                         friend.person.receiveSocialMediaPost(this, postObject.post, "friend");
                     } else {
                         console.error("friend.person doesnt exist");
-                    friend.receiveSocialMediaPost(this, postObject.post, "friend");
+                        friend.receiveSocialMediaPost(this, postObject.post, "friend");
                     }
                     // friend.receiveSocialMediaPost(this, randomPost, "friend");
                 });
@@ -174,7 +174,7 @@ export default class Person extends Node {
             console.log("friend:", aFriend);
             let score;
             let friend;
-            if(!aFriend.person){
+            if (!aFriend.person) {
                 console.error("friend.person is not a thing")
                 score = aFriend.score;
                 friend = aFriend.person;
@@ -190,7 +190,7 @@ export default class Person extends Node {
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
             if (score >= 3) {
-                this.infoLinks.set(friend.id, {person: friend, score: 0}); // 0 is default
+                this.infoLinks.set(friend.id, { person: friend, score: 0 }); // 0 is default
                 console.log("Set info link", this, friend);
             }
         });
@@ -211,7 +211,8 @@ export default class Person extends Node {
         const positivePosts = Array.from(this.items.keys()).filter((post) => {
             console.log("Post", post);
             console.log(this.items.get(post) > 0);
-            return this.items.get(post) > 0});
+            return this.items.get(post) > 0
+        });
         console.log("positivePosts", positivePosts);
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
@@ -223,8 +224,8 @@ export default class Person extends Node {
                 );
                 //Pick a random person from the list and add them as a friend
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                this.friends.set(randomPerson, 0);
-                randomPerson.friends.set(this, 0);
+                this.friends.set(randomPerson.id, { person: randomPerson, score: 0 });
+                randomPerson.friends.set(this.id, { person: this, score: 0 });
                 console.log("ADDED FRIEND", randomPerson, " TO ", this);
             }
         });
@@ -237,14 +238,47 @@ export default class Person extends Node {
         //Get all friends and infolinks with a score higher than 0
         // console.log(this.friends.get(friend), this.infoLinks.get(infoLink));
         console.log("this friends:", this.friends);
-        const positiveFriends = Array.from(this.friends.keys()).filter((friend) => {
-            console.log(this.friends, friend); // friend is id
-            return this.friends.get(friend) > 0
+        const positiveFriends = Array.from(this.friends.values()).filter((friend) => {
+            console.log(this.friends, friend, friend); // friend is id
+            const foundFriend = this.friends.get(friend.person.id);
+            console.log("foundFriend", foundFriend);
+            if (foundFriend.score >= 0) {
+                // TODO remove the = later
+                return foundFriend;
+            } else if (foundFriend.score < 0) {
+                console.log("foundFriend.score is lower than 0");
+            } else {
+                console.log("foundFriend.score is not found in this friend", foundFriend);
+            }
+            // return this.friends.get(friend) > 0;
         });
-        const positiveInfoLinks = Array.from(this.infoLinks.keys()).filter((infoLink) => this.infoLinks.get(infoLink.id) > 0);
+        const positiveInfoLinks = Array.from(this.infoLinks.values()).filter((infoLink) => {
+            const foundInfoLink = this.infoLinks.get(infoLink.person.id);
+            console.log("foundInfoLink", foundInfoLink);
+            if (foundInfoLink.score >= 0) {
+                // TODO remove the = later
+                return foundInfoLink;
+            } else if (foundInfoLink.score < 0) {
+                console.log("foundInfoLink.score is lower than 0");
+            } else {
+                console.log("foundInfoLink.score is not found in this foundInfoLink", foundInfoLink);
+            }
+            // return this.infoLinks.get(infoLink) > 0
+        });
         console.log("posFriends:", positiveFriends, "posInfolinks", positiveInfoLinks);
         //Get all items with a score higher than 0
-        const positiveItems = Array.from(this.items.keys()).filter((item) => this.items.get(item.id) > 0);
+        const positiveItems = Array.from(this.items.values()).filter((item) => {
+            const foundItem = this.items.get(item.post.id);
+            console.log("foundItem", foundItem);
+            if (foundItem.score >= 0) {
+                // TODO remove the = later
+                return foundItem;
+            } else if (foundItem.score < 0) {
+                console.log("foundItem.score is lower than 0");
+            } else {
+                console.log("foundItem.score is not found in this foundItem", foundItem);
+            }
+        });
 
         //Calculate the average position of all friends, infolinks and items
         let averageX = this.x;
@@ -252,16 +286,32 @@ export default class Person extends Node {
 
         console.log("PLACE", averageX, averageY, "THIS", this);
         positiveFriends.forEach((friend) => {
+            console.log(friend);
+            if (friend.person) {
+                friend = friend.person;
+            }
             averageX += friend.x;
             averageY += friend.y;
             console.log("FRIEND X + Y", friend.x, friend.y);
         });
         positiveInfoLinks.forEach((infoLink) => {
+            console.log(infoLink); // TODO this infolink had a object in person
+            if (infoLink.person && !infoLink.person.person) {
+                infoLink = infoLink.person;
+            } else if (infoLink.person.person && !infoLink.person.person.person) {
+                infoLink = infoLink.person.person;
+            } else if (infoLink.person.person.person) {
+                infoLink = infoLink.person.person.person;
+            }
             averageX += infoLink.x;
             averageY += infoLink.y;
             console.log("infoLink X + Y", infoLink.x, infoLink.y);
         });
         positiveItems.forEach((item) => {
+            console.log(item);
+            if (item.post) {
+                item = item.post;
+            }
             averageX += item.x;
             averageY += item.y;
             console.log("item X + Y", item.x, item.y);
@@ -276,8 +326,15 @@ export default class Person extends Node {
 
         if (distance > 0) {
             console.log("DISTANCE", distance);
-            this.x += dx / distance;
-            this.y += dy / distance;
+            console.log("this x and y", this.x, this.y);
+
+            this.x += (dx / distance) * 5;
+            this.y += (dy / distance) * 5;
+            this.element.style.left = this.x + "px";
+            this.element.style.top = this.y + "px";
+            console.log("this x and y after adding distance", this.x, this.y);
+        } else {
+            console.log("DISTANCE < 0", distance);
         }
     }
 
@@ -295,15 +352,15 @@ export default class Person extends Node {
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links) {
-    	this.removeForwardButtons();
+        this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
         this.items.forEach((item) => {
             let svgIcon = document.createElement("img");
             svgIcon.src = "./images/sns_icons_Send.svg";
             svgIcon.alt = "Forward";
             // console.log(item);
-            let itemNodeData 
-            if(item.post){
+            let itemNodeData
+            if (item.post) {
                 itemNodeData = item.post;
             } else {
                 itemNodeData = item;
@@ -313,10 +370,13 @@ export default class Person extends Node {
             forwardButton.appendChild(svgIcon);
             forwardButton.style.position = "absolute";
             forwardButton.style.left = itemNodeData.x + "px";
-            forwardButton.style.top = itemNodeData.y + "px";
+            forwardButton.style.top = itemNodeData.y - itemNodeData.radius - itemNodeData.popularity + "px";
             forwardButton.addEventListener("click", () => {
                 // const friendsArray = this.friends;
                 this.friends.forEach((friend) => {
+                    if (friend.person) {
+                        friend = friend.person;
+                    }
                     this.addItemLink(itemNodeData, friend, links);
                     this.addInfoLink(friend, this, links);
                 });
@@ -336,9 +396,9 @@ export default class Person extends Node {
     //Function for adding a friend link between the currently selected node and the node with the given id
     addFriend(node, links) {
         let toBeFriend = node;
-
-        this.friends.set(node.id, node);
-        toBeFriend.friends.set(this.id, this);
+        console.log("friend", node);
+        this.friends.set(node.id, { person: node, score: 0 });
+        toBeFriend.friends.set(this.id, { person: this, score: 0 });
 
         const link = new Edge(this, node, "friend-link");
         links.set(this.id + "-" + toBeFriend.id, link);
@@ -346,6 +406,10 @@ export default class Person extends Node {
     }
 
     removeFriend(node, links) {
+        console.log("remove friend", node);
+        if(node.person) {
+            node = node.person;
+        }
         let linkKey1 = this.id + "-" + node.id;
         let linkKey2 = node.id + "-" + this.id;
 
@@ -375,8 +439,9 @@ export default class Person extends Node {
     addItemLink(item, from, links) {
         let currentlySelectedPerson = from;
         let currentEyedItem = item;
-        currentlySelectedPerson.items.set(item.id, {post: item, score: 1});
-        currentEyedItem.readers.set(from.id, {person: from, score: 1});
+        console.log(currentlySelectedPerson);
+        currentlySelectedPerson.items.set(item.id, { post: item, score: 1 });
+        currentEyedItem.readers.set(from.id, { person: from, score: 1 });
 
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
@@ -393,7 +458,7 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links) {
-        from.infoLinks.set(to.id, to);
+        from.infoLinks.set(to.id, { person: to, score: 0 });
 
         const link = new Edge(from, to, "info-link");
         links.set(from.id + "-" + to.id, link);

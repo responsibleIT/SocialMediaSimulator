@@ -210,12 +210,11 @@ canvas {
     align-items: center;
     cursor: pointer;
     height: 2.5rem;
-    margin-top: -3.5rem;
-    margin-left: -1.6rem;
+    transform: translate(-50%, calc(-100% - 10px));
     transition: transform 0.3s ease;
 
     &:hover {
-        transform: translateY(-1em);
+        transform: translate(-50%, calc(-100% - 10px - .5em));
     }
 
     & img {
@@ -374,6 +373,7 @@ NODE STYLES
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
     position: absolute;
+    transition: 200ms;
 }
 
 .personNode {
@@ -551,15 +551,15 @@ PHONE STYLES
     border: 0.5em solid #234;
     border-radius: 28px;
     overflow: hidden;
-    opacity: 1;
-    transition: 200ms;
-    transform: translate(0, 0);
-}
-
-.phoneNotSelected {
     opacity: 0;
     transition: 200ms;
     transform: translate(6%, 0);
+    
+}
+
+.phone-selected {
+    opacity: 1;
+    transform: translate(0, 0);
 }
 
 .phone-border {
