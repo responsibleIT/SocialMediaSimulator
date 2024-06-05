@@ -83,6 +83,7 @@ randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
     const data = userdata.getPosts(count);
     drawRandom("Social Media Post", count, data);
+
     if (selectedNode !== null) {
         showSelectedNodeOptions(selectedNode);
     }
