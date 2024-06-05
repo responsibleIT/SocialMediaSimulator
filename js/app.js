@@ -113,7 +113,7 @@ findAllConnectedComponents();
 // });
 
 stepButton.addEventListener("click", () => {
-    console.log(selectedNode);
+    // console.log(selectedNode);
     // if (selectedNode !== null) {
     // step(selectedNode);
     nodes.forEach((node) => {
