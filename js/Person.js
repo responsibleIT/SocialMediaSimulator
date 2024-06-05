@@ -16,7 +16,7 @@ export default class Person extends Node {
     readSocialMediaPost(nodes, links) {
         let friendScores = [];
         let infoLinkScores = [];
-        let myScore = 0;
+        let myScore = 1;
 
         //Pick a random node from the nodes map that has label of Social Media Post
         const socialMediaPosts = Array.from(nodes.values()).filter((node) => node.label === "Social Media Post");
@@ -32,6 +32,7 @@ export default class Person extends Node {
                 if (friendsThatReadPost.length > 0) {
                     friendScores = friendsThatReadPost.map((friend) => {
                         const reader = randomPost.readers.get(friend);
+                        console.log(reader.score, reader);
                         return reader.score;
                     }); // Gets the node that has this id, not the score
                 }
@@ -48,13 +49,18 @@ export default class Person extends Node {
             }
             //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
             //The score will be -1, 0 or 1 based on the average of the scores
+            console.log(friendScores.length, infoLinkScores.length);
             if (friendScores.length > 0 || infoLinkScores.length > 0) {
+                console.log(friendScores.length > 0 || infoLinkScores.length > 0);
                 myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
+                console.log(myScore);
             }
             //Calculate the distance from me to the post
             const distance = Math.sqrt(Math.pow(this.x - randomPost.x, 2) + Math.pow(this.y - randomPost.y, 2));
+
+            console.log(myScore - distance / 500, myScore, distance, 500);
             //Adjust the score based on the distance
-            myScore = myScore - distance / 130;
+            myScore = myScore - distance / 500;
             //Change the score to -1, 0 or 1
             myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
             //Add the post to my items with the calculated score
@@ -67,29 +73,31 @@ export default class Person extends Node {
 
             const link = new Edge(this, randomPost, "item-link");
             links.set(this.id + "-" + randomPost.id, link);
-            link.drawLink();
+            // link.drawLink();
         }
     }
 
     //Function for forwarding a social media post to friends
-    forwardSocialMediaPost() {
+    forwardSocialMediaPost(links) {
         //Get a random post from my items
         const myPosts = Array.from(this.items.keys()); // myPosts = array with id's
         const randomPost = myPosts[Math.floor(Math.random() * myPosts.length)];
 
         //Check what my score is with the post
         const postObject = this.items.get(randomPost);
-
+        console.log("postObject.score", postObject.score);
         //If the score is positive, forward the post to all my friends.
         if (postObject.score > 0) {
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
                     if (friend.person) {
-                        friend.person.receiveSocialMediaPost(this, postObject.post, "friend");
+                        friend.person.receiveSocialMediaPost(this, postObject.post, "infoLink", links); // infolink
+                        console.log("FORWARD:", this.id, "TO:", friend.person.id);
                     } else {
                         console.error("friend.person doesnt exist");
-                        friend.receiveSocialMediaPost(this, postObject.post, "friend");
+                        friend.receiveSocialMediaPost(this, postObject.post, "infoLink", links); //infolink
+                        console.log("FORWARD:", this.id, "TO:", friend.id);
                     }
                 });
             }
@@ -97,7 +105,7 @@ export default class Person extends Node {
     }
 
     //Function for receiving forwarded social media posts
-    receiveSocialMediaPost(sender, post, relationship) {
+    receiveSocialMediaPost(sender, post, relationship ,links) {
         let relationshipScore = 0;
 
         //Check if I have already read the post
@@ -109,26 +117,36 @@ export default class Person extends Node {
             //Check the relationship score between me and the sender
             const friend = this.friends.get(sender.id); // TODO add score when adding friend
             relationshipScore = friend.score;
+
+            this.items.set(post.id, { post: post, score: postScore });
+            const link = new Edge(this, post, "item-link");
+            links.set(this.id + "-" + post.id, link);
         } else if (relationship === "infoLink") {
+            // TODO infolink, even checken of het goed gaat in deze if statement
             //Check the relationship score between me and the sender
-            const sender = this.infoLinks.get(sender.id); // TODO add score when adding infolink
             relationshipScore = sender.score;
+            this.infoLinks.set(sender.id, { person: sender, score: relationshipScore });
+            const link = new Edge(this, sender, "info-link");
+            links.set(this.id + "-" + sender.id, link);
         }
 
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
         let similarityThreshold = 150;
-        const amountSimilarPosts = Array.from(this.items.keys()).filter(
-            (item) => Math.abs(item.post.x - post.x) < similarityThreshold && Math.abs(item.post.y - post.y) < similarityThreshold
-        ).length;
+        const amountSimilarPosts = Array.from(this.items.keys()).filter((item) => {
+            if (item.post) {
+                item = item.post;
+            }
+            const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
+
+            return similarPostsArray.length;
+        });
         let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false;
 
         //Calculate a score for the post based on the relationship score and the similarity
         let postScore = relationshipScore + (isSimilar ? 1 : -1);
 
         //Add the post to my items with the calculated score
-        // this.items.set(post, postScore); // TODO
-        this.items.set(post.id, { post: post, score: postScore });
-        // TODO linkje tekenen
+
 
         //Add myself to the readers of the post
         post.readers.set(this.id, { person: this, score: postScore });
@@ -299,7 +317,7 @@ export default class Person extends Node {
      */
     step(nodes, links) {
         this.readSocialMediaPost(nodes, links);
-        this.forwardSocialMediaPost();
+        this.forwardSocialMediaPost(links);
         this.manageRelationships();
         this.addFriendThroughContent();
         this.moveNode();
