@@ -394,6 +394,14 @@ function showSelectedNodeOptions(nodeData) {
 
     increasedPopularityInput.value = nodeData.increasedPopularity;
 
+    updateFriendList(nodeData);
+    updateFeedList(nodeData);
+    updateLikedList(nodeData);
+
+    selectedNodeOptions.classList.remove("hide");
+}
+
+function updateFriendList(nodeData) {
     // friends
     const friendsUl = friends.querySelector("ul");
     if (nodeData.friends.size !== 0) {
@@ -423,7 +431,8 @@ function showSelectedNodeOptions(nodeData) {
             friendsUl.appendChild(clone);
         });
     }
-
+}
+function updateFeedList(nodeData) {
     // feed
     const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
@@ -454,11 +463,13 @@ function showSelectedNodeOptions(nodeData) {
                 if (nodeData.items.has(item.id)) {
                     nodeData.removeItemLink(item, links);
                     e.target.classList.remove("active");
+                    updateLikedList(nodeData);
                     // showSelectedNodeOptions(nodeData);
                     // TODO pdate the Likedfeed
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
                     e.target.classList.add("active");
+                    updateLikedList(nodeData);
                     // TODO showSelectedNodeOptions(nodeData);
                 }
             });
@@ -472,7 +483,8 @@ function showSelectedNodeOptions(nodeData) {
         // console.log(skip);
         // if (!skip) {
     }
-
+}
+function updateLikedList(nodeData) {
     // liked
     const likedUl = liked.querySelector("ul");
     if (nodeData.items.size !== 0) {
@@ -492,9 +504,13 @@ function showSelectedNodeOptions(nodeData) {
                     nodeData.removeItemLink(item.post, links);
                     // transparent
                     likeButton.classList.remove("active");
+                    updateFeedList(nodeData);
+                    likeButton.parentElement.parentElement.remove();
                 } else {
                     nodeData.addItemLink(item.post, nodeData, links);
                     likeButton.classList.add("active");
+                    updateFeedList(nodeData);
+                    likeButton.parentElement.parentElement.remove();
                 }
             });
 
@@ -503,8 +519,6 @@ function showSelectedNodeOptions(nodeData) {
     } else {
         likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
     }
-
-    selectedNodeOptions.classList.remove("hide");
 }
 
 /**
