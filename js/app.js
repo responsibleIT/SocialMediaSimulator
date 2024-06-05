@@ -85,7 +85,7 @@ randomContentButton.addEventListener("click", () => {
     drawRandom("Social Media Post", count, data);
 
     if (selectedNode !== null) {
-        showSelectedNodeOptions(selectedNode);
+        showMobile(selectedNode);
     }
 });
 
@@ -105,7 +105,7 @@ increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showSelectedNodeOptions(selectedNode);
+    showMobile(selectedNode);
 });
 
 // calcGroupsButton.addEventListener("click", () => {
@@ -308,7 +308,7 @@ function setEventListeners(node) {
         switch (selectedNode) {
             case null:
                 selectNode(node);
-                showSelectedNodeOptions(node);
+                showMobile(node);
                 showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
@@ -321,7 +321,7 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-                showSelectedNodeOptions(selectedNode);
+                showMobile(selectedNode);
             // showNodeDataContainer(selectedNode);
         }
     });
@@ -382,7 +382,7 @@ function getNodesWithReaders(nodes) {
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
-function showSelectedNodeOptions(nodeData) {
+function showMobile(nodeData) {
     console.log(nodeData);
     const image = document.getElementById("selectedNodeImage");
 
@@ -464,13 +464,13 @@ function updateFeedList(nodeData) {
                     nodeData.removeItemLink(item, links);
                     e.target.classList.remove("active");
                     updateLikedList(nodeData);
-                    // showSelectedNodeOptions(nodeData);
+                    // showMobile(nodeData);
                     // TODO pdate the Likedfeed
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
                     e.target.classList.add("active");
                     updateLikedList(nodeData);
-                    // TODO showSelectedNodeOptions(nodeData);
+                    // TODO showMobile(nodeData);
                 }
             });
 
