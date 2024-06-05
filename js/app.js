@@ -409,12 +409,13 @@ function showSelectedNodeOptions(nodeData) {
             const unfriendButton = clone.querySelector(".unfriend-button");
             p.textContent = friend.userName;
             img.src = friend.profileImage;
-            unfriendButton.addEventListener('click', () => {
+            unfriendButton.addEventListener("click", () => {
                 if (nodeData.person) {
                     nodeData = nodeData.person;
                 }
                 console.log(nodeData);
                 nodeData.removeFriend(friend, links);
+                unfriendButton.parentElement.remove();
 
                 resizeNodes(nodes);
                 showNodeDataContainer(nodeData);
@@ -446,13 +447,19 @@ function showSelectedNodeOptions(nodeData) {
             heading.textContent = item.title;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', (e) => {
+            if (nodeData.items.has(item.id)) {
+                likeButton.classList.add("active");
+            }
+            likeButton.addEventListener("click", (e) => {
                 if (nodeData.items.has(item.id)) {
                     nodeData.removeItemLink(item, links);
                     e.target.classList.remove("active");
+                    // showSelectedNodeOptions(nodeData);
+                    // TODO pdate the Likedfeed
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
                     e.target.classList.add("active");
+                    // TODO showSelectedNodeOptions(nodeData);
                 }
             });
 
@@ -479,7 +486,8 @@ function showSelectedNodeOptions(nodeData) {
             heading.textContent = item.post.title;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', () => {
+            likeButton.classList.add("active");
+            likeButton.addEventListener("click", () => {
                 if (nodeData.items.has(item.post.id)) {
                     nodeData.removeItemLink(item.post, links);
                     // transparent
