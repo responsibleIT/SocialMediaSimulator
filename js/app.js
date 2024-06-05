@@ -483,10 +483,10 @@ function showSelectedNodeOptions(nodeData) {
                 if (nodeData.items.has(item.post.id)) {
                     nodeData.removeItemLink(item.post, links);
                     // transparent
-                    likeButtton.classList.remove("active");
+                    likeButton.classList.remove("active");
                 } else {
                     nodeData.addItemLink(item.post, nodeData, links);
-                    likeButtton.classList.add("active");
+                    likeButton.classList.add("active");
                 }
             });
 
