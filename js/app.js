@@ -380,7 +380,7 @@ function showNodeDataContainer(nodeData) {
             });
             friendsUl.appendChild(clone);
         });
-    }
+    } 
 
     // feed
     const feedUl = feed.querySelector("ul");
