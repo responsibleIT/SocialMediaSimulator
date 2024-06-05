@@ -210,12 +210,11 @@ canvas {
     align-items: center;
     cursor: pointer;
     height: 2.5rem;
-    margin-top: -3.5rem;
-    margin-left: -1.6rem;
+    transform: translate(-50%, calc(-100% - 10px));
     transition: transform 0.3s ease;
 
     &:hover {
-        transform: translateY(-1em);
+        transform: translate(-50%, calc(-100% - 10px - .5em));
     }
 
     & img {
