@@ -321,7 +321,14 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-                showMobile(selectedNode);
+                if (node.label === "Person") {
+                    updateFriendList(selectedNode);
+                } else {
+                    updateLikedList(selectedNode);
+                    updateFeedList(selectedNode);
+                }
+
+            // showMobile(selectedNode);
             // showNodeDataContainer(selectedNode);
         }
     });
