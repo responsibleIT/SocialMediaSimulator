@@ -93,11 +93,11 @@ export default class Person extends Node {
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
-                    if(friend.person){
+                    if (friend.person) {
                         friend.person.receiveSocialMediaPost(this, postObject.post, "friend");
                     } else {
                         console.error("friend.person doesnt exist");
-                    friend.receiveSocialMediaPost(this, postObject.post, "friend");
+                        friend.receiveSocialMediaPost(this, postObject.post, "friend");
                     }
                     // friend.receiveSocialMediaPost(this, randomPost, "friend");
                 });
@@ -174,7 +174,7 @@ export default class Person extends Node {
             console.log("friend:", aFriend);
             let score;
             let friend;
-            if(!aFriend.person){
+            if (!aFriend.person) {
                 console.error("friend.person is not a thing")
                 score = aFriend.score;
                 friend = aFriend.person;
@@ -190,7 +190,7 @@ export default class Person extends Node {
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
             if (score >= 3) {
-                this.infoLinks.set(friend.id, {person: friend, score: 0}); // 0 is default
+                this.infoLinks.set(friend.id, { person: friend, score: 0 }); // 0 is default
                 console.log("Set info link", this, friend);
             }
         });
@@ -224,8 +224,8 @@ export default class Person extends Node {
                 );
                 //Pick a random person from the list and add them as a friend
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                this.friends.set(randomPerson.id, {person: randomPerson, score: 0});
-                randomPerson.friends.set(this.id, {person: this, score: 0});
+                this.friends.set(randomPerson.id, { person: randomPerson, score: 0 });
+                randomPerson.friends.set(this.id, { person: this, score: 0 });
                 console.log("ADDED FRIEND", randomPerson, " TO ", this);
             }
         });
@@ -352,15 +352,15 @@ export default class Person extends Node {
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links) {
-    	this.removeForwardButtons();
+        this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
         this.items.forEach((item) => {
             let svgIcon = document.createElement("img");
             svgIcon.src = "./images/sns_icons_Send.svg";
             svgIcon.alt = "Forward";
             // console.log(item);
-            let itemNodeData 
-            if(item.post){
+            let itemNodeData
+            if (item.post) {
                 itemNodeData = item.post;
             } else {
                 itemNodeData = item;
@@ -374,9 +374,9 @@ export default class Person extends Node {
             forwardButton.addEventListener("click", () => {
                 // const friendsArray = this.friends;
                 this.friends.forEach((friend) => {
-                    if(friend.person){
+                    if (friend.person) {
                         friend = friend.person;
-                    } 
+                    }
                     this.addItemLink(itemNodeData, friend, links);
                     this.addInfoLink(friend, this, links);
                 });
@@ -396,9 +396,9 @@ export default class Person extends Node {
     //Function for adding a friend link between the currently selected node and the node with the given id
     addFriend(node, links) {
         let toBeFriend = node;
-
-        this.friends.set(node.id, {person: node, score: 0});
-        toBeFriend.friends.set(this.id, {person: this, score: 0});
+        console.log("friend", node);
+        this.friends.set(node.id, { person: node, score: 0 });
+        toBeFriend.friends.set(this.id, { person: this, score: 0 });
 
         const link = new Edge(this, node, "friend-link");
         links.set(this.id + "-" + toBeFriend.id, link);
@@ -406,6 +406,10 @@ export default class Person extends Node {
     }
 
     removeFriend(node, links) {
+        console.log("remove friend", node);
+        if(node.person) {
+            node = node.person;
+        }
         let linkKey1 = this.id + "-" + node.id;
         let linkKey2 = node.id + "-" + this.id;
 
@@ -454,7 +458,7 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links) {
-        from.infoLinks.set(to.id, {person: to, score: 0});
+        from.infoLinks.set(to.id, { person: to, score: 0 });
 
         const link = new Edge(from, to, "info-link");
         links.set(from.id + "-" + to.id, link);

@@ -866,10 +866,55 @@ FAKEBOOK STYLES
             & button {
                 --background-color: transparent;
                 padding: 0;
+                box-shadow: none;
             }
         }
     }
 }
+
+/* .like-button{
+    & svg{
+        fill: transparent;
+        transition: fill 0.3s ease;
+        stroke: #000000;
+    }
+}
+
+.like-button.clicked svg {
+    fill: red;
+} */
+
+.like-button svg {
+    fill: transparent;
+    transition: fill 0.3s ease;
+    stroke: #000000;
+    pointer-events: none;
+}
+
+.like-button:hover, .like-button:active {
+    box-shadow: none;
+}
+   
+
+.like-button.active svg{
+    fill: red;
+    stroke: red;
+    animation: like 0.3s ease;
+}
+
+@keyframes like {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
 
 .delete-button {
     --background-color: #d70000;

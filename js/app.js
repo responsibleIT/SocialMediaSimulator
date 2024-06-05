@@ -45,6 +45,7 @@ resizeCanvas();
 ///// Event listeners /////
 ///////////////////////////
 
+
 // function for counter inputs
 countInputs.forEach((input) => {
     const increaseButton = input.children[2];
@@ -82,6 +83,7 @@ randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
     const data = userdata.getPosts(count);
     drawRandom("Social Media Post", count, data);
+
     if (selectedNode !== null) {
         showSelectedNodeOptions(selectedNode);
     }
@@ -397,12 +399,26 @@ function showSelectedNodeOptions(nodeData) {
     if (nodeData.friends.size !== 0) {
         friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
+            if (friend.person) {
+                friend = friend.person;
+            }
             console.log("update friend ul");
             const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
-            p.textContent = friend.person.userName;
-            img.src = friend.person.profileImage;
+            const unfriendButton = clone.querySelector(".unfriend-button");
+            p.textContent = friend.userName;
+            img.src = friend.profileImage;
+            unfriendButton.addEventListener('click', () => {
+                if (nodeData.person) {
+                    nodeData = nodeData.person;
+                }
+                console.log(nodeData);
+                nodeData.removeFriend(friend, links);
+
+                resizeNodes(nodes);
+                showNodeDataContainer(nodeData);
+            });
             friendsUl.appendChild(clone);
         });
     }
@@ -430,11 +446,13 @@ function showSelectedNodeOptions(nodeData) {
             heading.textContent = item.title;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener("click", () => {
+            likeButton.addEventListener('click', (e) => {
                 if (nodeData.items.has(item.id)) {
                     nodeData.removeItemLink(item, links);
+                    e.target.classList.remove("active");
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
+                    e.target.classList.add("active");
                 }
             });
 
@@ -461,11 +479,14 @@ function showSelectedNodeOptions(nodeData) {
             heading.textContent = item.post.title;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener("click", () => {
+            likeButton.addEventListener('click', () => {
                 if (nodeData.items.has(item.post.id)) {
                     nodeData.removeItemLink(item.post, links);
+                    // transparent
+                    likeButton.classList.remove("active");
                 } else {
                     nodeData.addItemLink(item.post, nodeData, links);
+                    likeButton.classList.add("active");
                 }
             });
 
@@ -659,3 +680,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+
+
