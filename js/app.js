@@ -114,10 +114,14 @@ findAllConnectedComponents();
 
 stepButton.addEventListener("click", () => {
     console.log(selectedNode);
-    if (selectedNode !== null) {
-        // step(selectedNode);
-        selectedNode.step(nodes, links);
-    }
+    // if (selectedNode !== null) {
+    // step(selectedNode);
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+        }
+    });
+    // }
 });
 
 // Add event listener for window resize
@@ -237,7 +241,7 @@ function drawRandom(label, count, userData) {
             case "Social Media Post":
                 const postImage = userData[i].image;
                 const title = userData[i].name;
-                console.log(postImage, title);
+                // console.log(postImage, title);
                 node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
             default:
@@ -292,7 +296,7 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        console.log("HOVER", node);
+        // console.log("HOVER", node);
         if (node.label === "Person") {
             showNodeDataContainer(node);
         }

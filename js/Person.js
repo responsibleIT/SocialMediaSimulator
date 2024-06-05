@@ -15,36 +15,50 @@ export default class Person extends Node {
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
         console.log("readSocialMediaPost function");
+
+        let friendScores = [];
+        let infoLinkScores = [];
+        let myScore = 0;
+
         //Pick a random node from the nodes map that has label of Social Media Post
         const socialMediaPosts = Array.from(nodes.values()).filter((node) => node.label === "Social Media Post");
         const randomPost = socialMediaPosts[Math.floor(Math.random() * socialMediaPosts.length)];
 
-        //Get the friends who have also read the post by checking the readers map of the post and see if it contains my friends
-        // const friendsThatReadPost = randomPost.readers.filter((reader) => this.friends.has(reader));
-        const friendsThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.friends.has(reader)); // Is id
-        //From my friends who have read the post, get the scores they have with the post
-        const friendScores = friendsThatReadPost.map((friend) => {
-            const reader = randomPost.readers.get(friend);
-            return reader.score;
-        }); // Gets the node that has this id, not the score
+        if (this.friends.size != 0) {
+            console.log("LOG: this.friends.size !== 0");
+            //Get the friends who have also read the post by checking the readers map of the post and see if it contains my friends
+            // const friendsThatReadPost = randomPost.readers.filter((reader) => this.friends.has(reader));
+            const friendsThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.friends.has(reader)); // Is id
+            //From my friends who have read the post, get the scores they have with the post
+            if (friendsThatReadPost.length > 0) {
+                friendScores = friendsThatReadPost.map((friend) => {
+                    const reader = randomPost.readers.get(friend);
+                    return reader.score;
+                }); // Gets the node that has this id, not the score
+            }
+        }
 
-        //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
-        // const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
-        console.log("randomPost.readers", randomPost.readers, "this.friends", this.friends);
-        const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader)); // Is id
-        //From my infolinks who have read the post, get the scores they have with the post
-        const infoLinkScores = infoLinksThatReadPost.map((infoLink) => {
-            const reader = randomPost.readers.get(infoLink);
-            return reader.score;
-        }); // Gets the node that has this id, not the score
-
-        console.log("infoLinksThatReadPost", infoLinksThatReadPost, "friendsThatReadPost", friendsThatReadPost);
-        console.log("friendScores", friendScores, "infoLinkScores", infoLinkScores);
-
+        if (this.infoLinks.size != 0) {
+            console.log("LOG: this.infoLinks.size !== 0");
+            //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
+            // const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
+            // console.log("randomPost.readers", randomPost.readers, "this.friends", this.friends);
+            const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader)); // Is id
+            //From my infolinks who have read the post, get the scores they have with the post
+            infoLinkScores = infoLinksThatReadPost.map((infoLink) => {
+                const reader = randomPost.readers.get(infoLink);
+                return reader.score;
+            }); // Gets the node that has this id, not the score
+        }
+        // console.log("infoLinksThatReadPost", infoLinksThatReadPost, "friendsThatReadPost", friendsThatReadPost);
+        // console.log("friendScores", friendScores, "infoLinkScores", infoLinkScores);
         //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
         //The score will be -1, 0 or 1 based on the average of the scores
-        let myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
 
+        if (friendScores.length > 0 || infoLinkScores.length > 0) {
+            myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
+        }
+        console.log(typeof myScore);
         //Calculate the distance from me to the post
         const distance = Math.sqrt(Math.pow(this.x - randomPost.x, 2) + Math.pow(this.y - randomPost.y, 2));
         //Adjust the score based on the distance
@@ -52,18 +66,18 @@ export default class Person extends Node {
         myScore = myScore - distance / 100;
         //Change the score to -1, 0 or 1
         myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
-        console.log("MY SCORE", myScore);
+        // console.log("MY SCORE", myScore);
         //Add the post to my items with the calculated score
         // randomPost.score = myScore;
 
-        console.log("randomPost + score", randomPost, myScore);
-
+        // console.log("randomPost + score", randomPost, myScore);
+        console.log("UITEINDELIJK SCORE:", myScore);
         this.items.set(randomPost.id, { post: randomPost, score: myScore }); // add the my score
         // this.items.set(randomPost, myScore); This adds the randomPost as a key and the score as the value of that key
 
         //Add myself to the readers of the post
         randomPost.readers.set(this.id, { person: this, score: myScore });
-        console.log("POST", randomPost, "READER", this);
+        // console.log("POST", randomPost, "READER", this);
 
         const link = new Edge(this, randomPost, "item-link");
         links.set(this.id + "-" + randomPost.id, link);
@@ -142,6 +156,7 @@ export default class Person extends Node {
         //Add the post to my items with the calculated score
         // this.items.set(post, postScore); // TODO
         this.items.set(post.id, { post: post, score: postScore });
+        // TODO linkje tekenen
 
         //Add myself to the readers of the post
         post.readers.set(this.id, { person: this, score: postScore });
@@ -150,8 +165,7 @@ export default class Person extends Node {
         if (postScore < 0) {
             console.log("DECREASE FRIEND RELATIONSHIP", this, sender, "relationship:", relationship);
             if (relationship === "friend") {
-                // TODO draw link and maybe use the existing functions
-                this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 }); // TODO relationshipScore zit niet in de friends map
+                this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 }); 
             } else if (relationship === "infoLink") {
                 // this.addInfoLink(sender, this, links);
                 this.infoLinks.set(sender.id, { person: sender, score: relationshipScore - 1 });
@@ -187,19 +201,22 @@ export default class Person extends Node {
             if (score <= -3) {
                 friend.friends.delete(this);
                 this.friends.delete(friend.id);
+                // TODO delete edge
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
             if (score >= 3) {
                 this.infoLinks.set(friend.id, { person: friend, score: 0 }); // 0 is default
                 console.log("Set info link", this, friend);
+                // TODO add info edge
             }
         });
 
         //Check if there are any infolinks that have a score of -5 or lower and remove them
-        this.infoLinks.forEach((score, infoLink) => {
-            if (score <= -5) {
-                infoLink.infoLinks.delete(this);
-                this.infoLinks.delete(infoLink);
+        this.infoLinks.forEach((link) => {
+            // link.person, link.scrore
+            if (link.score <= -5) {
+                // infoLink.infoLinks.delete(this);
+                this.infoLinks.delete(link);
             }
         });
     }
@@ -209,9 +226,11 @@ export default class Person extends Node {
         console.log("add friend function");
         //Get an array of all posts I have read and liked
         const positivePosts = Array.from(this.items.keys()).filter((post) => {
-            console.log("Post", post);
-            console.log(this.items.get(post) > 0);
-            return this.items.get(post) > 0
+            console.log("Post", post, post.score > 0);
+            // console.log(this.items.get(post) > 0);
+            if(post.score > 0){
+                return post
+            }
         });
         console.log("positivePosts", positivePosts);
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
@@ -219,8 +238,15 @@ export default class Person extends Node {
             if (Math.random() > 0.5) {
                 console.log("Math.random() > 0.5", post);
                 //Get all people who have read the post and liked it
-                const peopleThatReadPost = Array.from(post.readers.keys()).filter(
-                    (reader) => post.readers.get(reader) > 0 && reader !== this && !this.friends.has(reader)
+                const peopleThatReadPost = Array.from(post.readers.values()).filter(
+                    // TODO hier nog ff naar kijken post.readers.get(reader) > 0  werkt nog niet
+                    (reader) => {
+                        const foundReader = post.readers.get(reader.id);
+                        if (foundReader.score > 0 && reader !== this.id && !this.friends.has(reader) ){
+                            return reader
+                        }
+                        // post.readers.get(reader) > 0 && reader !== this && !this.friends.has(reader)
+                    } 
                 );
                 //Pick a random person from the list and add them as a friend
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
@@ -242,8 +268,7 @@ export default class Person extends Node {
             console.log(this.friends, friend, friend); // friend is id
             const foundFriend = this.friends.get(friend.person.id);
             console.log("foundFriend", foundFriend);
-            if (foundFriend.score >= 0) {
-                // TODO remove the = later
+            if (foundFriend.score > 0) {
                 return foundFriend;
             } else if (foundFriend.score < 0) {
                 console.log("foundFriend.score is lower than 0");
@@ -255,8 +280,7 @@ export default class Person extends Node {
         const positiveInfoLinks = Array.from(this.infoLinks.values()).filter((infoLink) => {
             const foundInfoLink = this.infoLinks.get(infoLink.person.id);
             console.log("foundInfoLink", foundInfoLink);
-            if (foundInfoLink.score >= 0) {
-                // TODO remove the = later
+            if (foundInfoLink.score > 0) {
                 return foundInfoLink;
             } else if (foundInfoLink.score < 0) {
                 console.log("foundInfoLink.score is lower than 0");
@@ -270,8 +294,7 @@ export default class Person extends Node {
         const positiveItems = Array.from(this.items.values()).filter((item) => {
             const foundItem = this.items.get(item.post.id);
             console.log("foundItem", foundItem);
-            if (foundItem.score >= 0) {
-                // TODO remove the = later
+            if (foundItem.score > 0) {
                 return foundItem;
             } else if (foundItem.score < 0) {
                 console.log("foundItem.score is lower than 0");
