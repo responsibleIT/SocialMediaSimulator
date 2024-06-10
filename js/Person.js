@@ -69,12 +69,14 @@ export default class Person extends Node {
 
             //Add myself to the readers of the post
             randomPost.readers.set(this.id, { person: this, score: myScore });
-            // if (myScore >= 0) {
             // TODO might delete later
             const link = new Edge(this, randomPost, "item-link");
             links.set(this.id + "-" + randomPost.id, link);
-            // link.drawLink();
-            // }
+
+            if (myScore < 0) {
+                link.element.classList.add("stupid-link");
+                console.log(link.element);
+            }
         }
     }
 

@@ -439,6 +439,10 @@ NODE STYLES
     &.pre-link {
         background-color: #999;
     }
+    &.stupid-link {
+        opacity: 0.4;
+        background-color: black;
+    }
 }
 @keyframes shoot {
     from {
