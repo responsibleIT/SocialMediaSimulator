@@ -1,5 +1,4 @@
 export default class userData {
-
     constructor() {
         this.preFetchedData = [];
         this.postData = [];
@@ -13,20 +12,19 @@ export default class userData {
         const response = await fetch(`https://randomuser.me/api/?results=${count}`);
         const data = await response.json();
 
-        data.results.forEach(person => {
+        data.results.forEach((person) => {
             let personData = {
                 image: person.picture.large,
                 username: person.name.first + " " + person.name.last,
             };
             this.preFetchedData.push(personData);
-
         });
     }
 
     async get(count) {
         const array = [];
 
-        if(this.preFetchedData.length < count) {
+        if (this.preFetchedData.length < count) {
             await this.fetchUserData(count);
         }
 
@@ -40,7 +38,6 @@ export default class userData {
 
         return array;
     }
-
 
     // get random items accourding to the count from the postData and return this
     getPosts(count) {
