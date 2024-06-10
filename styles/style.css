@@ -29,7 +29,6 @@ main {
 }
 
 h1 {
-    margin: 1em;
     padding: 0;
     margin: 0;
     height: fit-content;
@@ -120,11 +119,11 @@ body > header {
     gap: 1em;
     z-index: 12;
     transition: 200ms;
-    &:hover {
+    /*&:hover {
         opacity: 0;
         filter: alpha(opacity=0);
         z-index: 12;
-    }
+    }*/
     & h1 {
         order: 1;
         font-size: 1.4em;

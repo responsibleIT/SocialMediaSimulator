@@ -242,7 +242,7 @@ function drawRandom(label, count, userData) {
                 const postImage = userData[i].enclosure.url;
                 const title = userData[i].title;
                 console.log(postImage, title);
-                node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
+                node = new Post(id, "Social Media Post", x, y, { title, postImage });
                 break;
             default:
                 break;
@@ -278,7 +278,10 @@ async function spawnNode(evt) {
             node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
             break;
         case "Social Media Post":
-            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y);
+            let postData = await userdata.getPosts(1);
+            const postImage = postData[0].enclosure.url;
+            const title = postData[0].title;
+            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y, { title, postImage });
             break;
         default:
             break;
