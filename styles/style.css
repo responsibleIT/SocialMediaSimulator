@@ -790,7 +790,7 @@ FAKEBOOK STYLES
     }
 }
 
-#battery {
+.battery {
     width: 1.25em;
     height: 10px;
     /* border: 2px solid black; */
@@ -802,7 +802,7 @@ FAKEBOOK STYLES
     border-radius: 3px;
 
 }
-#battery-level {
+.battery-level {
     height: 100%;
     width: 0;
     background-color: lightgreen;
@@ -813,7 +813,7 @@ FAKEBOOK STYLES
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
 }
-#battery::before {
+.battery::before {
     content: '';
     width: 2px;
     height: 2px;
@@ -825,7 +825,7 @@ FAKEBOOK STYLES
     top: 50%;
     transform: translateY(-50%);
 }
-#level {
+.level {
     position: absolute;
     z-index: 1;
     font-size: .5em;
