@@ -421,7 +421,6 @@ function updateFriendList(nodeData) {
             if (friend.person) {
                 friend = friend.person;
             }
-            console.log("update friend ul");
             const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
@@ -459,7 +458,6 @@ function updateFeedList(nodeData) {
             //     }
             // });
             // console.log("unreadPosts array", unreadPosts);
-            console.log("update feed ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             img.src = item.image;
@@ -501,7 +499,6 @@ function updateLikedList(nodeData) {
     if (nodeData.items.size !== 0) {
         likedUl.innerHTML = "";
         nodeData.items.forEach((item) => {
-            console.log("update liked ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             img.src = item.post.image;
