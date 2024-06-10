@@ -528,7 +528,7 @@ function updateLikedList(nodeData) {
             likedUl.appendChild(clone);
         });
     } else {
-        likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
+        likedUl.innerHTML = "<li><p>Like posts to see them here!</p></li>"; // TODO add default
     }
 }
 
@@ -660,55 +660,23 @@ function bfsShortestPath(graph, startNode) {
     return distances;
 }
 
-// switch in the phone between tabs
-const phoneNav = document.getElementById("phoneNav");
-phoneNav.querySelectorAll("button").forEach((button) => {
-    button.addEventListener("click", () => {
-        phoneNav.querySelectorAll("button").forEach((button) => {
-            button.classList.remove("active");
-        });
-        button.classList.add("active");
-    });
-});
-
-// navigation in phone
+// Switch the mobile pages
 document.addEventListener('DOMContentLoaded', function () {
-    const buttons = document.querySelectorAll('#phoneNav button');
-    const friendsSection = document.getElementById('friends');
-    const profileSection = document.getElementById('profile');
-    const likedSection = document.getElementById('liked');
+    const phoneNav = document.getElementById("phoneNav");
+    const buttons = phoneNav.querySelectorAll("button");
+    const pages = document.querySelectorAll('#friends, #profile, #liked, #selectedProfile, #feed');
 
     buttons.forEach(button => {
         button.addEventListener('click', function () {
-            const page = this.dataset.page;
+            
+            buttons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
 
-            if (page === 'friends') {
-                friendsSection.style.display = 'block';
-                profileSection.style.display = 'none';
-                likedSection.style.display = 'none';
-                selectedProfile.style.display = 'none';
-                feed.style.display = "none";
-
-            } else if (page === 'profile') {
-                profileSection.style.display = 'block';
+            pages.forEach(page => page.style.display = 'none');
+            console.log(this.dataset.page)
+            document.getElementById(this.dataset.page).style.display = 'block';
+            if (this.dataset.page === 'profile') {
                 selectedProfile.style.display = 'block';
-                friendsSection.style.display = 'none';
-                likedSection.style.display = 'none';
-                feed.style.display = "none";
-            }
-            else if (page === 'liked') {
-                likedSection.style.display = 'block';
-                profileSection.style.display = 'none';
-                friendsSection.style.display = 'none';
-                selectedProfile.style.display = 'none';
-                feed.style.display = "none";
-            }
-            else {
-                friendsSection.style.display = 'none';
-                profileSection.style.display = 'none';
-                likedSection.style.display = 'none';
-                selectedProfile.style.display = 'none';
-                feed.style.display = "block";
             }
         });
     });
