@@ -233,7 +233,14 @@ function drawRandom(label, count, userData) {
                 node = new Person(id, "Person", x, y, { image, username });
                 break;
             case "Social Media Post":
+<<<<<<< Updated upstream
                 node = new Post(id, "Social Media Post", x, y);
+=======
+                const postImage = userData[i].enclosure.url;
+                const title = userData[i].title;
+                console.log(postImage, title);
+                node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
+>>>>>>> Stashed changes
                 break;
             default:
                 break;
