@@ -323,7 +323,13 @@ function setEventListeners(node) {
                 break;
             default:
                 const nodeHovered = nodes.get(hoveredNode);
-                selectedNode.linkHandler(nodeHovered, links);
+                console.log(nodeHovered);
+                if (nodeHovered.label === "Person") {
+                    selectedNode.linkHandler(nodeHovered, links);
+                } else {
+                    nodeHovered.linkHandler(selectedNode, links);
+                }
+
                 resizeNodes(nodes);
                 if (node.label === "Person") {
                     updateFriendList(selectedNode);
