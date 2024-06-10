@@ -3,9 +3,11 @@ import Post from "./Post.js";
 import Edge from "./Edge.js";
 import Cursor from "./cursor.js";
 import UserData from "./UserData.js";
+import WebData from "./WebData.js";
 
 const cursor = new Cursor();
 const userdata = new UserData();
+const webData = new WebData();
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");

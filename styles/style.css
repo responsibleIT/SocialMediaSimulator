@@ -585,6 +585,11 @@ PHONE STYLES
 .phoneIcon{
     grid-column: 3 / 3;
     grid-row: 1 / 1;
+    display: flex;
+    gap: 0.25em;
+    & img{
+        height: 10px;
+    }
 }
 
 
@@ -783,6 +788,48 @@ FAKEBOOK STYLES
         color: #0075ff;
         align-items: center;
     }
+}
+
+#battery {
+    width: 1.25em;
+    height: 10px;
+    /* border: 2px solid black; */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #D9D9D9;
+    border-radius: 3px;
+
+}
+#battery-level {
+    height: 100%;
+    width: 0;
+    background-color: lightgreen;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.5s;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+#battery::before {
+    content: '';
+    width: 2px;
+    height: 2px;
+    background: #D9D9D9;
+    position: absolute;
+    right: -3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+#level {
+    position: absolute;
+    z-index: 1;
+    font-size: .5em;
+    color: black;
 }
 
 .friends {
