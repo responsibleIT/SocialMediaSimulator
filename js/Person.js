@@ -12,6 +12,8 @@ export default class Person extends Node {
         this.userName = user.username;
     }
 
+    acceptanceDisctance = 300;
+
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
         let friendScores = [];
@@ -192,7 +194,7 @@ export default class Person extends Node {
 
         // console.log(myScore - distance / 500, myScore, distance, 500);
         //Adjust the score based on the distance
-        myScore = myScore - distance / 500;
+        myScore = myScore - distance / this.acceptanceDisctance;
         //Change the score to -1, 0 or 1
         myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
 
@@ -238,7 +240,7 @@ export default class Person extends Node {
     //Function for adding friends through content
     addFriendThroughContent(links) {
         //Get an array of all posts I have read and liked
-        const positivePosts = Array.from(this.items.keys()).filter((post) => {
+        const positivePosts = Array.from(this.items.values()).filter((post) => {
             // console.log(this.items.get(post) > 0);
             if (post.score > 0) {
                 return post;
@@ -246,17 +248,24 @@ export default class Person extends Node {
         });
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
+            // console.log(post);
             if (Math.random() > 0.5) {
+                post = post.post;
+                // console.log("readers:", post.readers);
                 //Get all people who have read the post and liked it
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
+                    reader = reader.person;
                     const foundReader = post.readers.get(reader.id);
                     if (foundReader.score > 0 && reader !== this.id && !this.friends.has(reader)) {
                         return reader;
                     }
                 });
+                // console.log(peopleThatReadPost);
                 //Pick a random person from the list and add them as a friend
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                this.addFriend(randomPerson, links);
+                // console.log(randomPerson);
+                console.log("ADD FRIEND", this, randomPerson);
+                this.addFriend(randomPerson.person, links);
             }
         });
     }
@@ -427,13 +436,17 @@ export default class Person extends Node {
 
     //Function for adding a friend link between the currently selected node and the node with the given id
     addFriend(node, links) {
-        let toBeFriend = node;
-        console.log("friend", node);
-        this.friends.set(node.id, { person: node, score: 0 });
-        toBeFriend.friends.set(this.id, { person: this, score: 0 });
+        // TODO if friend already exists dont add it again
+        const friend = this.friends.has(node.id);
+        if (friend === false) {
+            let toBeFriend = node;
+            // console.log("friend", node);
+            this.friends.set(node.id, { person: node, score: 0 });
+            toBeFriend.friends.set(this.id, { person: this, score: 0 });
 
-        const link = new Edge(this, node, "friend-link");
-        links.set(this.id + "-" + toBeFriend.id, link);
+            const link = new Edge(this, node, "friend-link");
+            links.set(this.id + "-" + toBeFriend.id, link);
+        }
     }
 
     removeFriend(node, links) {
@@ -489,8 +502,8 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links, score) {
-        if(!score){
-            score = 0
+        if (!score) {
+            score = 0;
         }
         if (to.person) {
             to = to.person;
