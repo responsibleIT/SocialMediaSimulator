@@ -87,7 +87,7 @@ randomContentButton.addEventListener("click", () => {
     drawRandom("Social Media Post", count, data);
 
     if (selectedNode !== null) {
-        showSelectedNodeOptions(selectedNode);
+        showMobile(selectedNode);
     }
 });
 
@@ -107,7 +107,7 @@ increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showSelectedNodeOptions(selectedNode);
+    showMobile(selectedNode);
 });
 
 // calcGroupsButton.addEventListener("click", () => {
@@ -115,11 +115,15 @@ findAllConnectedComponents();
 // });
 
 stepButton.addEventListener("click", () => {
-    console.log(selectedNode);
-    if (selectedNode !== null) {
-        // step(selectedNode);
-        selectedNode.step(nodes, links);
-    }
+    // console.log(selectedNode);
+    // if (selectedNode !== null) {
+    // step(selectedNode);
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+        }
+    });
+    // }
 });
 
 // Add event listener for window resize
@@ -237,8 +241,8 @@ function drawRandom(label, count, userData) {
                 node = new Person(id, "Person", x, y, { image, username });
                 break;
             case "Social Media Post":
-                const postImage = userData[i].image;
-                const title = userData[i].name;
+                const postImage = userData[i].enclosure.url;
+                const title = userData[i].title;
                 console.log(postImage, title);
                 node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
@@ -294,7 +298,7 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        console.log("HOVER", node);
+        // console.log("HOVER", node);
         if (node.label === "Person") {
             showNodeDataContainer(node);
         }
@@ -310,7 +314,7 @@ function setEventListeners(node) {
         switch (selectedNode) {
             case null:
                 selectNode(node);
-                showSelectedNodeOptions(node);
+                showMobile(node);
                 showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
@@ -323,7 +327,14 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-                showSelectedNodeOptions(selectedNode);
+                if (node.label === "Person") {
+                    updateFriendList(selectedNode);
+                } else {
+                    updateLikedList(selectedNode);
+                    updateFeedList(selectedNode);
+                }
+
+            // showMobile(selectedNode);
             // showNodeDataContainer(selectedNode);
         }
     });
@@ -384,7 +395,7 @@ function getNodesWithReaders(nodes) {
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
-function showSelectedNodeOptions(nodeData) {
+function showMobile(nodeData) {
     console.log(nodeData);
     const image = document.getElementById("selectedNodeImage");
 
@@ -396,6 +407,14 @@ function showSelectedNodeOptions(nodeData) {
 
     increasedPopularityInput.value = nodeData.increasedPopularity;
 
+    updateFriendList(nodeData);
+    updateFeedList(nodeData);
+    updateLikedList(nodeData);
+
+    selectedNodeOptions.classList.remove("hide");
+}
+
+function updateFriendList(nodeData) {
     // friends
     const friendsUl = friends.querySelector("ul");
     if (nodeData.friends.size !== 0) {
@@ -411,12 +430,13 @@ function showSelectedNodeOptions(nodeData) {
             const unfriendButton = clone.querySelector(".unfriend-button");
             p.textContent = friend.userName;
             img.src = friend.profileImage;
-            unfriendButton.addEventListener('click', () => {
+            unfriendButton.addEventListener("click", () => {
                 if (nodeData.person) {
                     nodeData = nodeData.person;
                 }
                 console.log(nodeData);
                 nodeData.removeFriend(friend, links);
+                unfriendButton.parentElement.remove();
 
                 resizeNodes(nodes);
                 showNodeDataContainer(nodeData);
@@ -424,7 +444,8 @@ function showSelectedNodeOptions(nodeData) {
             friendsUl.appendChild(clone);
         });
     }
-
+}
+function updateFeedList(nodeData) {
     // feed
     const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
@@ -448,13 +469,21 @@ function showSelectedNodeOptions(nodeData) {
             heading.textContent = item.title;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', (e) => {
+            if (nodeData.items.has(item.id)) {
+                likeButton.classList.add("active");
+            }
+            likeButton.addEventListener("click", (e) => {
                 if (nodeData.items.has(item.id)) {
                     nodeData.removeItemLink(item, links);
                     e.target.classList.remove("active");
+                    updateLikedList(nodeData);
+                    // showMobile(nodeData);
+                    // TODO pdate the Likedfeed
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
                     e.target.classList.add("active");
+                    updateLikedList(nodeData);
+                    // TODO showMobile(nodeData);
                 }
             });
 
@@ -467,7 +496,8 @@ function showSelectedNodeOptions(nodeData) {
         // console.log(skip);
         // if (!skip) {
     }
-
+}
+function updateLikedList(nodeData) {
     // liked
     const likedUl = liked.querySelector("ul");
     if (nodeData.items.size !== 0) {
@@ -481,14 +511,19 @@ function showSelectedNodeOptions(nodeData) {
             heading.textContent = item.post.title;
 
             const likeButton = clone.querySelector(".like-button");
-            likeButton.addEventListener('click', () => {
+            likeButton.classList.add("active");
+            likeButton.addEventListener("click", () => {
                 if (nodeData.items.has(item.post.id)) {
                     nodeData.removeItemLink(item.post, links);
                     // transparent
                     likeButton.classList.remove("active");
+                    updateFeedList(nodeData);
+                    likeButton.parentElement.parentElement.remove();
                 } else {
                     nodeData.addItemLink(item.post, nodeData, links);
                     likeButton.classList.add("active");
+                    updateFeedList(nodeData);
+                    likeButton.parentElement.parentElement.remove();
                 }
             });
 
@@ -497,8 +532,6 @@ function showSelectedNodeOptions(nodeData) {
     } else {
         likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
     }
-
-    selectedNodeOptions.classList.remove("hide");
 }
 
 /**

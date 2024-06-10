@@ -14,107 +14,102 @@ export default class Person extends Node {
 
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
-        console.log("readSocialMediaPost function");
+        let friendScores = [];
+        let infoLinkScores = [];
+        let myScore = 1;
+
         //Pick a random node from the nodes map that has label of Social Media Post
         const socialMediaPosts = Array.from(nodes.values()).filter((node) => node.label === "Social Media Post");
         const randomPost = socialMediaPosts[Math.floor(Math.random() * socialMediaPosts.length)];
 
-        //Get the friends who have also read the post by checking the readers map of the post and see if it contains my friends
-        // const friendsThatReadPost = randomPost.readers.filter((reader) => this.friends.has(reader));
-        const friendsThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.friends.has(reader)); // Is id
-        //From my friends who have read the post, get the scores they have with the post
-        const friendScores = friendsThatReadPost.map((friend) => {
-            const reader = randomPost.readers.get(friend);
-            return reader.score;
-        }); // Gets the node that has this id, not the score
+        const exists = this.items.get(randomPost.id);
+        if (!exists) {
+            // console.log("already read");
+            if (this.friends.size != 0) {
+                //Get the friends who have also read the post by checking the readers map of the post and see if it contains my friends
+                const friendsThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.friends.has(reader));
+                //From my friends who have read the post, get the scores they have with the post
+                if (friendsThatReadPost.length > 0) {
+                    friendScores = friendsThatReadPost.map((friend) => {
+                        const reader = randomPost.readers.get(friend);
+                        console.log(reader.score, reader);
+                        return reader.score;
+                    }); // Gets the node that has this id, not the score
+                }
+            }
 
-        //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
-        // const infoLinksThatReadPost = randomPost.readers.filter((reader) => this.infoLinks.has(reader));
-        console.log("randomPost.readers", randomPost.readers, "this.friends", this.friends);
-        const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader)); // Is id
-        //From my infolinks who have read the post, get the scores they have with the post
-        const infoLinkScores = infoLinksThatReadPost.map((infoLink) => {
-            const reader = randomPost.readers.get(infoLink);
-            return reader.score;
-        }); // Gets the node that has this id, not the score
+            if (this.infoLinks.size != 0) {
+                //Get the infolinks who have also read the post by checking the readers map of the post and see if it contains my infolinks
+                const infoLinksThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.infoLinks.has(reader)); // Is id
+                //From my infolinks who have read the post, get the scores they have with the post
+                infoLinkScores = infoLinksThatReadPost.map((infoLink) => {
+                    const reader = randomPost.readers.get(infoLink);
+                    return reader.score;
+                }); // Gets the node that has this id, not the score
+            }
+            //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
+            //The score will be -1, 0 or 1 based on the average of the scores
+            console.log(friendScores.length, infoLinkScores.length);
+            if (friendScores.length > 0 || infoLinkScores.length > 0) {
+                console.log(friendScores.length > 0 || infoLinkScores.length > 0);
+                myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
+                console.log(myScore);
+            }
+            //Calculate the distance from me to the post
+            const distance = Math.sqrt(Math.pow(this.x - randomPost.x, 2) + Math.pow(this.y - randomPost.y, 2));
 
-        console.log("infoLinksThatReadPost", infoLinksThatReadPost, "friendsThatReadPost", friendsThatReadPost);
-        console.log("friendScores", friendScores, "infoLinkScores", infoLinkScores);
+            console.log(myScore - distance / 500, myScore, distance, 500);
+            //Adjust the score based on the distance
+            myScore = myScore - distance / 500;
+            //Change the score to -1, 0 or 1
+            myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
+            //Add the post to my items with the calculated score
 
-        //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
-        //The score will be -1, 0 or 1 based on the average of the scores
-        let myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
+            this.items.set(randomPost.id, { post: randomPost, score: myScore }); // add the my score
+            // This adds the randomPost as a key and the score as the value of that key
 
-        //Calculate the distance from me to the post
-        const distance = Math.sqrt(Math.pow(this.x - randomPost.x, 2) + Math.pow(this.y - randomPost.y, 2));
-        //Adjust the score based on the distance
-        console.log("myScore", myScore, "-", distance, "/", 100);
-        myScore = myScore - distance / 100;
-        //Change the score to -1, 0 or 1
-        myScore = myScore > 0 ? 1 : myScore < 0 ? -1 : 0;
-        console.log("MY SCORE", myScore);
-        //Add the post to my items with the calculated score
-        // randomPost.score = myScore;
+            //Add myself to the readers of the post
+            randomPost.readers.set(this.id, { person: this, score: myScore });
 
-        console.log("randomPost + score", randomPost, myScore);
-
-        this.items.set(randomPost.id, { post: randomPost, score: myScore }); // add the my score
-        // this.items.set(randomPost, myScore); This adds the randomPost as a key and the score as the value of that key
-
-        //Add myself to the readers of the post
-        randomPost.readers.set(this.id, { person: this, score: myScore });
-        console.log("POST", randomPost, "READER", this);
-
-        const link = new Edge(this, randomPost, "item-link");
-        links.set(this.id + "-" + randomPost.id, link);
-        link.drawLink();
-
-        return myScore;
+            const link = new Edge(this, randomPost, "item-link");
+            links.set(this.id + "-" + randomPost.id, link);
+            // link.drawLink();
+        }
     }
 
     //Function for forwarding a social media post to friends
-    forwardSocialMediaPost() {
-        console.log("forwardSocialMediaPost function");
+    forwardSocialMediaPost(links) {
         //Get a random post from my items
-        const myPosts = Array.from(this.items.keys());
+        const myPosts = Array.from(this.items.keys()); // myPosts = array with id's
         const randomPost = myPosts[Math.floor(Math.random() * myPosts.length)];
-        // randomPost = id
-        // myPosts = array with id's
-        console.log("RANDOMPOST", randomPost, "MYPOSTS", myPosts);
+
         //Check what my score is with the post
-        // console.log(this.items);
         const postObject = this.items.get(randomPost);
-
-        console.log("this", this, "random post", postObject); // postObject = object
-
+        console.log("postObject.score", postObject.score);
         //If the score is positive, forward the post to all my friends.
         if (postObject.score > 0) {
-            console.log("myScore > 0", postObject.score);
             //With a percentage chance equal to my social score, forward the post to my friends
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
                     if (friend.person) {
-                        friend.person.receiveSocialMediaPost(this, postObject.post, "friend");
+                        friend.person.receiveSocialMediaPost(this, postObject.post, "infoLink", links); // infolink
+                        console.log("FORWARD:", this.id, "TO:", friend.person.id);
                     } else {
                         console.error("friend.person doesnt exist");
-                        friend.receiveSocialMediaPost(this, postObject.post, "friend");
+                        friend.receiveSocialMediaPost(this, postObject.post, "infoLink", links); //infolink
+                        console.log("FORWARD:", this.id, "TO:", friend.id);
                     }
-                    // friend.receiveSocialMediaPost(this, randomPost, "friend");
                 });
             }
-        } else {
-            console.log("myScore < 0", postObject);
         }
     }
 
     //Function for receiving forwarded social media posts
-    receiveSocialMediaPost(sender, post, relationship) {
-        console.log("receiveSocialMediaPost function");
+    receiveSocialMediaPost(sender, post, relationship ,links) {
         let relationshipScore = 0;
 
         //Check if I have already read the post
         if (this.items.has(post.id)) {
-            console.log("this.items.has(post.id)");
             return;
         }
 
@@ -122,26 +117,36 @@ export default class Person extends Node {
             //Check the relationship score between me and the sender
             const friend = this.friends.get(sender.id); // TODO add score when adding friend
             relationshipScore = friend.score;
+
+            this.items.set(post.id, { post: post, score: postScore });
+            const link = new Edge(this, post, "item-link");
+            links.set(this.id + "-" + post.id, link);
         } else if (relationship === "infoLink") {
+            // TODO infolink, even checken of het goed gaat in deze if statement
             //Check the relationship score between me and the sender
-            const sender = this.infoLinks.get(sender.id); // TODO add score when adding infolink
             relationshipScore = sender.score;
+            this.infoLinks.set(sender.id, { person: sender, score: relationshipScore });
+            const link = new Edge(this, sender, "info-link");
+            links.set(this.id + "-" + sender.id, link);
         }
 
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
-        let similarityThreshold = 10;
-        const amountSimilarPosts = Array.from(this.items.keys()).filter(
-            (item) => Math.abs(item.post.x - post.x) < similarityThreshold && Math.abs(item.post.y - post.y) < similarityThreshold
-        ).length;
-        console.log("amountSimilarPosts", amountSimilarPosts);
+        let similarityThreshold = 150;
+        const amountSimilarPosts = Array.from(this.items.keys()).filter((item) => {
+            if (item.post) {
+                item = item.post;
+            }
+            const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
+
+            return similarPostsArray.length;
+        });
         let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false;
 
         //Calculate a score for the post based on the relationship score and the similarity
         let postScore = relationshipScore + (isSimilar ? 1 : -1);
 
         //Add the post to my items with the calculated score
-        // this.items.set(post, postScore); // TODO
-        this.items.set(post.id, { post: post, score: postScore });
+
 
         //Add myself to the readers of the post
         post.readers.set(this.id, { person: this, score: postScore });
@@ -150,8 +155,7 @@ export default class Person extends Node {
         if (postScore < 0) {
             console.log("DECREASE FRIEND RELATIONSHIP", this, sender, "relationship:", relationship);
             if (relationship === "friend") {
-                // TODO draw link and maybe use the existing functions
-                this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 }); // TODO relationshipScore zit niet in de friends map
+                this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 });
             } else if (relationship === "infoLink") {
                 // this.addInfoLink(sender, this, links);
                 this.infoLinks.set(sender.id, { person: sender, score: relationshipScore - 1 });
@@ -169,64 +173,63 @@ export default class Person extends Node {
 
     //Function for managing relationships with friends and infolinks
     manageRelationships() {
-        console.log("manageRelationships function");
         this.friends.forEach((aFriend) => {
-            console.log("friend:", aFriend);
             let score;
             let friend;
             if (!aFriend.person) {
-                console.error("friend.person is not a thing")
                 score = aFriend.score;
                 friend = aFriend.person;
             } else {
                 score = 3;
-                friend = aFriend
+                friend = aFriend;
             }
 
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= -3) {
                 friend.friends.delete(this);
                 this.friends.delete(friend.id);
+                // TODO delete edge
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
             if (score >= 3) {
                 this.infoLinks.set(friend.id, { person: friend, score: 0 }); // 0 is default
-                console.log("Set info link", this, friend);
+                // TODO add info edge
             }
         });
 
         //Check if there are any infolinks that have a score of -5 or lower and remove them
-        this.infoLinks.forEach((score, infoLink) => {
-            if (score <= -5) {
-                infoLink.infoLinks.delete(this);
-                this.infoLinks.delete(infoLink);
+        this.infoLinks.forEach((link) => {
+            // link.person, link.scrore
+            if (link.score <= -5) {
+                // infoLink.infoLinks.delete(this);
+                this.infoLinks.delete(link);
             }
         });
     }
 
     //Function for adding friends through content
     addFriendThroughContent() {
-        console.log("add friend function");
         //Get an array of all posts I have read and liked
         const positivePosts = Array.from(this.items.keys()).filter((post) => {
-            console.log("Post", post);
-            console.log(this.items.get(post) > 0);
-            return this.items.get(post) > 0
+            // console.log(this.items.get(post) > 0);
+            if (post.score > 0) {
+                return post;
+            }
         });
-        console.log("positivePosts", positivePosts);
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
             if (Math.random() > 0.5) {
-                console.log("Math.random() > 0.5", post);
                 //Get all people who have read the post and liked it
-                const peopleThatReadPost = Array.from(post.readers.keys()).filter(
-                    (reader) => post.readers.get(reader) > 0 && reader !== this && !this.friends.has(reader)
-                );
+                const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
+                    const foundReader = post.readers.get(reader.id);
+                    if (foundReader.score > 0 && reader !== this.id && !this.friends.has(reader)) {
+                        return reader;
+                    }
+                });
                 //Pick a random person from the list and add them as a friend
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
                 this.friends.set(randomPerson.id, { person: randomPerson, score: 0 });
                 randomPerson.friends.set(this.id, { person: this, score: 0 });
-                console.log("ADDED FRIEND", randomPerson, " TO ", this);
             }
         });
     }
@@ -234,49 +237,28 @@ export default class Person extends Node {
     // get(friend.id) en movenode moet naar person
     //Function for moving the agent to a new position
     moveNode() {
-        // TODO krijgt nergens een friend of infolink toegewezen
         //Get all friends and infolinks with a score higher than 0
-        // console.log(this.friends.get(friend), this.infoLinks.get(infoLink));
-        console.log("this friends:", this.friends);
+        // console.log("this friends:", this.friends);
         const positiveFriends = Array.from(this.friends.values()).filter((friend) => {
             console.log(this.friends, friend, friend); // friend is id
             const foundFriend = this.friends.get(friend.person.id);
             console.log("foundFriend", foundFriend);
-            if (foundFriend.score >= 0) {
-                // TODO remove the = later
+            if (foundFriend.score > 0) {
                 return foundFriend;
-            } else if (foundFriend.score < 0) {
-                console.log("foundFriend.score is lower than 0");
-            } else {
-                console.log("foundFriend.score is not found in this friend", foundFriend);
             }
-            // return this.friends.get(friend) > 0;
         });
         const positiveInfoLinks = Array.from(this.infoLinks.values()).filter((infoLink) => {
             const foundInfoLink = this.infoLinks.get(infoLink.person.id);
             console.log("foundInfoLink", foundInfoLink);
-            if (foundInfoLink.score >= 0) {
-                // TODO remove the = later
+            if (foundInfoLink.score > 0) {
                 return foundInfoLink;
-            } else if (foundInfoLink.score < 0) {
-                console.log("foundInfoLink.score is lower than 0");
-            } else {
-                console.log("foundInfoLink.score is not found in this foundInfoLink", foundInfoLink);
             }
-            // return this.infoLinks.get(infoLink) > 0
         });
-        console.log("posFriends:", positiveFriends, "posInfolinks", positiveInfoLinks);
         //Get all items with a score higher than 0
         const positiveItems = Array.from(this.items.values()).filter((item) => {
             const foundItem = this.items.get(item.post.id);
-            console.log("foundItem", foundItem);
-            if (foundItem.score >= 0) {
-                // TODO remove the = later
+            if (foundItem.score > 0) {
                 return foundItem;
-            } else if (foundItem.score < 0) {
-                console.log("foundItem.score is lower than 0");
-            } else {
-                console.log("foundItem.score is not found in this foundItem", foundItem);
             }
         });
 
@@ -284,15 +266,12 @@ export default class Person extends Node {
         let averageX = this.x;
         let averageY = this.y;
 
-        console.log("PLACE", averageX, averageY, "THIS", this);
         positiveFriends.forEach((friend) => {
-            console.log(friend);
             if (friend.person) {
                 friend = friend.person;
             }
             averageX += friend.x;
             averageY += friend.y;
-            console.log("FRIEND X + Y", friend.x, friend.y);
         });
         positiveInfoLinks.forEach((infoLink) => {
             console.log(infoLink); // TODO this infolink had a object in person
@@ -305,16 +284,13 @@ export default class Person extends Node {
             }
             averageX += infoLink.x;
             averageY += infoLink.y;
-            console.log("infoLink X + Y", infoLink.x, infoLink.y);
         });
         positiveItems.forEach((item) => {
-            console.log(item);
             if (item.post) {
                 item = item.post;
             }
             averageX += item.x;
             averageY += item.y;
-            console.log("item X + Y", item.x, item.y);
         });
         averageX = averageX / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
         averageY = averageY / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
@@ -325,16 +301,13 @@ export default class Person extends Node {
         let distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance > 0) {
-            console.log("DISTANCE", distance);
             console.log("this x and y", this.x, this.y);
-
+            // TODO modify the 5
             this.x += (dx / distance) * 5;
             this.y += (dy / distance) * 5;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
             console.log("this x and y after adding distance", this.x, this.y);
-        } else {
-            console.log("DISTANCE < 0", distance);
         }
     }
 
@@ -344,7 +317,7 @@ export default class Person extends Node {
      */
     step(nodes, links) {
         this.readSocialMediaPost(nodes, links);
-        this.forwardSocialMediaPost();
+        this.forwardSocialMediaPost(links);
         this.manageRelationships();
         this.addFriendThroughContent();
         this.moveNode();
@@ -359,7 +332,7 @@ export default class Person extends Node {
             svgIcon.src = "./images/sns_icons_Send.svg";
             svgIcon.alt = "Forward";
             // console.log(item);
-            let itemNodeData
+            let itemNodeData;
             if (item.post) {
                 itemNodeData = item.post;
             } else {
@@ -407,7 +380,7 @@ export default class Person extends Node {
 
     removeFriend(node, links) {
         console.log("remove friend", node);
-        if(node.person) {
+        if (node.person) {
             node = node.person;
         }
         let linkKey1 = this.id + "-" + node.id;
