@@ -239,9 +239,9 @@ function drawRandom(label, count, userData) {
                 node = new Person(id, "Person", x, y, { image, username });
                 break;
             case "Social Media Post":
-                const postImage = userData[i].image;
-                const title = userData[i].name;
-                // console.log(postImage, title);
+                const postImage = userData[i].enclosure.url;
+                const title = userData[i].title;
+                console.log(postImage, title);
                 node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
             default:
