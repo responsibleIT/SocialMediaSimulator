@@ -719,3 +719,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    function showOnboarding(onboardingNumber) {
+        const overlays = document.querySelectorAll('.onboarding-overlay');
+        overlays.forEach(overlay => {
+            overlay.classList.remove('active');
+        });
+        document.getElementById('onboarding' + onboardingNumber).classList.add('active');
+    }
+
+    function nextOnboarding(onboardingNumber) {
+        showOnboarding(onboardingNumber);
+    }
+
+    function endOnboarding() {
+        const overlays = document.querySelectorAll('.onboarding-overlay');
+        overlays.forEach(overlay => {
+            overlay.classList.remove('active');
+        });
+        alert('Onboarding voltooid! Veel plezier met het gebruik van de app.');
+    }
+
+    window.nextOnboarding = nextOnboarding;
+    window.endOnboarding = endOnboarding;
+
+    showOnboarding(1);
+});
+

@@ -12,6 +12,33 @@
             <img src="images/logo.svg" alt="" class="logo" />
         </header>
         <main>
+            <div class="onboarding-overlay" id="onboarding1">
+                <div class="onboarding-box">
+                    <p>This simulator allows users to configure the structure of social networks and news articles, and visualizes the spread of fake news. This project supports the research of Responsible IT at the Amsterdam University of Applied Sciences into the role of AI in the dissemination of misinformation.</p>
+                    <button onclick="nextOnboarding(2)">Volgende</button>
+                </div>
+            </div>
+            <div class="onboarding-overlay" id="onboarding2">
+                <div class="onboarding-box">
+                    <p>Add some users and some posts to start.</p>
+                    <div class="counter-input">
+                        <button tabindex="-1">–</button>
+                        <input type="number" id="people-count" value="10" min="3" max="50" />
+                        <button tabindex="-1">+</button>
+                    </div>
+                    <button type="button" id="addRandomPeopleButton">
+                        Add people
+                    </button>
+
+                    <button onclick="nextOnboarding(3)">Volgende</button>
+                </div>
+            </div>
+            <div class="onboarding-overlay" id="onboarding3">
+                <div class="onboarding-box">
+                    <p>Je bent klaar om te beginnen! Veel plezier met het gebruik van onze app.</p>
+                    <button onclick="endOnboarding()">Start</button>
+                </div>
+            </div>
             <div class="top-bar">
 
                 <section id="generalOptions" class="toolbar">
@@ -98,13 +125,7 @@
                         
                         <img src="./images/networkIcon.svg" alt="" />
                         <img src="./images/wifiIcon.svg" alt="" />
-                        <!-- <img src="./images/batteryIcon.svg" alt="" /> -->
-                        <!-- <section id="stats"> -->
-                            <!-- <div id="charging">(charging state unknown)</div> -->
-                  
-                            <!-- charging gif -->
-                            <!-- <div id="level">(battery level unknown)</div> -->
-                          <!-- </section> -->
+                        
                           <div id="battery" class="battery">
                             <div id="battery-level" class="battery-level"></div>
                             <div id="level" class="level">(battery level unknown)</div>
