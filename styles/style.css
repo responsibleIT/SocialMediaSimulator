@@ -115,15 +115,14 @@ body > header {
     position: absolute;
     display: flex;
     align-items: center;
-    height: fit-content;
     gap: 1em;
     z-index: 12;
     transition: 200ms;
-    /*&:hover {
+    &:hover {
         opacity: 0;
         filter: alpha(opacity=0);
         z-index: 12;
-    }*/
+    }
     & h1 {
         order: 1;
         font-size: 1.4em;
