@@ -12,33 +12,56 @@
             <img src="images/logo.svg" alt="" class="logo" />
         </header>
         <main>
-            <div class="onboarding-overlay" id="onboarding1">
-                <div class="onboarding-box">
-                    <p>This simulator allows users to configure the structure of social networks and news articles, and visualizes the spread of fake news. This project supports the research of Responsible IT at the Amsterdam University of Applied Sciences into the role of AI in the dissemination of misinformation.</p>
-                    <button onclick="nextOnboarding(2)">Volgende</button>
-                </div>
+        <!-- Dialog for Onboarding Step 1 -->
+        <dialog id="onboarding1" class="onboarding-modal">
+            <div class="onboarding-box">
+                <h2>Welcome to the Social Media Simulator</h2>
+                <p>This simulator allows users to configure the structure of social networks and news articles, and visualizes the spread of fake news. This project supports the research of Responsible IT at the Amsterdam University of Applied Sciences into the role of AI in the dissemination of misinformation.</p>
+                <button id="next1">Volgende</button>
+                <button id="skipOnboarding">Skip</button>
             </div>
-            <div class="onboarding-overlay" id="onboarding2">
-                <div class="onboarding-box">
-                    <p>Add some users and some posts to start.</p>
-                    <div class="counter-input">
-                        <button tabindex="-1">–</button>
-                        <input type="number" id="people-count" value="10" min="3" max="50" />
-                        <button tabindex="-1">+</button>
-                    </div>
-                    <button type="button" id="addRandomPeopleButton">
-                        Add people
-                    </button>
+        </dialog>
 
-                    <button onclick="nextOnboarding(3)">Volgende</button>
+        <!-- Dialog for Onboarding Step 2 -->
+        <dialog id="onboarding2" class="onboarding-modal">
+            <div class="onboarding-box">
+                <section>
+                <p>Add</p>
+                <div class="counter-input">
+                    <button tabindex="-1">–</button>
+                    <input type="number" id="people-count-intro" value="10" min="3" max="50" />
+                    <button tabindex="-1">+</button>
                 </div>
-            </div>
-            <div class="onboarding-overlay" id="onboarding3">
-                <div class="onboarding-box">
-                    <p>Je bent klaar om te beginnen! Veel plezier met het gebruik van onze app.</p>
-                    <button onclick="endOnboarding()">Start</button>
+                <p>people</p>
+            </section>
+            <section>
+                <p>add</p>
+                <div class="counter-input">
+                    <button tabindex="-1">–</button>
+                    <input type="number" id="post-count-intro" value="10" min="3" max="50" />
+                    <button tabindex="-1">+</button>
                 </div>
+                <p>posts</p>
+            </section>
+                <button id="next2">Volgende</button>
+                <button id="skipOnboarding2">Skip</button>
             </div>
+        </dialog>
+
+        <!-- Dialog for Onboarding Step 3 -->
+        <dialog id="onboarding3" class="onboarding-modal">
+            <div class="onboarding-box">
+                <video width="400" height="200" autoplay muted loop>
+                    <source src="./images/gif2.mp4" type="video/mp4">
+                    Uw browser ondersteunt het video-element niet.
+                </video>
+            <button id="next3">Volgende</button>
+        </div>
+            </dialog>
+
+       
+
+
             <div class="top-bar">
 
                 <section id="generalOptions" class="toolbar">

@@ -57,6 +57,5 @@ export default class WebData {
     }
 }
 
-// Initialize the WebData class
-new WebData();
+
 
