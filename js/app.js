@@ -622,7 +622,6 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
-    // console.log(centralities);
     let mostImportantPerson = "Unknown";
     let highestScore;
     for (const [key, value] of Object.entries(centralities)) {
