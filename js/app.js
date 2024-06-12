@@ -113,6 +113,7 @@ stepButton.addEventListener("click", () => {
     nodes.forEach((node) => {
         if (node.label === "Person") {
             node.step(nodes, links);
+            resizeNodes(nodes);
         }
     });
     calculateAdjustedClosenessCentrality();
@@ -199,9 +200,9 @@ function findAllConnectedComponents() {
         }
     });
 
-    console.log("Total number of connected components:", components.length);
+    // console.log("Total number of connected components:", components.length);
     calcGroups.textContent = components.length;
-    console.log("Connected components:", components);
+    // console.log("Connected components:", components);
 }
 
 /**
@@ -215,7 +216,8 @@ function resizeNodes(nodes) {
         } else if (node.label === "Social Media Post") {
             node.popularity = calculatePostPopularity(node.readers?.size || 0);
         }
-        node.element.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
+
+        node.element.style.width = (node.radius * 2 + node.popularity + Number(node.increasedPopularity)) * node.growFactor + "px";
     });
 }
 

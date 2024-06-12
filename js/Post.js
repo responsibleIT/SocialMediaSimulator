@@ -6,5 +6,6 @@ export default class Post extends Node {
         this.readers = new Map(); //Contains {friend: score} pairs
         this.image = data.postImage;
         this.title = data.title;
+        this.growFactor = 1;
     }
 } 
