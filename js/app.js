@@ -3,9 +3,11 @@ import Post from "./Post.js";
 import Edge from "./Edge.js";
 import Cursor from "./cursor.js";
 import UserData from "./UserData.js";
+import FileHandler from "./FileHandler.js";
 
 const cursor = new Cursor();
 const userdata = new UserData();
+const fileHandler = new FileHandler();
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -684,6 +686,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+//Export & Import
+exportButton.addEventListener('click', () => {
+    fileHandler.export(nodes);
+});
+
+importButton.addEventListener('click', async() => {
+    await fileHandler.import(nodes);
+    nodes.forEach(node => {
+        node.draw();
+        setEventListeners(node);
+    });
+})
 
 
 
