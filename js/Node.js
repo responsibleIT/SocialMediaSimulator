@@ -27,9 +27,6 @@ export default class Node {
                 break;
             case "Social Media Post":
                 nodeElement.classList.add("postNode");
-                // if (this.image) {
-                // nodeElement.style.backgroundImage = `url(${this.image})`;
-                // }
                 break;
             default:
                 break;
@@ -49,8 +46,10 @@ export default class Node {
     linkHandler(node, links) {
         if (this.label === "Person") {
             this.friendsHandler(node, links);
+            this.spawnForwardButtons(links);
         } else if (this.label === "Social Media Post") {
             this.itemHandler(node, links);
+            node.spawnForwardButtons(links);
         }
     }
 
