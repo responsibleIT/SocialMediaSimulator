@@ -528,6 +528,16 @@ LEGEND STYLES
             & .likedLink {
                 background-color: #ff9900;
             }
+            & .postDot {
+                background-color: red;
+                aspect-ratio: 1/1;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+            }
+        }
+        & li:has(.postDot ){
+            flex-direction: row;
         }
     }
 }
