@@ -440,7 +440,7 @@ NODE STYLES
         background-color: #999;
     }
     &.stupid-link {
-        opacity: 0.4;
+        opacity: 0;
         background-color: black;
     }
 }

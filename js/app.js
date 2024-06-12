@@ -1,7 +1,7 @@
 import Person from "./Person.js";
 import Post from "./Post.js";
 import Edge from "./Edge.js";
-import Cursor from "./cursor.js";
+import Cursor from "./Cursor.js";
 import UserData from "./UserData.js";
 
 const cursor = new Cursor();
@@ -44,7 +44,6 @@ resizeCanvas();
 ///////////////////////////
 ///// Event listeners /////
 ///////////////////////////
-
 
 // function for counter inputs
 countInputs.forEach((input) => {
@@ -93,7 +92,7 @@ deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
 });
 
-canvas.addEventListener("click", (event) => {
+canvas.addEventListener("click", async (event) => {
     spawnNode(event);
 });
 
@@ -241,7 +240,6 @@ function drawRandom(label, count, userData) {
             case "Social Media Post":
                 const postImage = userData[i].enclosure.url;
                 const title = userData[i].title;
-                console.log(postImage, title);
                 node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
             default:
@@ -269,16 +267,19 @@ async function spawnNode(evt) {
 
     const id = nodes.size;
     const mousePos = getMousePosOnCanvas(canvasContainer, evt);
-
+    let userData;
     switch (label) {
         case "Person":
-            let userData = await userdata.get(1);
+            userData = await userdata.get(1);
             const image = userData[0].image;
             const username = userData[0].username;
             node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
             break;
         case "Social Media Post":
-            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y);
+            userData = await userdata.getPosts(1);
+            const postImage = userData[0].enclosure.url;
+            const title = userData[0].title;
+            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y, null, { title, postImage });
             break;
         default:
             break;

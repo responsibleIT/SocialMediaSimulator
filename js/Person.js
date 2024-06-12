@@ -14,12 +14,14 @@ export default class Person extends Node {
 
     acceptanceDisctance = 300;
 
+    // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
+    defaultScore = 1;
+
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
         let friendScores = [];
         let infoLinkScores = [];
-        let myScore = 1; // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
-        // TODO ? no link with the post when the score is negative?
+        let myScore = this.defaultScore;
 
         //Pick a random node from the nodes map that has label of Social Media Post
         const socialMediaPosts = Array.from(nodes.values()).filter((node) => node.label === "Social Media Post");
@@ -27,7 +29,6 @@ export default class Person extends Node {
 
         const exists = this.items.get(randomPost.id);
         if (!exists) {
-            // console.log("already read");
             if (this.friends.size != 0) {
                 //Get the friends who have also read the post by checking the readers map of the post and see if it contains my friends
                 const friendsThatReadPost = Array.from(randomPost.readers.keys()).filter((reader) => this.friends.has(reader));
@@ -35,9 +36,8 @@ export default class Person extends Node {
                 if (friendsThatReadPost.length > 0) {
                     friendScores = friendsThatReadPost.map((friend) => {
                         const reader = randomPost.readers.get(friend);
-                        // console.log(reader.score, reader);
                         return reader.score;
-                    }); // Gets the node that has this id, not the score
+                    });
                 }
             }
 
@@ -50,32 +50,25 @@ export default class Person extends Node {
                     return reader.score;
                 }); // Gets the node that has this id, not the score
             }
-            //Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
-            //The score will be -1, 0 or 1 based on the average of the scores
-            // console.log(friendScores.length, infoLinkScores.length);
+            // Calculate the score of the post for me based on the scores of my friends and infolinks and also the distance to the post.
             if (friendScores.length > 0 || infoLinkScores.length > 0) {
-                // console.log(friendScores.length > 0 || infoLinkScores.length > 0);
+                // The score will be -1, 0 or 1 based on the average of the scores
                 myScore = (friendScores.reduce((a, b) => a + b, 0) + infoLinkScores.reduce((a, b) => a + b, 0)) / (friendScores.length + infoLinkScores.length);
-                // console.log(myScore);
             }
 
             myScore = this.calculateScore(myScore, randomPost);
 
-            console.log("Score: ", myScore);
-
-            // TODO ? no link with the post when the score is negative?
             this.items.set(randomPost.id, { post: randomPost, score: myScore }); // add the my score
-            // This adds the randomPost as a key and the score as the value of that key
 
             //Add myself to the readers of the post
             randomPost.readers.set(this.id, { person: this, score: myScore });
-            // TODO might delete later
+
             const link = new Edge(this, randomPost, "item-link");
             links.set(this.id + "-" + randomPost.id, link);
 
+            // TODO might delete later
             if (myScore < 0) {
                 link.element.classList.add("stupid-link");
-                console.log(link.element);
             }
         }
     }
@@ -83,28 +76,23 @@ export default class Person extends Node {
     //Function for forwarding a social media post to friends
     forwardSocialMediaPost(links) {
         //Get a random post from my items
-        const myPosts = Array.from(this.items.keys()); // myPosts = array with id's
+        const myPosts = Array.from(this.items.keys());
         const randomPost = myPosts[Math.floor(Math.random() * myPosts.length)];
 
         //Check what my score is with the post
         const postObject = this.items.get(randomPost);
-        // console.log("postObject.score", postObject.score);
+
         //If the score is positive, forward the post to all my friends.
         if (postObject.score > 0) {
-            // console.log("forward function", postObject.score);
             //With a percentage chance equal to my social score, forward the post to my friends
 
             if (Math.random() < this.socialScore) {
-                // console.log("rn", rn, "social score", this.socialScore);
-                // console.log(this.friends);
                 this.friends.forEach((friend) => {
                     if (friend.person) {
                         friend.person.receiveSocialMediaPost(this, postObject.post, "infoLink", links); // infolink
-                        console.log("FORWARD:", this.id, "TO:", friend.person.id);
                     } else {
                         console.error("friend.person doesnt exist");
                         friend.receiveSocialMediaPost(this, postObject.post, "infoLink", links); //infolink
-                        console.log("FORWARD:", this.id, "TO:", friend.id);
                     }
                 });
             }
@@ -125,12 +113,12 @@ export default class Person extends Node {
             const friend = this.friends.get(sender.id); // TODO add score when adding friend
             relationshipScore = friend.score;
 
-            // TODO use function
+            // TODO use function = addItemLink()
+            // this.addItemLink(post, this, links, postScore);
             this.items.set(post.id, { post: post, score: postScore });
             const link = new Edge(this, post, "item-link");
             links.set(this.id + "-" + post.id, link);
         } else if (relationship === "infoLink") {
-            // TODO infolink, even checken of het goed gaat in deze if statement
             //Check the relationship score between me and the sender
             relationshipScore = sender.score;
 
@@ -144,7 +132,8 @@ export default class Person extends Node {
             const myScore = 1;
             const score = this.calculateScore(myScore, post);
 
-            // set the link between the forwarded post
+            // set the link between the forwarded post = addItemLink()
+            // this.addItemLink(post, this, links, score);
             this.items.set(post.id, { post: post, score: score }); // calculate the one
             const link2 = new Edge(this, post, "item-link");
             links.set(this.id + "-" + post.id, link2);
@@ -172,7 +161,6 @@ export default class Person extends Node {
 
         //if the postScore was negative, reduce the score between me and the sender by 1
         if (postScore < 0) {
-            console.log("DECREASE FRIEND RELATIONSHIP", this, sender, "relationship:", relationship);
             if (relationship === "friend") {
                 this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 });
             } else if (relationship === "infoLink") {
@@ -180,7 +168,6 @@ export default class Person extends Node {
                 this.infoLinks.set(sender.id, { person: sender, score: relationshipScore - 1 });
             }
         } else {
-            console.log("IMPROVE FRIEND RELATIONSHIP", this, sender, "relationship:", relationship);
             //if the postScore was positive, increase the score between me and the sender by 1
             if (relationship === "friend") {
                 this.friends.set(sender.id, { person: sender, score: relationshipScore + 1 });
@@ -482,12 +469,13 @@ export default class Person extends Node {
     }
 
     //Function for adding an item link between the currently selected node and the node with the given id
-    addItemLink(item, from, links) {
-        let currentlySelectedPerson = from;
-        let currentEyedItem = item;
-        console.log(currentlySelectedPerson);
-        currentlySelectedPerson.items.set(item.id, { post: item, score: 1 });
-        currentEyedItem.readers.set(from.id, { person: from, score: 1 });
+    addItemLink(item, from, links, score) {
+        if (!score) {
+            score = 1;
+        }
+
+        from.items.set(item.id, { post: item, score });
+        item.readers.set(from.id, { person: from, score });
 
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
