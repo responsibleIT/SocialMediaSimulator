@@ -7,4 +7,4 @@ export default class Post extends Node {
         this.image = data.postImage;
         this.title = data.title;
     }
-}
+} 
