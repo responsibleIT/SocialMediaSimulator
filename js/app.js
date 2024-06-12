@@ -217,7 +217,7 @@ function resizeNodes(nodes) {
             node.popularity = calculatePostPopularity(node.readers?.size || 0);
         }
 
-        node.element.style.width = (node.radius * 2 + node.popularity + Number(node.increasedPopularity)) * node.growFactor + "px";
+        node.element.style.width = node.radius * 2 + (node.popularity + Number(node.increasedPopularity)) * node.growFactor + "px";
     });
 }
 

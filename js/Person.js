@@ -10,7 +10,7 @@ export default class Person extends Node {
         this.socialScore = 0.5; //Decides how social the agent is
         this.profileImage = user.image;
         this.userName = user.username;
-        this.growFactor = 1.3;
+        this.growFactor = 1.5;
     }
 
     acceptanceDisctance = 300;
