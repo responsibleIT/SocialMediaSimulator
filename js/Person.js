@@ -16,6 +16,7 @@ export default class Person extends Node {
 
     // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
     defaultScore = 1;
+    stepDistance = 5;
 
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
@@ -131,7 +132,7 @@ export default class Person extends Node {
 
             const myScore = 1;
             const score = this.calculateScore(myScore, post);
-
+            // TODO QUESTION: score is hier anders and de score die wordt toegevoegd aan de readers van de post
             // set the link between the forwarded post = addItemLink()
             // this.addItemLink(post, this, links, score);
             this.items.set(post.id, { post: post, score: score }); // calculate the one
@@ -164,7 +165,6 @@ export default class Person extends Node {
             if (relationship === "friend") {
                 this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 });
             } else if (relationship === "infoLink") {
-                // this.addInfoLink(sender, this, links);
                 this.infoLinks.set(sender.id, { person: sender, score: relationshipScore - 1 });
             }
         } else {
@@ -181,7 +181,6 @@ export default class Person extends Node {
         //Calculate the distance from me to the post
         const distance = Math.sqrt(Math.pow(this.x - post.x, 2) + Math.pow(this.y - post.y, 2));
 
-        // console.log(myScore - distance / 500, myScore, distance, 500);
         //Adjust the score based on the distance
         myScore = myScore - distance / this.acceptanceDisctance;
         //Change the score to -1, 0 or 1
@@ -230,17 +229,14 @@ export default class Person extends Node {
     addFriendThroughContent(links) {
         //Get an array of all posts I have read and liked
         const positivePosts = Array.from(this.items.values()).filter((post) => {
-            // console.log(this.items.get(post) > 0);
             if (post.score > 0) {
                 return post;
             }
         });
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
-            // console.log(post);
             if (Math.random() > 0.5) {
                 post = post.post;
-                // console.log("readers:", post.readers);
                 //Get all people who have read the post and liked it
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
                     reader = reader.person;
@@ -249,11 +245,8 @@ export default class Person extends Node {
                         return reader;
                     }
                 });
-                // console.log(peopleThatReadPost);
                 //Pick a random person from the list and add them as a friend
                 const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                // console.log(randomPerson);
-                console.log("ADD FRIEND", this, randomPerson);
                 this.addFriend(randomPerson.person, links);
             }
         });
@@ -262,18 +255,14 @@ export default class Person extends Node {
     //Function for moving the agent to a new position
     moveNode(links) {
         //Get all friends and infolinks with a score higher than 0
-        // console.log("this friends:", this.friends);
         const positiveFriends = Array.from(this.friends.values()).filter((friend) => {
-            // console.log(this.friends, friend, friend); // friend is id
             const foundFriend = this.friends.get(friend.person.id);
-            // console.log("foundFriend", foundFriend);
             if (foundFriend.score > 0) {
                 return foundFriend;
             }
         });
         const positiveInfoLinks = Array.from(this.infoLinks.values()).filter((infoLink) => {
             const foundInfoLink = this.infoLinks.get(infoLink.person.id);
-            // console.log("foundInfoLink", foundInfoLink);
             if (foundInfoLink.score > 0) {
                 return foundInfoLink;
             }
@@ -298,7 +287,7 @@ export default class Person extends Node {
             averageY += friend.y;
         });
         positiveInfoLinks.forEach((infoLink) => {
-            // console.log(infoLink); // TODO this infolink had a object in person
+            // TODO this infolink had a object in person
             if (infoLink.person && !infoLink.person.person) {
                 infoLink = infoLink.person;
             } else if (infoLink.person.person && !infoLink.person.person.person) {
@@ -325,14 +314,11 @@ export default class Person extends Node {
         let distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance > 0) {
-            // console.log("this x and y", this.x, this.y);
-            // TODO modify the 5
-            this.x += (dx / distance) * 5;
-            this.y += (dy / distance) * 5;
+            this.x += (dx / distance) * this.stepDistance;
+            this.y += (dy / distance) * this.stepDistance;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
             this.moveLinks(links);
-            // console.log("this x and y after adding distance", this.x, this.y);
         }
     }
 
@@ -354,13 +340,11 @@ export default class Person extends Node {
         } else if (node.post) {
             node = node.post;
         }
-        // console.log(node);
         let link;
         link = links.get(`${this.id}-${node.id}`);
         if (!link) {
             link = links.get(`${node.id}-${this.id}`);
         }
-        // console.log(link);
         if (link) {
             link.calcAngle();
         } else {
@@ -384,35 +368,35 @@ export default class Person extends Node {
     spawnForwardButtons(links) {
         this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
-        this.items.forEach((item) => {
-            let svgIcon = document.createElement("img");
-            svgIcon.src = "./images/sns_icons_Send.svg";
-            svgIcon.alt = "Forward";
-            // console.log(item);
-            let itemNodeData;
-            if (item.post) {
-                itemNodeData = item.post;
-            } else {
-                itemNodeData = item;
-            }
-            let forwardButton = document.createElement("button");
-            forwardButton.classList.add("forwardButton");
-            forwardButton.appendChild(svgIcon);
-            forwardButton.style.position = "absolute";
-            forwardButton.style.left = itemNodeData.x + "px";
-            forwardButton.style.top = itemNodeData.y - itemNodeData.radius - itemNodeData.popularity + "px";
-            forwardButton.addEventListener("click", () => {
-                // const friendsArray = this.friends;
-                this.friends.forEach((friend) => {
-                    if (friend.person) {
-                        friend = friend.person;
-                    }
-                    this.addItemLink(itemNodeData, friend, links);
-                    this.addInfoLink(friend, this, links);
+        if (this.friends.size > 0) {
+            this.items.forEach((item) => {
+                let svgIcon = document.createElement("img");
+                svgIcon.src = "./images/sns_icons_Send.svg";
+                svgIcon.alt = "Forward";
+                let itemNodeData;
+                if (item.post) {
+                    itemNodeData = item.post;
+                } else {
+                    itemNodeData = item;
+                }
+                let forwardButton = document.createElement("button");
+                forwardButton.classList.add("forwardButton");
+                forwardButton.appendChild(svgIcon);
+                forwardButton.style.position = "absolute";
+                forwardButton.style.left = itemNodeData.x + "px";
+                forwardButton.style.top = itemNodeData.y - itemNodeData.radius - itemNodeData.popularity + "px";
+                forwardButton.addEventListener("click", () => {
+                    this.friends.forEach((friend) => {
+                        if (friend.person) {
+                            friend = friend.person;
+                        }
+                        this.addItemLink(itemNodeData, friend, links);
+                        this.addInfoLink(friend, this, links);
+                    });
                 });
+                canvasContainer.appendChild(forwardButton);
             });
-            canvasContainer.appendChild(forwardButton);
-        });
+        }
     }
 
     //Function to remove all forward buttons from the canvas
@@ -425,11 +409,9 @@ export default class Person extends Node {
 
     //Function for adding a friend link between the currently selected node and the node with the given id
     addFriend(node, links) {
-        // TODO if friend already exists dont add it again
         const friend = this.friends.has(node.id);
         if (friend === false) {
             let toBeFriend = node;
-            // console.log("friend", node);
             this.friends.set(node.id, { person: node, score: 0 });
             toBeFriend.friends.set(this.id, { person: this, score: 0 });
 
@@ -439,7 +421,6 @@ export default class Person extends Node {
     }
 
     removeFriend(node, links) {
-        console.log("remove friend", node);
         if (node.person) {
             node = node.person;
         }
@@ -458,14 +439,10 @@ export default class Person extends Node {
         }
 
         this.friends.delete(node.id);
-        //  = this.friends.filter((id) => id !== node.id);
         node.friends.delete(this.id);
-        // = node.friends.filter((id) => id !== this.id);
 
         links.delete(linkKey1);
         links.delete(linkKey2);
-        //redrawCanvas(); // Redraws the links
-        // resizeNodes(nodes);
     }
 
     //Function for adding an item link between the currently selected node and the node with the given id
@@ -503,7 +480,6 @@ export default class Person extends Node {
         if (!friendLink) {
             friendLink = links.get(`${to.id}-${from.id}`);
         }
-        console.log("link", friendLink);
         if (friendLink) {
             if (friendLink.type === "friend-link") {
                 friendLink.type = "info-link";
