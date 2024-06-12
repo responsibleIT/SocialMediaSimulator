@@ -1,7 +1,7 @@
 import Person from "./Person.js";
 import Post from "./Post.js";
 import Edge from "./Edge.js";
-import Cursor from "./cursor.js";
+import Cursor from "./Cursor.js";
 import UserData from "./UserData.js";
 import FileHandler from "./FileHandler.js";
 
@@ -47,7 +47,6 @@ resizeCanvas();
 ///// Event listeners /////
 ///////////////////////////
 
-
 // function for counter inputs
 countInputs.forEach((input) => {
     const increaseButton = input.children[2];
@@ -77,7 +76,6 @@ countInputs.forEach((input) => {
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
     let userData = await userdata.get(count);
-    console.log(userData);
     drawRandom("Person", count, userData);
 });
 
@@ -95,7 +93,7 @@ deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
 });
 
-canvas.addEventListener("click", (event) => {
+canvas.addEventListener("click", async (event) => {
     spawnNode(event);
 });
 
@@ -104,7 +102,6 @@ canvas.addEventListener("click", (event) => {
 // });
 
 increasedPopularityInput.addEventListener("change", () => {
-    // let selectedNodeData = nodes.get(selectedNode);
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
     showMobile(selectedNode);
@@ -115,15 +112,11 @@ findAllConnectedComponents();
 // });
 
 stepButton.addEventListener("click", () => {
-    // console.log(selectedNode);
-    // if (selectedNode !== null) {
-    // step(selectedNode);
     nodes.forEach((node) => {
         if (node.label === "Person") {
             node.step(nodes, links);
         }
     });
-    // }
 });
 
 // Add event listener for window resize
@@ -271,10 +264,10 @@ async function spawnNode(evt) {
 
     const id = nodes.size;
     const mousePos = getMousePosOnCanvas(canvasContainer, evt);
-
+    let userData;
     switch (label) {
         case "Person":
-            let userData = await userdata.get(1);
+            userData = await userdata.get(1);
             const image = userData[0].image;
             const username = userData[0].username;
             node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
@@ -301,7 +294,6 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
-        // console.log("HOVER", node);
         if (node.label === "Person") {
             showNodeDataContainer(node);
         }
@@ -328,7 +320,12 @@ function setEventListeners(node) {
                 break;
             default:
                 const nodeHovered = nodes.get(hoveredNode);
-                nodeHovered.linkHandler(selectedNode, links);
+                if (nodeHovered.label === "Person") {
+                    selectedNode.linkHandler(nodeHovered, links);
+                } else {
+                    nodeHovered.linkHandler(selectedNode, links);
+                }
+
                 resizeNodes(nodes);
                 if (node.label === "Person") {
                     updateFriendList(selectedNode);
@@ -399,7 +396,6 @@ function getNodesWithReaders(nodes) {
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
 function showMobile(nodeData) {
-    console.log(nodeData);
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNode.profileImage;
@@ -426,7 +422,6 @@ function updateFriendList(nodeData) {
             if (friend.person) {
                 friend = friend.person;
             }
-            console.log("update friend ul");
             const clone = friendsTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             const p = clone.querySelector("p");
@@ -437,7 +432,6 @@ function updateFriendList(nodeData) {
                 if (nodeData.person) {
                     nodeData = nodeData.person;
                 }
-                console.log(nodeData);
                 nodeData.removeFriend(friend, links);
                 unfriendButton.parentElement.remove();
 
@@ -449,22 +443,11 @@ function updateFriendList(nodeData) {
     }
 }
 function updateFeedList(nodeData) {
-    // feed
     const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
     if (nodesWithReaderMaps.length !== 0) {
         feedUl.innerHTML = "";
         nodesWithReaderMaps.forEach((item) => {
-            // check if item is in
-
-            // const unreadPosts = Array.from(nodeData.items.values()).filter((post) => {
-            //     console.log("Post", post);
-            //     if (!post.post.readers.has(nodeData.id)) {
-            //         return post;
-            //     }
-            // });
-            // console.log("unreadPosts array", unreadPosts);
-            console.log("update feed ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             img.src = item.image;
@@ -480,24 +463,15 @@ function updateFeedList(nodeData) {
                     nodeData.removeItemLink(item, links);
                     e.target.classList.remove("active");
                     updateLikedList(nodeData);
-                    // showMobile(nodeData);
-                    // TODO pdate the Likedfeed
                 } else {
                     nodeData.addItemLink(item, nodeData, links);
                     e.target.classList.add("active");
                     updateLikedList(nodeData);
-                    // TODO showMobile(nodeData);
                 }
             });
 
             feedUl.appendChild(clone);
         });
-
-        // TODO use this method to remove friends from your friendlists
-        // console.log(item);
-        // const skip = nodeData.items.has(item.id);
-        // console.log(skip);
-        // if (!skip) {
     }
 }
 function updateLikedList(nodeData) {
@@ -506,7 +480,6 @@ function updateLikedList(nodeData) {
     if (nodeData.items.size !== 0) {
         likedUl.innerHTML = "";
         nodeData.items.forEach((item) => {
-            console.log("update liked ul");
             const clone = feedTemplate.content.cloneNode(true);
             const img = clone.querySelector("img");
             img.src = item.post.image;

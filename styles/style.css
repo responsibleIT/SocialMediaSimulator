@@ -63,6 +63,7 @@ button {
     padding: .5em 1em;
     cursor: pointer;
     transition: 100ms;
+    text-wrap: nowrap;
 
     &:focus-visible {
         outline: 2px solid orange;
@@ -420,20 +421,36 @@ NODE STYLES
 
     &.info-link {
         background-color: #0075ff;
+        animation: shoot 1s linear;
     }
 
     &.friend-link {
         background-color: #00b000;
+        animation: shoot 1s linear;
     }
 
     &.item-link {
         background-color: #ff9900;
+        animation: shoot 1s linear;
     }
 
     &.pre-link {
         background-color: #999;
     }
+    &.stupid-link {
+        opacity: 0;
+        background-color: black;
+    }
 }
+@keyframes shoot {
+    from {
+        scale: 0;
+    }
+    to {
+        scale: 1;
+    }
+}
+
 .pre-link {
     opacity: 0;
 }
