@@ -115,6 +115,8 @@ stepButton.addEventListener("click", () => {
             node.step(nodes, links);
         }
     });
+    calculateAdjustedClosenessCentrality();
+    findAllConnectedComponents();
 });
 
 // Add event listener for window resize
@@ -155,8 +157,14 @@ function findAllConnectedComponents() {
     let visited = new Set();
     let components = [];
     // Filter to include only 'Person' nodes that have at least one friend
-    let graph = new Map([...nodes].filter(([id, node]) => node.label === "Person" && node.friends && node.friends.length > 0));
-
+    let graph = new Map(
+        [...nodes].filter(([id, node]) => {
+            if (node.label === "Person" && node.friends && node.friends.size > 0) {
+                return node;
+            }
+            // return node.label === "Person" && node.friends && node.friends.size > 0;
+        })
+    );
     // Helper function to perform BFS and find all nodes connected to 'startNode'
     function bfs(startNode) {
         let queue = [startNode];
@@ -169,17 +177,17 @@ function findAllConnectedComponents() {
             let neighbors = graph.get(currentNode).friends || [];
 
             neighbors.forEach((neighbor) => {
-                if (!visited.has(neighbor) && graph.has(neighbor)) {
+                neighbor = neighbor.person;
+                if (!visited.has(neighbor.id) && graph.has(neighbor.id)) {
                     // Ensure neighbor is also a 'Person' with friends
-                    visited.add(neighbor);
-                    queue.push(neighbor);
-                    component.push(neighbor);
+                    visited.add(neighbor.id);
+                    queue.push(neighbor.id);
+                    component.push(neighbor.id);
                 }
             });
         }
         return component;
     }
-
     // Main loop to initiate BFS from each unvisited node that has friends
     graph.forEach((_, node) => {
         if (!visited.has(node)) {
@@ -191,9 +199,9 @@ function findAllConnectedComponents() {
         }
     });
 
-    // console.log("Total number of connected components:", components.length);
+    console.log("Total number of connected components:", components.length);
     calcGroups.textContent = components.length;
-    // console.log("Connected components:", components);
+    console.log("Connected components:", components);
 }
 
 /**
@@ -324,6 +332,8 @@ function setEventListeners(node) {
                 }
 
                 resizeNodes(nodes);
+                calculateAdjustedClosenessCentrality();
+                findAllConnectedComponents();
                 if (node.label === "Person") {
                     updateFriendList(selectedNode);
                 } else {
@@ -606,8 +616,6 @@ function calculateAdjustedClosenessCentrality() {
     console.log(centralities);
 }
 
-
-
 /**
  * Function for calculating the shortest paths between all nodes
  * @param {Map} graph - ... (nodes)
@@ -623,7 +631,6 @@ function bfsShortestPath(graph, startNode) {
         let currentNode = queue.shift();
         let currentDistance = distances[currentNode];
         let neighbors = graph.get(currentNode).friends; // Assuming 'friends' is the adjacency list
-        console.log(neighbors);
         neighbors.forEach((neighbor) => {
             if (distances[neighbor] === Infinity) {
                 // Node has not been visited
