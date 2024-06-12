@@ -602,8 +602,15 @@ function deselectNode() {
 //Function for calculating the closeness centrality of all nodes
 function calculateAdjustedClosenessCentrality() {
     let centralities = {};
-    let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
+    let personNodes = new Map(
+        [...nodes].filter(([id, node]) => {
+            if (node.label === "Person") {
+                return node;
+            }
+        })
+    );
     personNodes.forEach((value, node) => {
+        console.log(value, node);
         let shortestPaths = bfsShortestPath(nodes, node);
         let reachableNodes = Object.values(shortestPaths).filter((dist) => dist < Infinity).length;
         let totalDistance = Object.values(shortestPaths).reduce((acc, d) => (d < Infinity ? acc + d : acc), 0);
@@ -615,7 +622,24 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
-    console.log(centralities);
+    // console.log(centralities);
+    let mostImportantPerson = "Unknown";
+    let highestScore;
+    for (const [key, value] of Object.entries(centralities)) {
+        console.log(`${key}: ${value}`);
+        const nodeName = nodes.get(Number(key));
+        if ((highestScore === undefined) & (value > 0)) {
+            highestScore = value;
+            mostImportantPerson = nodeName.userName;
+        } else if (value > highestScore) {
+            highestScore = value;
+            mostImportantPerson = nodeName.userName;
+        } else if (value === highestScore) {
+            highestScore = value;
+            mostImportantPerson = mostImportantPerson + ", " + nodeName.userName;
+        }
+    }
+    calcMostImportantPerson.textContent = mostImportantPerson;
 }
 
 /**
@@ -624,18 +648,23 @@ function calculateAdjustedClosenessCentrality() {
  * @param {Object} startNode - ...
  */
 function bfsShortestPath(graph, startNode) {
+    console.log(graph, startNode);
     let distances = {};
     let queue = [startNode];
     graph.forEach((_, node) => (distances[node] = Infinity)); // Initialize distances
     distances[startNode] = 0;
 
     while (queue.length > 0) {
-        let currentNode = queue.shift();
-        let currentDistance = distances[currentNode];
-        let neighbors = graph.get(currentNode).friends; // Assuming 'friends' is the adjacency list
+        let currentNodeId = queue.shift();
+        let currentDistance = distances[currentNodeId];
+        console.log(currentNodeId);
+        let neighbors = graph.get(currentNodeId).friends; // Assuming 'friends' is the adjacency list
+        console.log("neighbors", neighbors);
         neighbors.forEach((neighbor) => {
+            neighbor = neighbor.person.id;
             if (distances[neighbor] === Infinity) {
                 // Node has not been visited
+                console.log(distances[neighbor] === Infinity);
                 queue.push(neighbor);
                 distances[neighbor] = currentDistance + 1;
             }
