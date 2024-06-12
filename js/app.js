@@ -21,7 +21,6 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
-phone.classList.add("phoneNotSelected");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -45,6 +44,7 @@ resizeCanvas();
 ///////////////////////////
 ///// Event listeners /////
 ///////////////////////////
+
 
 // function for counter inputs
 countInputs.forEach((input) => {
@@ -81,7 +81,12 @@ randomPeopleButton.addEventListener("click", async () => {
 
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
-    drawRandom("Social Media Post", count, null);
+    const data = userdata.getPosts(count);
+    drawRandom("Social Media Post", count, data);
+
+    if (selectedNode !== null) {
+        showMobile(selectedNode);
+    }
 });
 
 deleteNodeButton.addEventListener("click", () => {
@@ -100,7 +105,7 @@ increasedPopularityInput.addEventListener("change", () => {
     // let selectedNodeData = nodes.get(selectedNode);
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showSelectedNodeOptions();
+    showMobile(selectedNode);
 });
 
 // calcGroupsButton.addEventListener("click", () => {
@@ -108,11 +113,15 @@ findAllConnectedComponents();
 // });
 
 stepButton.addEventListener("click", () => {
-    console.log(selectedNode);
-    if (selectedNode !== null) {
-        // step(selectedNode);
-        selectedNode.step(nodes, links);
-    }
+    // console.log(selectedNode);
+    // if (selectedNode !== null) {
+    // step(selectedNode);
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+        }
+    });
+    // }
 });
 
 // Add event listener for window resize
@@ -230,7 +239,10 @@ function drawRandom(label, count, userData) {
                 node = new Person(id, "Person", x, y, { image, username });
                 break;
             case "Social Media Post":
-                node = new Post(id, "Social Media Post", x, y);
+                const postImage = userData[i].enclosure.url;
+                const title = userData[i].title;
+                console.log(postImage, title);
+                node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
                 break;
             default:
                 break;
@@ -284,6 +296,7 @@ async function spawnNode(evt) {
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
+        // console.log("HOVER", node);
         if (node.label === "Person") {
             showNodeDataContainer(node);
         }
@@ -299,7 +312,7 @@ function setEventListeners(node) {
         switch (selectedNode) {
             case null:
                 selectNode(node);
-                showSelectedNodeOptions();
+                showMobile(node);
                 showNodeDataContainer(node);
                 generalOptions.classList.add("hide");
                 break;
@@ -312,8 +325,15 @@ function setEventListeners(node) {
                 const nodeHovered = nodes.get(hoveredNode);
                 nodeHovered.linkHandler(selectedNode, links);
                 resizeNodes(nodes);
-                showSelectedNodeOptions();
-                showNodeDataContainer(selectedNode);
+                if (node.label === "Person") {
+                    updateFriendList(selectedNode);
+                } else {
+                    updateLikedList(selectedNode);
+                    updateFeedList(selectedNode);
+                }
+
+            // showMobile(selectedNode);
+            // showNodeDataContainer(selectedNode);
         }
     });
 
@@ -360,34 +380,6 @@ function showNodeDataContainer(nodeData) {
     //Move the nodeDataContainer to the position of the node label
     nodeDataContainer.style.left = nodeData.x + 10 + "px";
     nodeDataContainer.style.top = nodeData.y + 10 + "px";
-
-    // friends
-    const friendsUl = friends.querySelector("ul");
-    const templateFriends = document.querySelector("#friendsTemplate");
-    if (nodeData.friends.size !== 0) {
-        friendsUl.innerHTML = "";
-        nodeData.friends.forEach((friend) => {
-            const clone = templateFriends.content.cloneNode(true);
-            const img = clone.querySelector("img");
-            const p = clone.querySelector("p");
-            p.textContent = friend.userName;
-            img.src = friend.profileImage;
-            friendsUl.appendChild(clone);
-        });
-    }
-
-    const feedUl = feed.querySelector("ul");
-    const nodesWithReaderMaps = getNodesWithReaders(nodes);
-    if (nodesWithReaderMaps.length !== 0) {
-        feedUl.innerHTML = "";
-        nodesWithReaderMaps.forEach((node) => {
-            const clone = feedTemplate.content.cloneNode(true);
-            const img = clone.querySelector("img");
-            const heading = clone.querySelector("h4");
-            heading.textContent = "Post " + node.id;
-            feedUl.appendChild(clone);
-        });
-    }
 }
 
 function getNodesWithReaders(nodes) {
@@ -401,7 +393,8 @@ function getNodesWithReaders(nodes) {
 }
 
 //Function for showing the selectedNodeOptions container with the right data when a node is selected
-function showSelectedNodeOptions() {
+function showMobile(nodeData) {
+    console.log(nodeData);
     const image = document.getElementById("selectedNodeImage");
 
     image.src = selectedNode.profileImage;
@@ -410,7 +403,133 @@ function showSelectedNodeOptions() {
     selectedNodeUserFriends.textContent = selectedNode.friends.size;
     totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
+    increasedPopularityInput.value = nodeData.increasedPopularity;
+
+    updateFriendList(nodeData);
+    updateFeedList(nodeData);
+    updateLikedList(nodeData);
+
     selectedNodeOptions.classList.remove("hide");
+}
+
+function updateFriendList(nodeData) {
+    // friends
+    const friendsUl = friends.querySelector("ul");
+    if (nodeData.friends.size !== 0) {
+        friendsUl.innerHTML = "";
+        nodeData.friends.forEach((friend) => {
+            if (friend.person) {
+                friend = friend.person;
+            }
+            console.log("update friend ul");
+            const clone = friendsTemplate.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            const p = clone.querySelector("p");
+            const unfriendButton = clone.querySelector(".unfriend-button");
+            p.textContent = friend.userName;
+            img.src = friend.profileImage;
+            unfriendButton.addEventListener("click", () => {
+                if (nodeData.person) {
+                    nodeData = nodeData.person;
+                }
+                console.log(nodeData);
+                nodeData.removeFriend(friend, links);
+                unfriendButton.parentElement.remove();
+
+                resizeNodes(nodes);
+                showNodeDataContainer(nodeData);
+            });
+            friendsUl.appendChild(clone);
+        });
+    }
+}
+function updateFeedList(nodeData) {
+    // feed
+    const feedUl = feed.querySelector("ul");
+    const nodesWithReaderMaps = getNodesWithReaders(nodes);
+    if (nodesWithReaderMaps.length !== 0) {
+        feedUl.innerHTML = "";
+        nodesWithReaderMaps.forEach((item) => {
+            // check if item is in
+
+            // const unreadPosts = Array.from(nodeData.items.values()).filter((post) => {
+            //     console.log("Post", post);
+            //     if (!post.post.readers.has(nodeData.id)) {
+            //         return post;
+            //     }
+            // });
+            // console.log("unreadPosts array", unreadPosts);
+            console.log("update feed ul");
+            const clone = feedTemplate.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            img.src = item.image;
+            const heading = clone.querySelector("h4");
+            heading.textContent = item.title;
+
+            const likeButton = clone.querySelector(".like-button");
+            if (nodeData.items.has(item.id)) {
+                likeButton.classList.add("active");
+            }
+            likeButton.addEventListener("click", (e) => {
+                if (nodeData.items.has(item.id)) {
+                    nodeData.removeItemLink(item, links);
+                    e.target.classList.remove("active");
+                    updateLikedList(nodeData);
+                    // showMobile(nodeData);
+                    // TODO pdate the Likedfeed
+                } else {
+                    nodeData.addItemLink(item, nodeData, links);
+                    e.target.classList.add("active");
+                    updateLikedList(nodeData);
+                    // TODO showMobile(nodeData);
+                }
+            });
+
+            feedUl.appendChild(clone);
+        });
+
+        // TODO use this method to remove friends from your friendlists
+        // console.log(item);
+        // const skip = nodeData.items.has(item.id);
+        // console.log(skip);
+        // if (!skip) {
+    }
+}
+function updateLikedList(nodeData) {
+    // liked
+    const likedUl = liked.querySelector("ul");
+    if (nodeData.items.size !== 0) {
+        likedUl.innerHTML = "";
+        nodeData.items.forEach((item) => {
+            console.log("update liked ul");
+            const clone = feedTemplate.content.cloneNode(true);
+            const img = clone.querySelector("img");
+            img.src = item.post.image;
+            const heading = clone.querySelector("h4");
+            heading.textContent = item.post.title;
+
+            const likeButton = clone.querySelector(".like-button");
+            likeButton.classList.add("active");
+            likeButton.addEventListener("click", () => {
+                if (nodeData.items.has(item.post.id)) {
+                    nodeData.removeItemLink(item.post, links);
+                    // transparent
+                    likeButton.classList.remove("active");
+                    updateFeedList(nodeData);
+                    likeButton.parentElement.parentElement.remove();
+                } else {
+                    nodeData.addItemLink(item.post, nodeData, links);
+                    likeButton.classList.add("active");
+                    updateFeedList(nodeData);
+                    likeButton.parentElement.parentElement.remove();
+                }
+            });
+
+            likedUl.appendChild(clone);
+        });
+    } else {
+        likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
+    }
 }
 
 /**
@@ -469,7 +588,7 @@ function selectNode(node) {
     node.element.classList.add("selected");
     if (node.label === "Person") {
         showPreLink(node);
-        phone.classList.remove("phoneNotSelected");
+        phone.classList.add("phone-selected");
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
@@ -478,7 +597,7 @@ function selectNode(node) {
 //Function for deselecting a node and remove the highlight
 function deselectNode() {
     const node = selectedNode;
-    phone.classList.add("phoneNotSelected");
+    phone.classList.remove("phone-selected");
     node.element.classList.remove("selected");
 
     // Assuming that mouseMoveHandler is now a named function
@@ -594,3 +713,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+
+

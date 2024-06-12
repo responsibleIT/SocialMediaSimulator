@@ -101,20 +101,6 @@
                 </div>
 
                 <div id="selectedNodeOptions" class="hide fakebook">
-                    <!-- <header class="fakebook-header">
-                        <h2>
-                            <img src="./images/fakebook-logo.svg" alt="" />
-                            <span class="visually-hidden">Fakebook</span>
-                        </h2>
-                        <button>
-                            <img src="./images/plusIcon.svg" alt="" />
-                            <span class="visually-hidden">Add post</span>
-                        </button>
-                        <button>
-                            <img src="./images/settings.svg" alt="" />
-                            <span class="visually-hidden">Settings</span>
-                        </button>
-                    </header> -->
 
                     <section class="fakebook-profile">
                         <h3 class="visually-hidden">Profile</h3>
@@ -137,34 +123,34 @@
                                 <p>Popularity</p>
                             </div>
                             
-                            
-
-                            <!-- <label style="display: none">
-                                Increased Popularity
-                                <input type="number" id="nodePopularity" min="0" max="50" />
-                            </label> -->
                         </div>
-                        <div id="feed" class="feed">
-                            <div class="section-heading">
-                                <h3>Feed</h3>
-                            </div>
-                            <ul>
-                                <li>
-                                    <p>Nothing is posted at the moment</p>
-                                </li>
-                            </ul>
-                            <template id="feedTemplate">
-                                <li>
-                                    <h4 class="post-heading"></h4>
-                                    <img class="post-image" src="https://unsplash.it/640/425" alt="">
-                                    <div class="post-options">
-                                        <button><img src="./images/likePost.svg" alt=""></button>
-                                        <button><img src="./images/share.svg" alt=""></button>
-                                        <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
-                                    </div>
-                                </li>
-                            </template>
+                    </section>
+                        
+                    <section id="feed" class="feed">
+                        <div class="section-heading">
+                            <h3>Feed</h3>
                         </div>
+                        <ul>
+                            <li>
+                                <p>Nothing is posted at the moment</p>
+                            </li>
+                        </ul>
+                        <template id="feedTemplate">
+                            <li>
+                                <h4 class="post-heading"></h4>
+                                <img class="post-image" src="https://unsplash.it/640/425" alt="">
+                                <div class="post-options">
+                                    <button class="like-button">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 6.29875C11.6074 6.29875 11.2511 6.069 11.0891 5.71137C10.4573 4.31658 9.37609 3.25 7.5 3.25C7.50407 3.25 7.50336 3.25003 7.4982 3.25029C7.42316 3.25394 6.40663 3.30344 5.40233 3.9597C4.40333 4.61249 3.25 5.97094 3.25 9C3.25 10.1891 3.71609 11.4989 4.51245 12.8495C5.30341 14.191 6.3768 15.4997 7.48645 16.6669C9.43856 18.7202 11.4313 20.2614 11.9992 20.688C12.5647 20.2637 14.5589 18.7218 16.5123 16.6669C17.6219 15.4998 18.6951 14.1911 19.4859 12.8496C20.2821 11.4989 20.7481 10.1891 20.7481 9C20.7481 5.97094 19.5948 4.61249 18.5958 3.9597C17.5915 3.30344 16.575 3.25394 16.4999 3.25029C16.4948 3.25003 16.4941 3.25 16.4981 3.25L12 6.29875ZM12 6.29875C12.3926 6.29875 12.7489 6.069 12.9109 5.71137C13.5427 4.31658 14.6239 3.25 16.5 3.25L12 6.29875Z" stroke-width="2" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    
+                                    <button><img src="./images/share.svg" alt=""></button>
+                                    <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
+                                </div>
+                            </li>
+                        </template>
                     </section>
 
                     <section class="friends" id="friends">
@@ -182,7 +168,7 @@
                             <li>
                                 <img src="./images/reset.svg" alt="" />
                                 <p>Christiana</p>
-                                <button>Unfriend</button>
+                                <button class="unfriend-button">Unfriend</button>
                             </li>
                         </template>
                     </section>
@@ -215,23 +201,16 @@
                     </section>
 
                     <section class="liked" id="liked">
-                        <h3>Liked Post</h3>
+                        <div class="section-heading">
+                            <h3>Liked</h3>
+                        </div>
                         <ul>
                             <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Jop's birthday</p>
-                                <button>Unlike</button>
-                            </li>
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>CSS day</p>
-                                <button>Unlike</button>
+                                <p>You have not like anything yet</p>
                             </li>
                             
                         </ul>
                     </section>
-
-                    
                 </div>
 
                 <nav id="phoneNav" class="phone-navigation">

@@ -210,12 +210,11 @@ canvas {
     align-items: center;
     cursor: pointer;
     height: 2.5rem;
-    margin-top: -3.5rem;
-    margin-left: -1.6rem;
+    transform: translate(-50%, calc(-100% - 10px));
     transition: transform 0.3s ease;
 
     &:hover {
-        transform: translateY(-1em);
+        transform: translate(-50%, calc(-100% - 10px - .5em));
     }
 
     & img {
@@ -374,6 +373,7 @@ NODE STYLES
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
     position: absolute;
+    transition: 200ms;
 }
 
 .personNode {
@@ -551,15 +551,15 @@ PHONE STYLES
     border: 0.5em solid #234;
     border-radius: 28px;
     overflow: hidden;
-    opacity: 1;
-    transition: 200ms;
-    transform: translate(0, 0);
-}
-
-.phoneNotSelected {
     opacity: 0;
     transition: 200ms;
     transform: translate(6%, 0);
+    
+}
+
+.phone-selected {
+    opacity: 1;
+    transform: translate(0, 0);
 }
 
 .phone-border {
@@ -838,13 +838,7 @@ FAKEBOOK STYLES
     }
 }
 
-.friendsList{
-    font-size: 0.75rem;
-    text-decoration: none;
-
-}
-
-.feed {
+.feed, .liked {
 
     & li {
 
@@ -868,9 +862,59 @@ FAKEBOOK STYLES
                 margin-left: auto;
                 gap: .5em;
             }
+
+            & button {
+                --background-color: transparent;
+                padding: 0;
+                box-shadow: none;
+            }
         }
     }
 }
+
+/* .like-button{
+    & svg{
+        fill: transparent;
+        transition: fill 0.3s ease;
+        stroke: #000000;
+    }
+}
+
+.like-button.clicked svg {
+    fill: red;
+} */
+
+.like-button svg {
+    fill: transparent;
+    transition: fill 0.3s ease;
+    stroke: #000000;
+    pointer-events: none;
+}
+
+.like-button:hover, .like-button:active {
+    box-shadow: none;
+}
+   
+
+.like-button.active svg{
+    fill: red;
+    stroke: red;
+    animation: like 0.3s ease;
+}
+
+@keyframes like {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
 
 .delete-button {
     --background-color: #d70000;
