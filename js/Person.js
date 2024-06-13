@@ -393,7 +393,8 @@ export default class Person extends Node {
                 forwardButton.appendChild(svgIcon);
                 forwardButton.style.position = "absolute";
                 forwardButton.style.left = itemNodeData.x + "px";
-                forwardButton.style.top = itemNodeData.y - itemNodeData.radius - itemNodeData.popularity + "px";
+                forwardButton.style.top =
+                    itemNodeData.y - itemNodeData.radius - ((itemNodeData.popularity - itemNodeData.increasedPopularity) * itemNodeData.growFactor) / 2 + "px";
                 forwardButton.addEventListener("click", () => {
                     this.friends.forEach((friend) => {
                         if (friend.person) {
