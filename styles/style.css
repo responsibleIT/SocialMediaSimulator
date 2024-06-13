@@ -1019,40 +1019,11 @@ FAKEBOOK STYLES
     gap: 1em;
 }
 
+dialog p {
+    line-height: 1.6em;
+}
 
-.onboarding-modal {
-    border: none;
-    padding: 0;
-    background: none;
-    /* display: block; */
-}
-.onboarding-box {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    width: 600px;
-    height: 255px;
-    margin: auto;
-}
-.onboarding-box p {
-    font-size: 16px;
-    margin-bottom: 20px;
-}
-.onboarding-box button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 5px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-}
-.onboarding-box button#next1 {
-    background-color: #007bff;
-    color: white;
-}
-.onboarding-box button#skipOnboarding {
+.skipOnboarding, .skipOnboarding2{
     background-color: #6c757d;
     color: white;
 }
@@ -1062,8 +1033,49 @@ dialog{
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 12px;
+    padding: 1em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 600px;
+    height: 255px;
+    /* margin: auto; */
+    border: none;
+
+    & div{
+        display: flex;
+        gap: .5em;
+    }
 }
 
-.onboarding-box section{
-    display: flex
+dialog:nth-of-type(1) p{
+    margin: 1em 0 1em 0;
+}
+
+dialog:nth-of-type(2){
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+dialog:nth-of-type(3)  {
+    
+    height: 400px;
+
+    & div{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+    
+    }
+
+video{
+    margin: 0;
+}
+
+.buttonRow{
+    display: flex;
+    gap: 0.5em;
 }

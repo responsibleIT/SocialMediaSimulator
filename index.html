@@ -14,18 +14,17 @@
         <main>
         <!-- Dialog for Onboarding Step 1 -->
         <dialog id="onboarding1" class="onboarding-modal">
-            <div class="onboarding-box">
                 <h2>Welcome to the Social Media Simulator</h2>
                 <p>This simulator allows users to configure the structure of social networks and news articles, and visualizes the spread of fake news. This project supports the research of Responsible IT at the Amsterdam University of Applied Sciences into the role of AI in the dissemination of misinformation.</p>
-                <button id="next1">Volgende</button>
-                <button id="skipOnboarding">Skip</button>
-            </div>
+                <button id="next1">Start</button>
+                <button id="skipOnboarding" class="skipOnboarding">Skip</button>
         </dialog>
 
         <!-- Dialog for Onboarding Step 2 -->
         <dialog id="onboarding2" class="onboarding-modal">
-            <div class="onboarding-box">
-                <section>
+            <h2>Let's begin simple</h2>
+            <p>Add some users and some post to start</p>    
+            <div>
                 <p>Add</p>
                 <div class="counter-input">
                     <button tabindex="-1">–</button>
@@ -33,8 +32,8 @@
                     <button tabindex="-1">+</button>
                 </div>
                 <p>people</p>
-            </section>
-            <section>
+            </div>
+            <div>
                 <p>add</p>
                 <div class="counter-input">
                     <button tabindex="-1">–</button>
@@ -42,21 +41,22 @@
                     <button tabindex="-1">+</button>
                 </div>
                 <p>posts</p>
-            </section>
-                <button id="next2">Volgende</button>
-                <button id="skipOnboarding2">Skip</button>
+            </div>
+            <div class="buttonRow">
+                <button id="next2">Next</button>
+                <button id="skipOnboarding2" class="skipOnboarding2">Skip</button>
             </div>
         </dialog>
 
         <!-- Dialog for Onboarding Step 3 -->
         <dialog id="onboarding3" class="onboarding-modal">
-            <div class="onboarding-box">
-                <video width="400" height="200" autoplay muted loop>
+            <div>
+                <video width="400" height="300" autoplay muted loop>
                     <source src="./images/gif2.mp4" type="video/mp4">
-                    Uw browser ondersteunt het video-element niet.
+                    Your browser does not support the video tag.
                 </video>
             <button id="next3">Volgende</button>
-        </div>
+            </div>
             </dialog>
 
        
@@ -151,7 +151,7 @@
                         
                           <div id="battery" class="battery">
                             <div id="battery-level" class="battery-level"></div>
-                            <div id="level" class="level">(battery level unknown)</div>
+                            <div id="level" class="level">50%</div>
                         </div>
 
 

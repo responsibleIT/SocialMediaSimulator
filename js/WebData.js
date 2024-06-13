@@ -17,7 +17,7 @@ export default class WebData {
         batteryLevelDiv.style.width = percentage + '%';
 
         if (percentage > 50) {
-            batteryLevelDiv.style.backgroundColor = 'green';
+            batteryLevelDiv.style.backgroundColor = 'lightgreen';
         } else if (percentage > 20) {
             batteryLevelDiv.style.backgroundColor = 'yellow';
         } else {

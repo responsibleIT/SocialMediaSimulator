@@ -723,12 +723,14 @@ document.getElementById('skipOnboarding').addEventListener('click', function () 
 
 document.getElementById('next2').addEventListener('click', function () {
     document.getElementById('onboarding2').close();
+    document.getElementById('onboarding2').style.display = "none";
     document.getElementById('onboarding3').showModal();
     // Proceed to the next step or complete onboarding
 });
 
 document.getElementById('skipOnboarding2').addEventListener('click', function () {
     document.getElementById('onboarding2').close();
+    document.getElementById('onboarding2').style.display = "none";
     // Skip the onboarding process
 });
 
