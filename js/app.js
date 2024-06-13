@@ -27,7 +27,6 @@ let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
 
-
 //Global map of nodes
 let nodes = new Map();
 
@@ -156,17 +155,6 @@ window.addEventListener("resize", resizeCanvas);
 ///////////////////////////
 //////// Functions ////////
 ///////////////////////////
-
-function addAnchorNames() {
-    // nodes.forEach((node)=>{
-    // if(node.label === "Person"){
-    // }
-    // })
-}
-
-// function hasAnchorPos() {
-//     return window.matchMedia("(anchor-name: --anchor)").matches;
-// }
 
 /**
  * Function to calculate the popularity of the post
