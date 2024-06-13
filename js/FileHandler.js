@@ -66,6 +66,7 @@ export default class FileHandler {
 			      	const array = JSON.parse(content);
 
 			      	nodes.forEach(node => node.element.remove());
+			      	links.forEach(link => link.element.remove());
 
 			      	nodes.clear();
 			      	links.clear();
