@@ -26,6 +26,9 @@ const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
 const legendListItems = document.querySelectorAll(".legend li");
+const friendsUl = friends.querySelector("ul");
+const feedUl = feed.querySelector("ul");
+const likedUl = liked.querySelector("ul");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -48,7 +51,6 @@ let filteredEdges = [];
 
 // Initial resize to set canvas size
 resizeCanvas();
-
 
 ///////////////////////////
 ///// Event listeners /////
@@ -104,14 +106,11 @@ countInputs.forEach((input) => {
     });
 });
 
-
-
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
     let userData = await userdata.get(count);
     drawRandom("Person", count, userData);
 });
-
 
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
@@ -133,7 +132,6 @@ next2.addEventListener("click", async () => {
     drawRandom("Person", peopleCount, userData);
     drawRandom("Social Media Post", postCount, peopleData);
 });
-
 
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
@@ -467,13 +465,8 @@ function showMobile(nodeData) {
 
     increasedPopularityInput.value = nodeData.increasedPopularity;
 
-    const friendsUl = friends.querySelector("ul");
     friendsUl.innerHTML = "";
-
-    const feedUl = feed.querySelector("ul");
     feedUl.innerHTML = "";
-
-    const likedUl = liked.querySelector("ul");
     likedUl.innerHTML = "";
 
     updateFriendList(nodeData);
@@ -485,7 +478,6 @@ function showMobile(nodeData) {
 
 function updateFriendList(nodeData, node) {
     // friends
-    const friendsUl = friends.querySelector("ul");
     if (nodeData.friends.size !== 0) {
         nodeData.friends.forEach((friend) => {
             if (friend.person) {
@@ -536,7 +528,6 @@ function addPostToFriendList(friendsUl, friend, nodeData) {
 }
 
 function updateFeedList(nodeData) {
-    const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
     if (nodesWithReaderMaps.length !== 0) {
         nodesWithReaderMaps.forEach((item) => {
@@ -595,7 +586,6 @@ function addPostToFeedList(feedUl, item, nodeData) {
 
 function updateLikedList(nodeData) {
     // liked
-    const likedUl = liked.querySelector("ul");
     if (nodeData.items.size !== 0) {
         nodeData.items.forEach((item) => {
             const headings = likedUl.querySelectorAll(".post-heading");
