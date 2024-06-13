@@ -3,10 +3,12 @@ import Post from "./Post.js";
 import Edge from "./Edge.js";
 import Cursor from "./Cursor.js";
 import UserData from "./UserData.js";
+import FileHandler from "./FileHandler.js";
 import WebData from "./WebData.js";
 
 const cursor = new Cursor();
 const userdata = new UserData();
+const fileHandler = new FileHandler();
 const webData = new WebData();
 
 const canvas = document.getElementById("nodeCanvas");
@@ -287,7 +289,7 @@ function drawRandom(label, count, userData) {
             case "Social Media Post":
                 const postImage = userData[i].enclosure.url;
                 const title = userData[i].title;
-                node = new Post(id, "Social Media Post", x, y, null, { title, postImage });
+                node = new Post(id, "Social Media Post", x, y, { title, postImage });
                 break;
             default:
                 break;
@@ -323,10 +325,10 @@ async function spawnNode(evt) {
             node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
             break;
         case "Social Media Post":
-            userData = await userdata.getPosts(1);
-            const postImage = userData[0].enclosure.url;
-            const title = userData[0].title;
-            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y, null, { title, postImage });
+            let postData = await userdata.getPosts(1);
+            const postImage = postData[0].enclosure.url;
+            const title = postData[0].title;
+            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y, { title, postImage });
             break;
         default:
             break;
@@ -558,7 +560,7 @@ function updateLikedList(nodeData) {
             likedUl.appendChild(clone);
         });
     } else {
-        likedUl.innerHTML = "Like posts to see them here!"; // TODO add default
+        likedUl.innerHTML = "<li><p>Like posts to see them here!</p></li>"; // TODO add default
     }
 }
 
@@ -709,59 +711,40 @@ function bfsShortestPath(graph, startNode) {
     return distances;
 }
 
-// switch in the phone between tabs
-const phoneNav = document.getElementById("phoneNav");
-phoneNav.querySelectorAll("button").forEach((button) => {
-    button.addEventListener("click", () => {
-        phoneNav.querySelectorAll("button").forEach((button) => {
-            button.classList.remove("active");
-        });
-        button.classList.add("active");
-    });
-});
-
-// navigation in phone
+// Switch the mobile pages
 document.addEventListener('DOMContentLoaded', function () {
-    const buttons = document.querySelectorAll('#phoneNav button');
-    const friendsSection = document.getElementById('friends');
-    const profileSection = document.getElementById('profile');
-    const likedSection = document.getElementById('liked');
+    const phoneNav = document.getElementById("phoneNav");
+    const buttons = phoneNav.querySelectorAll("button");
+    const pages = document.querySelectorAll('#friends, #profile, #liked, #selectedProfile, #feed');
 
     buttons.forEach(button => {
         button.addEventListener('click', function () {
-            const page = this.dataset.page;
+            
+            buttons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
 
-            if (page === 'friends') {
-                friendsSection.style.display = 'block';
-                profileSection.style.display = 'none';
-                likedSection.style.display = 'none';
-                selectedProfile.style.display = 'none';
-                feed.style.display = "none";
-
-            } else if (page === 'profile') {
-                profileSection.style.display = 'block';
+            pages.forEach(page => page.style.display = 'none');
+            console.log(this.dataset.page)
+            document.getElementById(this.dataset.page).style.display = 'block';
+            if (this.dataset.page === 'profile') {
                 selectedProfile.style.display = 'block';
-                friendsSection.style.display = 'none';
-                likedSection.style.display = 'none';
-                feed.style.display = "none";
-            }
-            else if (page === 'liked') {
-                likedSection.style.display = 'block';
-                profileSection.style.display = 'none';
-                friendsSection.style.display = 'none';
-                selectedProfile.style.display = 'none';
-                feed.style.display = "none";
-            }
-            else {
-                friendsSection.style.display = 'none';
-                profileSection.style.display = 'none';
-                likedSection.style.display = 'none';
-                selectedProfile.style.display = 'none';
-                feed.style.display = "block";
             }
         });
     });
 });
+
+//Export & Import
+exportButton.addEventListener('click', () => {
+    fileHandler.export(nodes);
+});
+
+importButton.addEventListener('click', async() => {
+    await fileHandler.import(nodes, links);
+    nodes.forEach(node => {
+        setEventListeners(node);
+    });
+    resizeNodes(nodes);
+})
 
 
 window.onload = function () {
@@ -794,9 +777,4 @@ document.getElementById('skipOnboarding2').addEventListener('click', function ()
 document.getElementById('next3').addEventListener('click', function () {
     document.getElementById('onboarding3').close();
     // Proceed to the next step or complete onboarding
-});
-
-document.getElementById('skipOnboarding3').addEventListener('click', function () {
-    document.getElementById('onboarding3').close();
-    // Skip the onboarding process
 });

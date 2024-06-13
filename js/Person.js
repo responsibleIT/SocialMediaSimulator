@@ -418,12 +418,12 @@ export default class Person extends Node {
     }
 
     //Function for adding a friend link between the currently selected node and the node with the given id
-    addFriend(node, links) {
+    addFriend(node, links, score = 0) {
         const friend = this.friends.has(node.id);
         if (friend === false) {
             let toBeFriend = node;
-            this.friends.set(node.id, { person: node, score: 0 });
-            toBeFriend.friends.set(this.id, { person: this, score: 0 });
+            this.friends.set(node.id, { person: node, score: score });
+            toBeFriend.friends.set(this.id, { person: this, score: score });
 
             const link = new Edge(this, node, "friend-link");
             links.set(this.id + "-" + toBeFriend.id, link);
@@ -456,16 +456,17 @@ export default class Person extends Node {
     }
 
     //Function for adding an item link between the currently selected node and the node with the given id
-    addItemLink(item, from, links, score) {
-        if (!score) {
-            score = 1;
-        }
-
+    addItemLink(item, from, links, score = 1) {
         from.items.set(item.id, { post: item, score });
         item.readers.set(from.id, { person: from, score });
 
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
+        if (score > 0) {
+			link.element.classList.add("liked-link");
+		} else {
+			link.element.classList.add("disliked-link");
+		}
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
@@ -478,10 +479,7 @@ export default class Person extends Node {
     }
 
     //Function for adding an info link between the currently selected node and the node with the given id
-    addInfoLink(from, to, links, score) {
-        if (!score) {
-            score = 0;
-        }
+    addInfoLink(from, to, links, score = 0) {
         if (to.person) {
             to = to.person;
         }
