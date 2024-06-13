@@ -531,7 +531,6 @@ function addPostToFriendList(friendsUl, friend, nodeData) {
         unfriendButton.parentElement.remove();
 
         resizeNodes(nodes);
-        showNodeDataContainer(nodeData);
     });
     friendsUl.appendChild(clone);
 }
