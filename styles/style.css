@@ -391,6 +391,7 @@ NODE STYLES
 .postNode {
     /* background-color: red; */
     background-image: url(../images/post-red.svg);
+    border-radius: 0;
 }
 
 /* the person nodes that are not selected */
