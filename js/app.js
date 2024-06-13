@@ -157,6 +157,12 @@ window.addEventListener("resize", resizeCanvas);
 //////// Functions ////////
 ///////////////////////////
 
+function addAnchorNames() {
+    // nodes.forEach((node)=>{
+    // if(node.label === "Person"){
+    // }
+    // })
+}
 
 // function hasAnchorPos() {
 //     return window.matchMedia("(anchor-name: --anchor)").matches;
@@ -335,6 +341,10 @@ function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
         if (node.label === "Person") {
+            nodes.forEach((node) => {
+                node.element.style.anchorName = "";
+            });
+            node.element.style.anchorName = "--currentNode";
             showNodeDataContainer(node);
         }
     });
