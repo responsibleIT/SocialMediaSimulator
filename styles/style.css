@@ -389,7 +389,8 @@ NODE STYLES
 }
 
 .postNode {
-    background-color: red;
+    /* background-color: red; */
+    background-image: url(../images/svg-edited.svg);
 }
 
 /* the person nodes that are not selected */
