@@ -21,6 +21,7 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
+const legendListItems = document.querySelectorAll(".legend li");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -38,12 +39,39 @@ let selectedNode = null;
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
 
+// variables for filtering edges
+let filteredEdges = [];
+
 // Initial resize to set canvas size
 resizeCanvas();
 
 ///////////////////////////
 ///// Event listeners /////
 ///////////////////////////
+
+legendListItems.forEach((li) => {
+    li.addEventListener("click", () => {
+        const span = li.querySelector("span");
+        const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${span.classList[0]}`);
+
+        if (filteredEdges.includes(span.classList[0])) {
+            allLinksOfThatKind.forEach((span) => {
+                span.style.display = "flex";
+            });
+            li.style.textDecoration = "none";
+            const index = filteredEdges.indexOf(span.classList[0]);
+            if (index > -1) {
+                filteredEdges.splice(index, 1);
+            }
+        } else {
+            filteredEdges.push(span.classList[0]);
+            allLinksOfThatKind.forEach((span) => {
+                span.style.display = "none";
+            });
+            li.style.textDecoration = "line-through";
+        }
+    });
+});
 
 // function for counter inputs
 countInputs.forEach((input) => {

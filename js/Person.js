@@ -70,7 +70,9 @@ export default class Person extends Node {
 
             // TODO might delete later
             if (myScore < 0) {
-                link.element.classList.add("stupid-link");
+                link.element.classList.add("disliked-link");
+            } else {
+                link.element.classList.add("liked-link");
             }
         }
     }

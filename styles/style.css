@@ -421,7 +421,7 @@ NODE STYLES
     transform-origin: center left;
     height: 1px;
 
-    &.info-link, &.friend-link, &.item-link {
+    &.info-link, &.friend-link, &.liked-link {
         animation: shoot 1s linear;
     }
 }
@@ -440,7 +440,7 @@ NODE STYLES
 .friend-link {
     background-color: #00b000;
 }
-.item-link {
+.liked-link {
     background-color: #ff9900;
 }
 .pre-link {
@@ -449,6 +449,7 @@ NODE STYLES
 }
 .disliked-link {
     background-color: black;
+    opacity: 0.3;
 }
 
 .canvas-container:hover .pre-link {
