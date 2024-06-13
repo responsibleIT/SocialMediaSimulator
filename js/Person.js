@@ -10,6 +10,7 @@ export default class Person extends Node {
         this.socialScore = 0.5; //Decides how social the agent is
         this.profileImage = user.image;
         this.userName = user.username;
+        this.growFactor = 1.5;
     }
 
     acceptanceDisctance = 300;
@@ -69,7 +70,9 @@ export default class Person extends Node {
 
             // TODO might delete later
             if (myScore < 0) {
-                link.element.classList.add("stupid-link");
+                link.element.classList.add("disliked-link");
+            } else {
+                link.element.classList.add("liked-link");
             }
         }
     }
@@ -90,54 +93,35 @@ export default class Person extends Node {
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
                     if (friend.person) {
-                        friend.person.receiveSocialMediaPost(this, postObject.post, "infoLink", links); // infolink
+                        friend.person.receiveSocialMediaPost(this, postObject.post, links);
                     } else {
                         console.error("friend.person doesnt exist");
-                        friend.receiveSocialMediaPost(this, postObject.post, "infoLink", links); //infolink
+                        friend.receiveSocialMediaPost(this, postObject.post, links);
                     }
                 });
             }
         }
     }
 
+    // friend wordt pas infolink wanneer er meerdere keren leuke posts worden doorgestuurd.
+
     //Function for receiving forwarded social media posts
-    receiveSocialMediaPost(sender, post, relationship, links) {
+    receiveSocialMediaPost(sender, post, links) {
+        //Check the relationship score between me and the sender
+        // TODO if statement
         let relationshipScore = 0;
+        relationshipScore = sender.score;
+
+        let relationship = "friend"; // GET REALTIONSHIP BETWEEN THIS AND SENDER
+        this.infoLinks.forEach((person) => {
+            if (person.person === sender) {
+                relationship = "infoLink";
+            }
+        });
 
         //Check if I have already read the post
         if (this.items.has(post.id)) {
             return;
-        }
-
-        if (relationship === "friend") {
-            //Check the relationship score between me and the sender
-            const friend = this.friends.get(sender.id); // TODO add score when adding friend
-            relationshipScore = friend.score;
-
-            // TODO use function = addItemLink()
-            // this.addItemLink(post, this, links, postScore);
-            this.items.set(post.id, { post: post, score: postScore });
-            const link = new Edge(this, post, "item-link");
-            links.set(this.id + "-" + post.id, link);
-        } else if (relationship === "infoLink") {
-            //Check the relationship score between me and the sender
-            relationshipScore = sender.score;
-
-            //  TODO check if someone already is an infolink
-            const link = this.infoLinks.has(sender.id);
-
-            if (link === true) {
-                this.addInfoLink(this, sender, links, relationshipScore);
-            }
-
-            const myScore = 1;
-            const score = this.calculateScore(myScore, post);
-            // TODO QUESTION: score is hier anders and de score die wordt toegevoegd aan de readers van de post
-            // set the link between the forwarded post = addItemLink()
-            // this.addItemLink(post, this, links, score);
-            this.items.set(post.id, { post: post, score: score }); // calculate the one
-            const link2 = new Edge(this, post, "item-link");
-            links.set(this.id + "-" + post.id, link2);
         }
 
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
@@ -155,10 +139,34 @@ export default class Person extends Node {
         //Calculate a score for the post based on the relationship score and the similarity
         let postScore = relationshipScore + (isSimilar ? 1 : -1);
 
-        //Add the post to my items with the calculated score
+        if (relationship === "friend") {
+            // TODO use function = addItemLink()
+            // this.addItemLink(post, this, links, postScore);
+            this.items.set(post.id, { post: post, score: postScore });
+            const link = new Edge(this, post, "item-link");
+            links.set(this.id + "-" + post.id, link);
+            //Add myself to the readers of the post
+            post.readers.set(this.id, { person: this, score: postScore });
+        } else if (relationship === "infoLink") {
+            //  TODO check if someone already is an infolink
+            const link = this.infoLinks.has(sender.id);
 
-        //Add myself to the readers of the post
-        post.readers.set(this.id, { person: this, score: postScore });
+            if (link === true) {
+                this.addInfoLink(this, sender, links, relationshipScore);
+            }
+
+            const myScore = 1;
+            const score = this.calculateScore(myScore, post);
+            // TODO QUESTION: score is hier anders and de score die wordt toegevoegd aan de readers van de post
+            // set the link between the forwarded post = addItemLink()
+            // this.addItemLink(post, this, links, score);
+            this.items.set(post.id, { post: post, score: score }); // calculate the one
+            // TODO SET SCORE
+            const link2 = new Edge(this, post, "info-link");
+            links.set(this.id + "-" + post.id, link2);
+            //Add myself to the readers of the post
+            post.readers.set(this.id, { person: this, score: score });
+        }
 
         //if the postScore was negative, reduce the score between me and the sender by 1
         if (postScore < 0) {
@@ -212,6 +220,7 @@ export default class Person extends Node {
                 const link = this.infoLinks.has(friend.id);
                 if (link === true) {
                     this.addInfoLink(this, friend, links);
+                    // TODO FRIEND BECOMES INFOLINK
                 }
             }
         });
@@ -384,7 +393,8 @@ export default class Person extends Node {
                 forwardButton.appendChild(svgIcon);
                 forwardButton.style.position = "absolute";
                 forwardButton.style.left = itemNodeData.x + "px";
-                forwardButton.style.top = itemNodeData.y - itemNodeData.radius - itemNodeData.popularity + "px";
+                forwardButton.style.top =
+                    itemNodeData.y - itemNodeData.radius - ((itemNodeData.popularity - itemNodeData.increasedPopularity) * itemNodeData.growFactor) / 2 + "px";
                 forwardButton.addEventListener("click", () => {
                     this.friends.forEach((friend) => {
                         if (friend.person) {

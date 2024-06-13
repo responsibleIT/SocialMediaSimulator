@@ -421,27 +421,8 @@ NODE STYLES
     transform-origin: center left;
     height: 1px;
 
-    &.info-link {
-        background-color: #0075ff;
+    &.info-link, &.friend-link, &.liked-link, &.disliked-link {
         animation: shoot 1s linear;
-    }
-
-    &.friend-link {
-        background-color: #00b000;
-        animation: shoot 1s linear;
-    }
-
-    &.item-link {
-        background-color: #ff9900;
-        animation: shoot 1s linear;
-    }
-
-    &.pre-link {
-        background-color: #999;
-    }
-    &.stupid-link {
-        opacity: 0;
-        background-color: black;
     }
 }
 @keyframes shoot {
@@ -453,9 +434,24 @@ NODE STYLES
     }
 }
 
+.info-link {
+    background-color: #0075ff;
+}
+.friend-link {
+    background-color: #00b000;
+}
+.liked-link {
+    background-color: #ff9900;
+}
 .pre-link {
+    background-color: #999;
     opacity: 0;
 }
+.disliked-link {
+    background-color: black;
+    opacity: 0.1;
+}
+
 .canvas-container:hover .pre-link {
     opacity: 1;
 }
@@ -518,16 +514,18 @@ LEGEND STYLES
             & span {
                 height: 3px;
                 width: 100%;
+                animation: none;
             }
-            & .friendLink {
-                background-color: #00b000;
+            & .post-dot {
+                background-color: red;
+                aspect-ratio: 1/1;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
             }
-            & .dataLink {
-                background-color: blue;
-            }
-            & .likedLink {
-                background-color: #ff9900;
-            }
+        }
+        & li:has(.post-dot ){
+            flex-direction: row;
         }
     }
 }

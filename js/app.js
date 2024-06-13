@@ -21,6 +21,7 @@ const calcClosenessCentrality = document.getElementById("calcClosenessCentrality
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
+const legendListItems = document.querySelectorAll(".legend li");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -38,12 +39,39 @@ let selectedNode = null;
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
 
+// variables for filtering edges
+let filteredEdges = [];
+
 // Initial resize to set canvas size
 resizeCanvas();
 
 ///////////////////////////
 ///// Event listeners /////
 ///////////////////////////
+
+legendListItems.forEach((li) => {
+    li.addEventListener("click", () => {
+        const span = li.querySelector("span");
+        const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${span.classList[0]}`);
+
+        if (filteredEdges.includes(span.classList[0])) {
+            allLinksOfThatKind.forEach((span) => {
+                span.style.display = "flex";
+            });
+            li.style.textDecoration = "none";
+            const index = filteredEdges.indexOf(span.classList[0]);
+            if (index > -1) {
+                filteredEdges.splice(index, 1);
+            }
+        } else {
+            filteredEdges.push(span.classList[0]);
+            allLinksOfThatKind.forEach((span) => {
+                span.style.display = "none";
+            });
+            li.style.textDecoration = "line-through";
+        }
+    });
+});
 
 // function for counter inputs
 countInputs.forEach((input) => {
@@ -113,8 +141,11 @@ stepButton.addEventListener("click", () => {
     nodes.forEach((node) => {
         if (node.label === "Person") {
             node.step(nodes, links);
+            resizeNodes(nodes);
         }
     });
+    calculateAdjustedClosenessCentrality();
+    findAllConnectedComponents();
 });
 
 // Add event listener for window resize
@@ -155,8 +186,14 @@ function findAllConnectedComponents() {
     let visited = new Set();
     let components = [];
     // Filter to include only 'Person' nodes that have at least one friend
-    let graph = new Map([...nodes].filter(([id, node]) => node.label === "Person" && node.friends && node.friends.length > 0));
-
+    let graph = new Map(
+        [...nodes].filter(([id, node]) => {
+            if (node.label === "Person" && node.friends && node.friends.size > 0) {
+                return node;
+            }
+            // return node.label === "Person" && node.friends && node.friends.size > 0;
+        })
+    );
     // Helper function to perform BFS and find all nodes connected to 'startNode'
     function bfs(startNode) {
         let queue = [startNode];
@@ -169,17 +206,17 @@ function findAllConnectedComponents() {
             let neighbors = graph.get(currentNode).friends || [];
 
             neighbors.forEach((neighbor) => {
-                if (!visited.has(neighbor) && graph.has(neighbor)) {
+                neighbor = neighbor.person;
+                if (!visited.has(neighbor.id) && graph.has(neighbor.id)) {
                     // Ensure neighbor is also a 'Person' with friends
-                    visited.add(neighbor);
-                    queue.push(neighbor);
-                    component.push(neighbor);
+                    visited.add(neighbor.id);
+                    queue.push(neighbor.id);
+                    component.push(neighbor.id);
                 }
             });
         }
         return component;
     }
-
     // Main loop to initiate BFS from each unvisited node that has friends
     graph.forEach((_, node) => {
         if (!visited.has(node)) {
@@ -191,9 +228,7 @@ function findAllConnectedComponents() {
         }
     });
 
-    // console.log("Total number of connected components:", components.length);
     calcGroups.textContent = components.length;
-    // console.log("Connected components:", components);
 }
 
 /**
@@ -207,7 +242,8 @@ function resizeNodes(nodes) {
         } else if (node.label === "Social Media Post") {
             node.popularity = calculatePostPopularity(node.readers?.size || 0);
         }
-        node.element.style.width = (node.radius + node.popularity + Number(node.increasedPopularity)) * 2 + "px";
+
+        node.element.style.width = node.radius * 2 + (node.popularity + Number(node.increasedPopularity)) * node.growFactor + "px";
     });
 }
 
@@ -324,6 +360,8 @@ function setEventListeners(node) {
                 }
 
                 resizeNodes(nodes);
+                calculateAdjustedClosenessCentrality();
+                findAllConnectedComponents();
                 if (node.label === "Person") {
                     updateFriendList(selectedNode);
                 } else {
@@ -590,7 +628,13 @@ function deselectNode() {
 //Function for calculating the closeness centrality of all nodes
 function calculateAdjustedClosenessCentrality() {
     let centralities = {};
-    let personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
+    let personNodes = new Map(
+        [...nodes].filter(([id, node]) => {
+            if (node.label === "Person") {
+                return node;
+            }
+        })
+    );
     personNodes.forEach((value, node) => {
         let shortestPaths = bfsShortestPath(nodes, node);
         let reachableNodes = Object.values(shortestPaths).filter((dist) => dist < Infinity).length;
@@ -603,10 +647,23 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
-    console.log(centralities);
+    let mostImportantPerson = "Unknown";
+    let highestScore;
+    for (const [key, value] of Object.entries(centralities)) {
+        const nodeName = nodes.get(Number(key));
+        if ((highestScore === undefined) & (value > 0)) {
+            highestScore = value;
+            mostImportantPerson = nodeName.userName;
+        } else if (value > highestScore) {
+            highestScore = value;
+            mostImportantPerson = nodeName.userName;
+        } else if (value === highestScore) {
+            highestScore = value;
+            mostImportantPerson = mostImportantPerson + ", " + nodeName.userName;
+        }
+    }
+    calcMostImportantPerson.textContent = mostImportantPerson;
 }
-
-
 
 /**
  * Function for calculating the shortest paths between all nodes
@@ -620,11 +677,11 @@ function bfsShortestPath(graph, startNode) {
     distances[startNode] = 0;
 
     while (queue.length > 0) {
-        let currentNode = queue.shift();
-        let currentDistance = distances[currentNode];
-        let neighbors = graph.get(currentNode).friends; // Assuming 'friends' is the adjacency list
-        console.log(neighbors);
+        let currentNodeId = queue.shift();
+        let currentDistance = distances[currentNodeId];
+        let neighbors = graph.get(currentNodeId).friends; // Assuming 'friends' is the adjacency list
         neighbors.forEach((neighbor) => {
+            neighbor = neighbor.person.id;
             if (distances[neighbor] === Infinity) {
                 // Node has not been visited
                 queue.push(neighbor);
