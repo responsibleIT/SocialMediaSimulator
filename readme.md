@@ -10,3 +10,19 @@ This project is a work in progress. Some functionality might not be fully implem
 - How does a recommender system work?
 
 Feel free to fork this project and tinker with it.
+
+
+
+
+
+
+<!-- 
+TODO
+infolinks lichter {check}
+most important person op canvas en minder in de calculations popup
+anchor positioning popup
+add influencer 
+forward buttons uitdoen wanneer je links uitzet
+wat wij willen over brengen is nog niet helemaal duidelijk -> testen, 
+responsiveness fixen
+ -->
