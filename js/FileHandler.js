@@ -94,7 +94,6 @@ export default class FileHandler {
 			      			nodeItem.items.forEach(item => {
 			      				const itemNode = nodes.get(item.id);
 			      				node.addItemLink(itemNode, node, links, item.score);
-			      				
 			      			});
 			      			nodeItem.infoLinks.forEach(infoLink => {
 			      				const infoLinkNode = nodes.get(infoLink.id);

@@ -285,7 +285,7 @@ SPECIAL INPUTS
 */
 
 .counter-input {
-    display: flex;
+    display: inline-flex;
     gap: 0.25em;
     align-items: center;
     border-radius: 999em;
@@ -299,6 +299,8 @@ SPECIAL INPUTS
         text-align: center;
         color: #0075ff;
         outline: none;
+        width: 2ch;
+        -moz-appearance: textfield;
     }
 
     & input::-webkit-outer-spin-button,
@@ -1019,59 +1021,39 @@ FAKEBOOK STYLES
 ONBOARDING STYLES
 */
 
-dialog{
-    z-index: 999;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border-radius: 12px;
-    padding: 1em;
+dialog {
+    border-radius: .75em;
+    padding: 2em;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    width: 600px;
-    height: fit-content;
+    width: 36em;
     border: none;
-    & div{
-        display: flex;
-        gap: .5em;
+    margin: auto;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, .25);
     }
-}
-
-dialog p {
-    line-height: 1.6em;
-}
-
-dialog:nth-of-type(1) p{
-    margin: 1em 0 1em 0;
-}
-
-dialog:nth-of-type(2){
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-}
-
-dialog:nth-of-type(3)  {    
-    height: fit-content;
     
-    & div{
+    & > div{
         display: flex;
         flex-direction: column;
         gap: 1em;
-    } 
+    }
+
+    & p {
+        line-height: 1.6em;
+    }
 }
 
-.skipOnboarding, .skipOnboarding2{
+.skip-button {
     --background-color: #6c757d;
     color: white;
 }
 
-video{
+video {
     margin: 0;
 }
 
-.buttonRow{
+.button-row {
     display: flex;
     gap: 0.5em;
 }

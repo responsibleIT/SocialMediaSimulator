@@ -462,6 +462,11 @@ export default class Person extends Node {
 
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
+        if (score > 0) {
+			link.element.classList.add("liked-link");
+		} else {
+			link.element.classList.add("disliked-link");
+		}
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id

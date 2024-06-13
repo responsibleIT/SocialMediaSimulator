@@ -3,19 +3,13 @@ import Post from "./Post.js";
 import Edge from "./Edge.js";
 import Cursor from "./Cursor.js";
 import UserData from "./UserData.js";
-<<<<<<< HEAD
 import FileHandler from "./FileHandler.js";
-
-const cursor = new Cursor();
-const userdata = new UserData();
-const fileHandler = new FileHandler();
-=======
 import WebData from "./WebData.js";
 
 const cursor = new Cursor();
 const userdata = new UserData();
+const fileHandler = new FileHandler();
 const webData = new WebData();
->>>>>>> 61c68849b78addcbebf7c38441f543cd56558bef
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -295,7 +289,6 @@ function drawRandom(label, count, userData) {
             case "Social Media Post":
                 const postImage = userData[i].enclosure.url;
                 const title = userData[i].title;
-                console.log(postImage, title);
                 node = new Post(id, "Social Media Post", x, y, { title, postImage });
                 break;
             default:
@@ -784,9 +777,4 @@ document.getElementById('skipOnboarding2').addEventListener('click', function ()
 document.getElementById('next3').addEventListener('click', function () {
     document.getElementById('onboarding3').close();
     // Proceed to the next step or complete onboarding
-});
-
-document.getElementById('skipOnboarding3').addEventListener('click', function () {
-    document.getElementById('onboarding3').close();
-    // Skip the onboarding process
 });
