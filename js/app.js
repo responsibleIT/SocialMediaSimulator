@@ -487,26 +487,19 @@ function updateFriendList(nodeData, node) {
     // friends
     const friendsUl = friends.querySelector("ul");
     if (nodeData.friends.size !== 0) {
-        // friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
             if (friend.person) {
                 friend = friend.person;
             }
-            let removeFriend;
-            // console.log(node);
-
             const friendNames = friendsUl.querySelectorAll("li p.friend");
             if (friendNames.length > 0) {
                 let dontAddToList = false;
                 friendNames.forEach((friendName) => {
-                    if (node && friend === node) {
-                        removeFriend = node.userName;
+                    if (node && friendName.textContent === node.userName) {
+                        friendName.parentElement.remove(); // remove the li if the node that needs to be removed, is true aan de textcontent of the p
                     }
-                    console.log(removeFriend);
                     if (friendName.textContent === friend.userName) {
                         dontAddToList = true;
-                    } else if (friendName.textContent === removeFriend) {
-                        friendNames.parentElement.remove();
                     }
                 });
                 if (!dontAddToList) {
@@ -517,6 +510,8 @@ function updateFriendList(nodeData, node) {
                 addPostToFriendList(friendsUl, friend, nodeData);
             }
         });
+    } else {
+        friendsUl.innerHTML = "";
     }
 }
 
