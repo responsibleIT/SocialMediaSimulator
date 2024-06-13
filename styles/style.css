@@ -598,6 +598,11 @@ PHONE STYLES
 .phoneIcon{
     grid-column: 3 / 3;
     grid-row: 1 / 1;
+    display: flex;
+    gap: 0.25em;
+    & img{
+        height: 10px;
+    }
 }
 
 
@@ -798,6 +803,48 @@ FAKEBOOK STYLES
     }
 }
 
+.battery {
+    width: 1.25em;
+    height: 10px;
+    /* border: 2px solid black; */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #D9D9D9;
+    border-radius: 3px;
+
+}
+.battery-level {
+    height: 100%;
+    width: 0;
+    background-color: lightgreen;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.5s;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+.battery::before {
+    content: '';
+    width: 2px;
+    height: 2px;
+    background: #D9D9D9;
+    position: absolute;
+    right: -3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.level {
+    position: absolute;
+    z-index: 1;
+    font-size: .5em;
+    color: black;
+}
+
 .friends {
 
     & > button{
@@ -966,4 +1013,65 @@ FAKEBOOK STYLES
 .fakeFollowers {
     display: flex;
     gap: 1em;
+}
+
+/*
+ONBOARDING STYLES
+*/
+
+dialog{
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 12px;
+    padding: 1em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 600px;
+    height: fit-content;
+    border: none;
+    & div{
+        display: flex;
+        gap: .5em;
+    }
+}
+
+dialog p {
+    line-height: 1.6em;
+}
+
+dialog:nth-of-type(1) p{
+    margin: 1em 0 1em 0;
+}
+
+dialog:nth-of-type(2){
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+dialog:nth-of-type(3)  {    
+    height: fit-content;
+    
+    & div{
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    } 
+}
+
+.skipOnboarding, .skipOnboarding2{
+    --background-color: #6c757d;
+    color: white;
+}
+
+video{
+    margin: 0;
+}
+
+.buttonRow{
+    display: flex;
+    gap: 0.5em;
 }
