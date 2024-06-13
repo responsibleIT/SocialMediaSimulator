@@ -2,7 +2,7 @@ export default class WebData {
     constructor() {
         // web api for battery level
         this.batteryPercentage = 0;
-        this.getBatteryStatus();
+        this.initBatteryStatus();
         this.updateTime();
     }
 
@@ -25,20 +25,31 @@ export default class WebData {
         }
     }
 
-    getBatteryStatus() {
-        navigator.getBattery().then((battery) => {
-            // Update the battery status initially when the promise resolves ...
-            this.updateBatteryStatus(battery);
-
-            // .. and for any subsequent updates.
-            battery.onchargingchange = () => {
+    initBatteryStatus() {
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then((battery) => {
+                // Update the battery status initially when the promise resolves ...
                 this.updateBatteryStatus(battery);
-            };
 
-            battery.onlevelchange = () => {
-                this.updateBatteryStatus(battery);
-            };
-        });
+                // .. and for any subsequent updates.
+                battery.onchargingchange = () => {
+                    this.updateBatteryStatus(battery);
+                };
+
+                battery.onlevelchange = () => {
+                    this.updateBatteryStatus(battery);
+                };
+            });
+        } else {
+            this.disableBatteryStatus();
+        }
+    }
+
+    disableBatteryStatus() {
+        const batterySection = document.getElementById('battery-section');
+        if (batterySection) {
+            batterySection.style.display = 'none';
+        }
     }
 
     updateTime() {
@@ -56,6 +67,3 @@ export default class WebData {
         setInterval(updateTime, 60000);
     }
 }
-
-
-
