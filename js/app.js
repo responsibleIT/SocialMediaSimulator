@@ -49,6 +49,7 @@ let filteredEdges = [];
 // Initial resize to set canvas size
 resizeCanvas();
 
+
 ///////////////////////////
 ///// Event listeners /////
 ///////////////////////////
@@ -347,6 +348,10 @@ function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
         hoveredNode = node.id;
         if (node.label === "Person") {
+            nodes.forEach((node) => {
+                node.element.style.anchorName = "";
+            });
+            node.element.style.anchorName = "--currentNode";
             showNodeDataContainer(node);
         }
     });
@@ -433,9 +438,12 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
     nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
-    //Move the nodeDataContainer to the position of the node label
-    nodeDataContainer.style.left = nodeData.x + 10 + "px";
-    nodeDataContainer.style.top = nodeData.y + 10 + "px";
+    // if (hasAnchorPos()) {
+    //     console.log(hasAnchorPos());
+    //     //Move the nodeDataContainer to the position of the node label
+    //     nodeDataContainer.style.left = nodeData.x + 10 + "px";
+    //     nodeDataContainer.style.top = nodeData.y + 10 + "px";
+    // }
 }
 
 function getNodesWithReaders(nodes) {
