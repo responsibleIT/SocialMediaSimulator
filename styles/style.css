@@ -421,28 +421,8 @@ NODE STYLES
     transform-origin: center left;
     height: 1px;
 
-    &.info-link {
-        background-color: #0075ff;
+    &.info-link, &.friend-link, &.item-link {
         animation: shoot 1s linear;
-    }
-
-    &.friend-link {
-        background-color: #00b000;
-        animation: shoot 1s linear;
-    }
-
-    &.item-link {
-        background-color: #ff9900;
-        animation: shoot 1s linear;
-    }
-
-    &.pre-link {
-        background-color: #999;
-    }
-    &.stupid-link {
-        opacity: 0.6;
-        display: none;
-        background-color: black;
     }
 }
 @keyframes shoot {
@@ -454,9 +434,23 @@ NODE STYLES
     }
 }
 
+.info-link {
+    background-color: #0075ff;
+}
+.friend-link {
+    background-color: #00b000;
+}
+.item-link {
+    background-color: #ff9900;
+}
 .pre-link {
+    background-color: #999;
     opacity: 0;
 }
+.disliked-link {
+    background-color: black;
+}
+
 .canvas-container:hover .pre-link {
     opacity: 1;
 }
@@ -519,17 +513,9 @@ LEGEND STYLES
             & span {
                 height: 3px;
                 width: 100%;
+                animation: none;
             }
-            & .friendLink {
-                background-color: #00b000;
-            }
-            & .dataLink {
-                background-color: blue;
-            }
-            & .likedLink {
-                background-color: #ff9900;
-            }
-            & .postDot {
+            & .post-dot {
                 background-color: red;
                 aspect-ratio: 1/1;
                 width: 15px;
@@ -537,7 +523,7 @@ LEGEND STYLES
                 border-radius: 50%;
             }
         }
-        & li:has(.postDot ){
+        & li:has(.post-dot ){
             flex-direction: row;
         }
     }

@@ -200,9 +200,7 @@ function findAllConnectedComponents() {
         }
     });
 
-    // console.log("Total number of connected components:", components.length);
     calcGroups.textContent = components.length;
-    // console.log("Connected components:", components);
 }
 
 /**
@@ -610,7 +608,6 @@ function calculateAdjustedClosenessCentrality() {
         })
     );
     personNodes.forEach((value, node) => {
-        console.log(value, node);
         let shortestPaths = bfsShortestPath(nodes, node);
         let reachableNodes = Object.values(shortestPaths).filter((dist) => dist < Infinity).length;
         let totalDistance = Object.values(shortestPaths).reduce((acc, d) => (d < Infinity ? acc + d : acc), 0);
@@ -625,7 +622,6 @@ function calculateAdjustedClosenessCentrality() {
     let mostImportantPerson = "Unknown";
     let highestScore;
     for (const [key, value] of Object.entries(centralities)) {
-        console.log(`${key}: ${value}`);
         const nodeName = nodes.get(Number(key));
         if ((highestScore === undefined) & (value > 0)) {
             highestScore = value;
@@ -647,7 +643,6 @@ function calculateAdjustedClosenessCentrality() {
  * @param {Object} startNode - ...
  */
 function bfsShortestPath(graph, startNode) {
-    console.log(graph, startNode);
     let distances = {};
     let queue = [startNode];
     graph.forEach((_, node) => (distances[node] = Infinity)); // Initialize distances
@@ -656,14 +651,11 @@ function bfsShortestPath(graph, startNode) {
     while (queue.length > 0) {
         let currentNodeId = queue.shift();
         let currentDistance = distances[currentNodeId];
-        console.log(currentNodeId);
         let neighbors = graph.get(currentNodeId).friends; // Assuming 'friends' is the adjacency list
-        console.log("neighbors", neighbors);
         neighbors.forEach((neighbor) => {
             neighbor = neighbor.person.id;
             if (distances[neighbor] === Infinity) {
                 // Node has not been visited
-                console.log(distances[neighbor] === Infinity);
                 queue.push(neighbor);
                 distances[neighbor] = currentDistance + 1;
             }
