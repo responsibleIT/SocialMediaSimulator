@@ -666,11 +666,11 @@ exportButton.addEventListener('click', () => {
 });
 
 importButton.addEventListener('click', async() => {
-    await fileHandler.import(nodes);
+    await fileHandler.import(nodes, links);
     nodes.forEach(node => {
-        node.draw();
         setEventListeners(node);
     });
+    resizeNodes(nodes);
 })
 
 
