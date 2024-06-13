@@ -16,8 +16,10 @@
         <dialog id="onboarding1" class="onboarding-modal">
                 <h2>Welcome to the Social Media Simulator</h2>
                 <p>This simulator allows users to configure the structure of social networks and news articles, and visualizes the spread of fake news. This project supports the research of Responsible IT at the Amsterdam University of Applied Sciences into the role of AI in the dissemination of misinformation.</p>
-                <button id="next1">Start</button>
-                <button id="skipOnboarding" class="skipOnboarding">Skip</button>
+                <div class="buttonRow">
+                    <button id="next1">Start</button>
+                    <button id="skipOnboarding" class="skipOnboarding">Skip</button>
+                </div>
         </dialog>
 
         <!-- Dialog for Onboarding Step 2 -->
@@ -51,19 +53,17 @@
         <!-- Dialog for Onboarding Step 3 -->
         <dialog id="onboarding3" class="onboarding-modal">
             <div>
+                <h2>How to start connection?</h2>
+                <p>When you click on a person, you can click on people to add them as a friend and click on a post to like the post. When you forward a post it gets send to all your friends.</p>
                 <video width="400" height="300" autoplay muted loop>
                     <source src="./images/gif2.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            <button id="next3">Volgende</button>
+            <button id="next3">Go</button>
             </div>
             </dialog>
 
-       
-
-
             <div class="top-bar">
-
                 <section id="generalOptions" class="toolbar">
                     <h2 class="visually-hidden">Toolbar</h2>
                     <section>
