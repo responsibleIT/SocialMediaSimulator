@@ -6,14 +6,64 @@
         <title>FB Model Configuration</title>
         <link rel="stylesheet" href="styles/style.css" />
     </head>
-    <body>
+    <body> 
         <header>
             <h1>Social Media Simulator</h1>
             <img src="images/logo.svg" alt="" class="logo" />
         </header>
         <main>
-            <div class="top-bar">
+        <!-- Dialog for Onboarding Step 1 -->
+        <dialog id="onboarding1" class="onboarding-modal">
+                <h2>Welcome to the Social Media Simulator</h2>
+                <p>This simulator allows users to configure the structure of social networks and news articles, and visualizes the spread of fake news. This project supports the research of Responsible IT at the Amsterdam University of Applied Sciences into the role of AI in the dissemination of misinformation.</p>
+                <div class="buttonRow">
+                    <button id="next1">Start</button>
+                    <button id="skipOnboarding" class="skipOnboarding">Skip</button>
+                </div>
+        </dialog>
 
+        <!-- Dialog for Onboarding Step 2 -->
+        <dialog id="onboarding2" class="onboarding-modal">
+            <h2>Let's begin simple</h2>
+            <p>Add some users and some post to start</p>    
+            <div>
+                <p>Add</p>
+                <div class="counter-input">
+                    <button tabindex="-1">–</button>
+                    <input type="number" id="people-count-intro" value="10" min="3" max="50" />
+                    <button tabindex="-1">+</button>
+                </div>
+                <p>people</p>
+            </div>
+            <div>
+                <p>add</p>
+                <div class="counter-input">
+                    <button tabindex="-1">–</button>
+                    <input type="number" id="post-count-intro" value="10" min="3" max="50" />
+                    <button tabindex="-1">+</button>
+                </div>
+                <p>posts</p>
+            </div>
+            <div class="buttonRow">
+                <button id="next2">Next</button>
+                <button id="skipOnboarding2" class="skipOnboarding2">Skip</button>
+            </div>
+        </dialog>
+
+        <!-- Dialog for Onboarding Step 3 -->
+        <dialog id="onboarding3" class="onboarding-modal">
+            <div>
+                <h2>How to start connection?</h2>
+                <p>When you click on a person, you can click on people to add them as a friend and click on a post to like the post. When you forward a post it gets send to all your friends.</p>
+                <video width="400" height="300" autoplay muted loop>
+                    <source src="./images/gif2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            <button id="next3">Go</button>
+            </div>
+            </dialog>
+
+            <div class="top-bar">
                 <section id="generalOptions" class="toolbar">
                     <h2 class="visually-hidden">Toolbar</h2>
                     <section>
@@ -90,12 +140,21 @@
                 <!-- <img src="../images/phone.png" alt="" class="phone-border" /> -->
 
                 <div class="phone-status-bar">
-                    <p>12:34</p>
+                   
+                    <div id="time" class="time"></div>
                     <div class="phoneIcon">
+
+
                         
                         <img src="./images/networkIcon.svg" alt="" />
                         <img src="./images/wifiIcon.svg" alt="" />
-                        <img src="./images/batteryIcon.svg" alt="" />
+                        
+                          <div id="battery" class="battery">
+                            <div id="battery-level" class="battery-level"></div>
+                            <div id="level" class="level">50%</div>
+                        </div>
+
+
                     </div>
                     
                 </div>

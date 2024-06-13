@@ -3,9 +3,11 @@ import Post from "./Post.js";
 import Edge from "./Edge.js";
 import Cursor from "./Cursor.js";
 import UserData from "./UserData.js";
+import WebData from "./WebData.js";
 
 const cursor = new Cursor();
 const userdata = new UserData();
+const webData = new WebData();
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -99,11 +101,14 @@ countInputs.forEach((input) => {
     });
 });
 
+
+
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
     let userData = await userdata.get(count);
     drawRandom("Person", count, userData);
 });
+
 
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
@@ -114,6 +119,18 @@ randomContentButton.addEventListener("click", () => {
         showMobile(selectedNode);
     }
 });
+
+// onboading post and people add function
+next2.addEventListener("click", async () => {
+    const peopleCount = document.getElementById("people-count-intro").value;
+    const postCount = document.getElementById("post-count-intro").value;
+    let userData = await userdata.get(peopleCount);
+    const peopleData = userdata.getPosts(postCount);
+
+    drawRandom("Person", peopleCount, userData);
+    drawRandom("Social Media Post", postCount, peopleData);
+});
+
 
 deleteNodeButton.addEventListener("click", () => {
     // deleteNode();
@@ -747,5 +764,39 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+window.onload = function () {
+    document.getElementById('onboarding1').showModal();
+};
 
+document.getElementById('next1').addEventListener('click', function () {
+    document.getElementById('onboarding1').close();
+    document.getElementById('onboarding2').showModal();
+});
 
+document.getElementById('skipOnboarding').addEventListener('click', function () {
+    document.getElementById('onboarding1').close();
+    // Skip the onboarding process
+});
+
+document.getElementById('next2').addEventListener('click', function () {
+    document.getElementById('onboarding2').close();
+    document.getElementById('onboarding2').style.display = "none";
+    document.getElementById('onboarding3').showModal();
+    // Proceed to the next step or complete onboarding
+});
+
+document.getElementById('skipOnboarding2').addEventListener('click', function () {
+    document.getElementById('onboarding2').close();
+    document.getElementById('onboarding2').style.display = "none";
+    // Skip the onboarding process
+});
+
+document.getElementById('next3').addEventListener('click', function () {
+    document.getElementById('onboarding3').close();
+    // Proceed to the next step or complete onboarding
+});
+
+document.getElementById('skipOnboarding3').addEventListener('click', function () {
+    document.getElementById('onboarding3').close();
+    // Skip the onboarding process
+});
