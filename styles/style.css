@@ -158,9 +158,34 @@ canvas {
     display: block;
 }
 
+:root { --anchor: --none; }
+
+@supports(anchor-name: --anchor) {
+    /* anchor names are addid via js */
+    /* TODO DOE MET JS */
+    :root:has(div:nth-of-type(2):hover){--anchor: --twee;}
+    :root:has(div:nth-of-type(3):hover){--anchor: --drie;}
+    :root:has(div:nth-of-type(4):hover){--anchor: --vier;}
+    :root:has(div:nth-of-type(5):hover){--anchor: --vijf;}
+    :root:has(div:nth-of-type(6):hover){--anchor: --zes;}
+
+    .canvas-container div:nth-of-type(2) {anchor-name: --twee;}
+    .canvas-container div:nth-of-type(3) {anchor-name: --drie;}
+    .canvas-container div:nth-of-type(4) {anchor-name: --vier;}
+    .canvas-container div:nth-of-type(5) {anchor-name: --vijf;}
+    .canvas-container div:nth-of-type(6) {anchor-name: --zes;}
+    .node-popover {
+        /* position: relative; */
+    }
+}
+@supports not (anchor-name: --anchor) {
+    .node-popover {
+        position: absolute; 
+        /* TODO VRAGEN BIJ SANNE WAAROM DIT UIT MOET EN BIJ DE TEST AAN */ 
+    }
+}
 .node-popover {
     z-index: 99;
-    position: absolute;
     width: fit-content;
     height: fit-content;
     border-radius: 12px;
@@ -173,7 +198,9 @@ canvas {
     color: black;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
     border: none;
-
+    position-anchor: var(--anchor);
+    top: anchor(50%);
+    left: anchor(end);
     & img {
         width: 48px;
         aspect-ratio: 1;
@@ -238,7 +265,7 @@ canvas {
 }
 
 .hide {
-    display: none;
+    /* display: none; */
 }
 
 /* 

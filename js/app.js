@@ -27,6 +27,7 @@ let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
 
+
 //Global map of nodes
 let nodes = new Map();
 
@@ -44,6 +45,7 @@ let filteredEdges = [];
 
 // Initial resize to set canvas size
 resizeCanvas();
+
 
 ///////////////////////////
 ///// Event listeners /////
@@ -154,6 +156,11 @@ window.addEventListener("resize", resizeCanvas);
 ///////////////////////////
 //////// Functions ////////
 ///////////////////////////
+
+
+// function hasAnchorPos() {
+//     return window.matchMedia("(anchor-name: --anchor)").matches;
+// }
 
 /**
  * Function to calculate the popularity of the post
@@ -414,9 +421,12 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
     nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
-    //Move the nodeDataContainer to the position of the node label
-    nodeDataContainer.style.left = nodeData.x + 10 + "px";
-    nodeDataContainer.style.top = nodeData.y + 10 + "px";
+    // if (hasAnchorPos()) {
+    //     console.log(hasAnchorPos());
+    //     //Move the nodeDataContainer to the position of the node label
+    //     nodeDataContainer.style.left = nodeData.x + 10 + "px";
+    //     nodeDataContainer.style.top = nodeData.y + 10 + "px";
+    // }
 }
 
 function getNodesWithReaders(nodes) {
