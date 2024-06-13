@@ -369,7 +369,6 @@ NODE STYLES
 */
 
 .node {
-    border-radius: 50%;
     z-index: 90;
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
@@ -382,6 +381,7 @@ NODE STYLES
     background-repeat: no-repeat;
     background-size: contain;
     overflow: hidden;
+    border-radius: 50%;
 
     &.selected {
         border: 2px solid orange;
@@ -389,7 +389,8 @@ NODE STYLES
 }
 
 .postNode {
-    background-color: red;
+    /* background-color: red; */
+    background-image: url(../images/post-red.svg);
 }
 
 /* the person nodes that are not selected */
