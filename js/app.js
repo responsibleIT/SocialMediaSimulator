@@ -133,18 +133,9 @@ next2.addEventListener("click", async () => {
     drawRandom("Social Media Post", postCount, peopleData);
 });
 
-
-// deleteNodeButton.addEventListener("click", () => {
-//     deleteNode();
-// });
-
 canvas.addEventListener("click", async (event) => {
     spawnNode(event);
 });
-
-// calcGroups.addEventListener("click", () => {
-// calculateAdjustedClosenessCentrality();
-// });
 
 increasedPopularityInput.addEventListener("change", () => {
     selectedNode.increasedPopularity = increasedPopularityInput.value;
@@ -631,7 +622,7 @@ function selectNode(node) {
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
-    showMobile(node);
+    // showMobile(node);
 }
 
 //Function for deselecting a node and remove the highlight
