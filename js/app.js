@@ -20,7 +20,6 @@ const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
-const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
@@ -133,17 +132,9 @@ next2.addEventListener("click", async () => {
     drawRandom("Social Media Post", postCount, peopleData);
 });
 
-deleteNodeButton.addEventListener("click", () => {
-    // deleteNode();
-});
-
 canvas.addEventListener("click", async (event) => {
     spawnNode(event);
 });
-
-// calcGroups.addEventListener("click", () => {
-// calculateAdjustedClosenessCentrality();
-// });
 
 increasedPopularityInput.addEventListener("change", () => {
     selectedNode.increasedPopularity = increasedPopularityInput.value;
@@ -696,6 +687,7 @@ function selectNode(node) {
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
+    // showMobile(node);
 }
 
 //Function for deselecting a node and remove the highlight
@@ -792,6 +784,7 @@ document.addEventListener("DOMContentLoaded", function () {
     buttons.forEach((button) => {
         button.addEventListener("click", function () {
             buttons.forEach((btn) => btn.classList.remove("active"));
+
             this.classList.add("active");
 
             pages.forEach((page) => (page.style.display = "none"));
@@ -808,7 +801,7 @@ exportButton.addEventListener('click', () => {
     fileHandler.export(nodes);
 });
 
-importButton.addEventListener('click', async() => {
+importButton.addEventListener('click', async () => {
     await fileHandler.import(nodes, links);
     nodes.forEach(node => {
         setEventListeners(node);
@@ -848,3 +841,29 @@ document.getElementById('next3').addEventListener('click', function () {
     document.getElementById('onboarding3').close();
     // Proceed to the next step or complete onboarding
 });
+
+// console.log(deleteNodeButton);
+deleteNodeButton.addEventListener('click', () => {
+    const node = selectedNode
+    node.friends.forEach((friend) => {
+        friend.person.removeFriend(node, links);
+    });
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
+    });
+    node.infoLinks.forEach((infoLink) => {
+        infoLink.person.removeInfoLink(infoLink.person, node, links);
+    });
+
+    deselectNode();
+    node.element.remove();
+    nodes.delete(node.id);
+    // showMobile(node);
+
+
+    // updateFriendList(node);
+    console.log(nodes);
+});
+
+
+
