@@ -20,12 +20,14 @@ const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
-const deleteNodeButton = document.getElementById("deleteNode");
 const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
 const legendListItems = document.querySelectorAll(".legend li");
+const friendsUl = friends.querySelector("ul");
+const feedUl = feed.querySelector("ul");
+const likedUl = liked.querySelector("ul");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -48,7 +50,6 @@ let filteredEdges = [];
 
 // Initial resize to set canvas size
 resizeCanvas();
-
 
 ///////////////////////////
 ///// Event listeners /////
@@ -104,14 +105,11 @@ countInputs.forEach((input) => {
     });
 });
 
-
-
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
     let userData = await userdata.get(count);
     drawRandom("Person", count, userData);
 });
-
 
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
@@ -134,18 +132,9 @@ next2.addEventListener("click", async () => {
     drawRandom("Social Media Post", postCount, peopleData);
 });
 
-
-deleteNodeButton.addEventListener("click", () => {
-    // deleteNode();
-});
-
 canvas.addEventListener("click", async (event) => {
     spawnNode(event);
 });
-
-// calcGroups.addEventListener("click", () => {
-// calculateAdjustedClosenessCentrality();
-// });
 
 increasedPopularityInput.addEventListener("change", () => {
     selectedNode.increasedPopularity = increasedPopularityInput.value;
@@ -387,7 +376,7 @@ function setEventListeners(node) {
                 calculateAdjustedClosenessCentrality();
                 findAllConnectedComponents();
                 if (node.label === "Person") {
-                    updateFriendList(selectedNode);
+                    updateFriendList(selectedNode, node);
                 } else {
                     updateLikedList(selectedNode);
                     updateFeedList(selectedNode);
@@ -439,7 +428,6 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
     // if (hasAnchorPos()) {
-    //     console.log(hasAnchorPos());
     //     //Move the nodeDataContainer to the position of the node label
     //     nodeDataContainer.style.left = nodeData.x + 10 + "px";
     //     nodeDataContainer.style.top = nodeData.y + 10 + "px";
@@ -468,6 +456,10 @@ function showMobile(nodeData) {
 
     increasedPopularityInput.value = nodeData.increasedPopularity;
 
+    friendsUl.innerHTML = "";
+    feedUl.innerHTML = "";
+    likedUl.innerHTML = "";
+
     updateFriendList(nodeData);
     updateFeedList(nodeData);
     updateLikedList(nodeData);
@@ -475,101 +467,164 @@ function showMobile(nodeData) {
     selectedNodeOptions.classList.remove("hide");
 }
 
-function updateFriendList(nodeData) {
+function updateFriendList(nodeData, node) {
     // friends
-    const friendsUl = friends.querySelector("ul");
     if (nodeData.friends.size !== 0) {
-        friendsUl.innerHTML = "";
         nodeData.friends.forEach((friend) => {
             if (friend.person) {
                 friend = friend.person;
             }
-            const clone = friendsTemplate.content.cloneNode(true);
-            const img = clone.querySelector("img");
-            const p = clone.querySelector("p");
-            const unfriendButton = clone.querySelector(".unfriend-button");
-            p.textContent = friend.userName;
-            img.src = friend.profileImage;
-            unfriendButton.addEventListener("click", () => {
-                if (nodeData.person) {
-                    nodeData = nodeData.person;
+            const friendNames = friendsUl.querySelectorAll("li p.friend");
+            if (friendNames.length > 0) {
+                let dontAddToList = false;
+                friendNames.forEach((friendName) => {
+                    if (node && friendName.textContent === node.userName) {
+                        friendName.parentElement.remove(); // remove the li if the node that needs to be removed, is true aan de textcontent of the p
+                    }
+                    if (friendName.textContent === friend.userName) {
+                        dontAddToList = true;
+                    }
+                });
+                if (!dontAddToList) {
+                    addPostToFriendList(friendsUl, friend, nodeData);
                 }
-                nodeData.removeFriend(friend, links);
-                unfriendButton.parentElement.remove();
-
-                resizeNodes(nodes);
-                showNodeDataContainer(nodeData);
-            });
-            friendsUl.appendChild(clone);
+            } else {
+                friendsUl.innerHTML = "";
+                addPostToFriendList(friendsUl, friend, nodeData);
+            }
         });
+    } else {
+        friendsUl.innerHTML = "";
     }
 }
+
+function addPostToFriendList(friendsUl, friend, nodeData) {
+    const clone = friendsTemplate.content.cloneNode(true);
+    const img = clone.querySelector("img");
+    const p = clone.querySelector("p");
+    p.classList.add("friend");
+    const unfriendButton = clone.querySelector(".unfriend-button");
+    p.textContent = friend.userName;
+    img.src = friend.profileImage;
+    unfriendButton.addEventListener("click", () => {
+        if (nodeData.person) {
+            nodeData = nodeData.person;
+        }
+        nodeData.removeFriend(friend, links);
+        unfriendButton.parentElement.remove();
+
+        resizeNodes(nodes);
+    });
+    friendsUl.appendChild(clone);
+}
+
 function updateFeedList(nodeData) {
-    const feedUl = feed.querySelector("ul");
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
     if (nodesWithReaderMaps.length !== 0) {
-        feedUl.innerHTML = "";
         nodesWithReaderMaps.forEach((item) => {
-            const clone = feedTemplate.content.cloneNode(true);
-            const img = clone.querySelector("img");
-            img.src = item.image;
-            const heading = clone.querySelector("h4");
-            heading.textContent = item.title;
-
-            const likeButton = clone.querySelector(".like-button");
-            if (nodeData.items.has(item.id)) {
-                likeButton.classList.add("active");
-            }
-            likeButton.addEventListener("click", (e) => {
-                if (nodeData.items.has(item.id)) {
-                    nodeData.removeItemLink(item, links);
-                    e.target.classList.remove("active");
-                    updateLikedList(nodeData);
-                } else {
-                    nodeData.addItemLink(item, nodeData, links);
-                    e.target.classList.add("active");
-                    updateLikedList(nodeData);
+            const headings = feedUl.querySelectorAll(".post-heading");
+            if (headings.length > 0) {
+                let dontAddToList = false;
+                headings.forEach((heading) => {
+                    if (heading.textContent === item.title) {
+                        const likeButton = heading.parentElement.querySelector(".like-button");
+                        if (nodeData.items.has(item.id)) {
+                            likeButton.classList.add("active");
+                        } else {
+                            likeButton.classList.remove("active");
+                        }
+                        dontAddToList = true;
+                    }
+                });
+                if (!dontAddToList) {
+                    addPostToFeedList(feedUl, item, nodeData);
                 }
-            });
-
-            feedUl.appendChild(clone);
+            } else {
+                feedUl.innerHTML = "";
+                addPostToFeedList(feedUl, item, nodeData);
+            }
         });
     }
 }
+
+function addPostToFeedList(feedUl, item, nodeData) {
+    const clone = feedTemplate.content.cloneNode(true);
+    const img = clone.querySelector("img");
+    img.src = item.image;
+    const heading = clone.querySelector("h4");
+    heading.textContent = item.title;
+
+    const likeButton = clone.querySelector(".like-button");
+    if (nodeData.items.has(item.id)) {
+        likeButton.classList.add("active");
+    } else {
+        likeButton.classList.remove("active");
+    }
+    likeButton.addEventListener("click", (e) => {
+        if (nodeData.items.has(item.id)) {
+            nodeData.removeItemLink(item, links);
+            e.target.classList.remove("active");
+            updateLikedList(nodeData);
+        } else {
+            nodeData.addItemLink(item, nodeData, links);
+            e.target.classList.add("active");
+            updateLikedList(nodeData);
+        }
+    });
+
+    feedUl.appendChild(clone);
+}
+
 function updateLikedList(nodeData) {
     // liked
-    const likedUl = liked.querySelector("ul");
     if (nodeData.items.size !== 0) {
-        likedUl.innerHTML = "";
         nodeData.items.forEach((item) => {
-            const clone = feedTemplate.content.cloneNode(true);
-            const img = clone.querySelector("img");
-            img.src = item.post.image;
-            const heading = clone.querySelector("h4");
-            heading.textContent = item.post.title;
-
-            const likeButton = clone.querySelector(".like-button");
-            likeButton.classList.add("active");
-            likeButton.addEventListener("click", () => {
-                if (nodeData.items.has(item.post.id)) {
-                    nodeData.removeItemLink(item.post, links);
-                    // transparent
-                    likeButton.classList.remove("active");
-                    updateFeedList(nodeData);
-                    likeButton.parentElement.parentElement.remove();
-                } else {
-                    nodeData.addItemLink(item.post, nodeData, links);
-                    likeButton.classList.add("active");
-                    updateFeedList(nodeData);
-                    likeButton.parentElement.parentElement.remove();
+            const headings = likedUl.querySelectorAll(".post-heading");
+            if (headings.length > 0) {
+                let dontAddToList = false;
+                headings.forEach((heading) => {
+                    if (heading.textContent === item.post.title) {
+                        dontAddToList = true;
+                    }
+                });
+                if (!dontAddToList) {
+                    addPostToLikedList(likedUl, item, nodeData);
                 }
-            });
-
-            likedUl.appendChild(clone);
+            } else {
+                likedUl.innerHTML = "";
+                addPostToLikedList(likedUl, item, nodeData);
+            }
         });
     } else {
         likedUl.innerHTML = "<li><p>Like posts to see them here!</p></li>"; // TODO add default
     }
+}
+
+function addPostToLikedList(likedUl, item, nodeData) {
+    const clone = feedTemplate.content.cloneNode(true);
+    const img = clone.querySelector("img");
+    img.src = item.post.image;
+    const heading = clone.querySelector("h4");
+    heading.textContent = item.post.title;
+
+    const likeButton = clone.querySelector(".like-button");
+    likeButton.classList.add("active");
+    likeButton.addEventListener("click", () => {
+        if (nodeData.items.has(item.post.id)) {
+            nodeData.removeItemLink(item.post, links);
+            // transparent
+            likeButton.classList.remove("active");
+            updateFeedList(nodeData);
+            likeButton.parentElement.parentElement.remove();
+        } else {
+            nodeData.addItemLink(item.post, nodeData, links);
+            likeButton.classList.add("active");
+            updateFeedList(nodeData);
+            likeButton.parentElement.parentElement.remove();
+        }
+    });
+
+    likedUl.appendChild(clone);
 }
 
 /**
@@ -632,6 +687,7 @@ function selectNode(node) {
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
+    // showMobile(node);
 }
 
 //Function for deselecting a node and remove the highlight
@@ -720,22 +776,21 @@ function bfsShortestPath(graph, startNode) {
 }
 
 // Switch the mobile pages
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     const phoneNav = document.getElementById("phoneNav");
     const buttons = phoneNav.querySelectorAll("button");
-    const pages = document.querySelectorAll('#friends, #profile, #liked, #selectedProfile, #feed');
+    const pages = document.querySelectorAll("#friends, #profile, #liked, #selectedProfile, #feed");
 
-    buttons.forEach(button => {
-        button.addEventListener('click', function () {
-            
-            buttons.forEach(btn => btn.classList.remove("active"));
+    buttons.forEach((button) => {
+        button.addEventListener("click", function () {
+            buttons.forEach((btn) => btn.classList.remove("active"));
+
             this.classList.add("active");
 
-            pages.forEach(page => page.style.display = 'none');
-            console.log(this.dataset.page)
-            document.getElementById(this.dataset.page).style.display = 'block';
-            if (this.dataset.page === 'profile') {
-                selectedProfile.style.display = 'block';
+            pages.forEach((page) => (page.style.display = "none"));
+            document.getElementById(this.dataset.page).style.display = "block";
+            if (this.dataset.page === "profile") {
+                selectedProfile.style.display = "block";
             }
         });
     });
@@ -746,7 +801,7 @@ exportButton.addEventListener('click', () => {
     fileHandler.export(nodes);
 });
 
-importButton.addEventListener('click', async() => {
+importButton.addEventListener('click', async () => {
     await fileHandler.import(nodes, links);
     nodes.forEach(node => {
         setEventListeners(node);
@@ -786,3 +841,29 @@ document.getElementById('next3').addEventListener('click', function () {
     document.getElementById('onboarding3').close();
     // Proceed to the next step or complete onboarding
 });
+
+// console.log(deleteNodeButton);
+deleteNodeButton.addEventListener('click', () => {
+    const node = selectedNode
+    node.friends.forEach((friend) => {
+        friend.person.removeFriend(node, links);
+    });
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
+    });
+    node.infoLinks.forEach((infoLink) => {
+        infoLink.person.removeInfoLink(infoLink.person, node, links);
+    });
+
+    deselectNode();
+    node.element.remove();
+    nodes.delete(node.id);
+    // showMobile(node);
+
+
+    // updateFriendList(node);
+    console.log(nodes);
+});
+
+
+
