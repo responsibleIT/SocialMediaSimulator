@@ -83,6 +83,13 @@ legendListItems.forEach((li) => {
     });
 });
 
+// Liked is line through, remove forward buttons.
+// Click again to remove the line through, show the forward buttons again.
+// the class is liked-link
+
+
+
+
 // function for counter inputs
 countInputs.forEach((input) => {
     const increaseButton = input.children[2];
@@ -603,6 +610,16 @@ function updateLikedList(nodeData) {
         likedUl.innerHTML = "<li><p>Like posts to see them here!</p></li>"; // TODO add default
     }
 }
+
+deleteButtonLikes.addEventListener('click', () => {
+    const node = selectedNode;
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
+    });
+    updateLikedList(node);
+
+});
+
 
 function addPostToLikedList(likedUl, item, nodeData) {
     const clone = feedTemplate.content.cloneNode(true);
