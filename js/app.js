@@ -24,7 +24,7 @@ const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
-const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
+// const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
@@ -748,7 +748,7 @@ function deselectNode() {
 
 let previousMips;
 let mostImportantPersonsInText;
-let mostImportantPersons;
+let mostImportantPersons = [];
 
 //Function for calculating the closeness centrality of all nodes
 function calculateAdjustedClosenessCentrality() {
@@ -791,7 +791,7 @@ function calculateAdjustedClosenessCentrality() {
             mostImportantPersons.push(nodeName);
         }
     }
-    calcMostImportantPerson.textContent = mostImportantPersonsInText;
+    // calcMostImportantPerson.textContent = mostImportantPersonsInText;
     if (previousMips !== mostImportantPersonsInText) {
         addMedalToMip(mostImportantPersons, mostImportantPersonsInText);
     }
