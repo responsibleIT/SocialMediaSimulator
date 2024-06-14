@@ -631,6 +631,7 @@ function selectNode(node) {
         node.spawnForwardButtons(links);
     }
     selectedNode = node;
+    showMobile(node);
 }
 
 //Function for deselecting a node and remove the highlight
@@ -788,15 +789,26 @@ document.getElementById('next3').addEventListener('click', function () {
 
 // console.log(deleteNodeButton);
 deleteNodeButton.addEventListener('click', () => {
-    const node = nodes.get(selectedNode.id);
-    links.forEach((link) => {
-        if (link.from === node || link.to === node) {
-            link.element.remove();
-            links.delete(link.id);
-        }
-    })
+    const node = selectedNode
+    node.friends.forEach((friend) => {
+        friend.person.removeFriend(node, links);
+    });
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
+    });
+    node.infoLinks.forEach((infoLink) => {
+        infoLink.person.removeInfoLink(infoLink.person, node, links);
+    });
+
     deselectNode();
     node.element.remove();
-    nodes.remove(selectedNode.id);
+    nodes.delete(node.id);
+    // showMobile(node);
+
+
+    // updateFriendList(node);
+    console.log(nodes);
 });
+
+
 
