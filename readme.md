@@ -20,7 +20,7 @@ Feel free to fork this project and tinker with it.
 TODO
 infolinks lichter {check}
 most important person op canvas en minder in de calculations popup
-anchor positioning popup
+anchor positioning popup [check]
 add influencer + het ontstaan van een influencer stimuleren -> toekomstig iets
 rode stippen naar postst.
 bulk delete posts op account
@@ -30,7 +30,11 @@ onboarding => bart bijna mee klaar
 delete acount functie
 forward buttons uitdoen wanneer je links uitzet
 wat wij willen over brengen is nog niet helemaal duidelijk -> testen, 
+
 responsiveness fixen
+
+
+
 node veslepen -> toekomstig iets
 testen
  -->
