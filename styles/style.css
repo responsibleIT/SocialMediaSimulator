@@ -1069,3 +1069,18 @@ video {
     display: flex;
     gap: 0.5em;
 }
+
+/* 
+Medal img for MIP
+*/
+
+.mipMedal {
+    display: none;
+    position: fixed;
+    position-anchor: --MIP;
+    top: anchor(0%);
+    left: anchor(start);
+    width: 20px;
+    height: auto;
+    z-index: 9999;
+}

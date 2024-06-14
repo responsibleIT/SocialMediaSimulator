@@ -340,6 +340,8 @@ async function spawnNode(evt) {
     setEventListeners(node);
 }
 
+
+let hiddenImg;
 /**
  * ...
  * @param {Map} nodes - ...
@@ -349,8 +351,19 @@ function setEventListeners(node) {
         hoveredNode = node.id;
         if (node.label === "Person") {
             nodes.forEach((node) => {
-                node.element.style.anchorName = "";
+                if (node.element.style.anchorName !== `--MIP${node.id}`) {
+                    node.element.style.anchorName = "";
+                }
             });
+            if (node.element.style.anchorName === `--MIP${node.id}`) {
+                const allMedals = canvasContainer.querySelectorAll(".mipMedal");
+                allMedals.forEach((img) => {
+                    if (img.style.positionAnchor === `--MIP${node.id}`) {
+                        img.style.display = "none";
+                        hiddenImg = img;
+                    }
+                });
+            }
             node.element.style.anchorName = "--currentNode";
             showNodeDataContainer(node);
         }
@@ -359,6 +372,12 @@ function setEventListeners(node) {
     node.element.addEventListener("mouseout", function () {
         hoveredNode = null;
         nodeDataContainer.style.display = "none";
+        if (mostImportantPersons.length > 0 && mostImportantPersonsInText !== "Unknown") {
+        }
+        if (hiddenImg) {
+            hiddenImg.style.display = "block";
+            node.element.style.anchorName = `--MIP${node.id}`;
+        }
     });
 
     node.element.addEventListener("click", function () {
@@ -611,15 +630,13 @@ function updateLikedList(nodeData) {
     }
 }
 
-deleteButtonLikes.addEventListener('click', () => {
+deleteButtonLikes.addEventListener("click", () => {
     const node = selectedNode;
     node.items.forEach((item) => {
         node.removeItemLink(item.post, links);
     });
     updateLikedList(node);
-
 });
-
 
 function addPostToLikedList(likedUl, item, nodeData) {
     const clone = feedTemplate.content.cloneNode(true);
@@ -729,6 +746,10 @@ function deselectNode() {
     node.removeForwardButtons();
 }
 
+let previousMips;
+let mostImportantPersonsInText;
+let mostImportantPersons;
+
 //Function for calculating the closeness centrality of all nodes
 function calculateAdjustedClosenessCentrality() {
     let centralities = {};
@@ -751,22 +772,47 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
-    let mostImportantPerson = "Unknown";
     let highestScore;
+    mostImportantPersons = [];
+    mostImportantPersonsInText = "Unknown";
     for (const [key, value] of Object.entries(centralities)) {
         const nodeName = nodes.get(Number(key));
         if ((highestScore === undefined) & (value > 0)) {
             highestScore = value;
-            mostImportantPerson = nodeName.userName;
+            mostImportantPersonsInText = nodeName.userName;
+            mostImportantPersons = [nodeName];
         } else if (value > highestScore) {
             highestScore = value;
-            mostImportantPerson = nodeName.userName;
+            mostImportantPersonsInText = nodeName.userName;
+            mostImportantPersons = [nodeName];
         } else if (value === highestScore) {
             highestScore = value;
-            mostImportantPerson = mostImportantPerson + ", " + nodeName.userName;
+            mostImportantPersonsInText = mostImportantPersonsInText + ", " + nodeName.userName;
+            mostImportantPersons.push(nodeName);
         }
     }
-    calcMostImportantPerson.textContent = mostImportantPerson;
+    calcMostImportantPerson.textContent = mostImportantPersonsInText;
+    if (previousMips !== mostImportantPersonsInText) {
+        addMedalToMip(mostImportantPersons, mostImportantPersonsInText);
+    }
+}
+
+function addMedalToMip(mostImportantPersons, mostImportantPersonsInText) {
+    hiddenImg = "";
+    const allPreviousImages = canvasContainer.querySelectorAll(".mipMedal");
+    allPreviousImages.forEach((img) => {
+        img.remove();
+    });
+    previousMips = mostImportantPersonsInText;
+    mostImportantPersons.forEach((person) => {
+        const img = document.createElement("img");
+        img.src = "images/goldMedal.png";
+        img.classList.add("mipMedal");
+        canvasContainer.append(img);
+        img.style.positionAnchor = `--MIP${person.id}`;
+        img.style.display = "block";
+        person.element.style.anchorName = `--MIP${person.id}`;
+    });
 }
 
 /**
@@ -818,22 +864,21 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //Export & Import
-exportButton.addEventListener('click', () => {
+exportButton.addEventListener("click", () => {
     fileHandler.export(nodes);
 });
 
-importButton.addEventListener('click', async () => {
+importButton.addEventListener("click", async () => {
     await fileHandler.import(nodes, links);
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
         setEventListeners(node);
     });
     resizeNodes(nodes);
-})
+});
 
 
 
 
-// console.log(deleteNodeButton);
 deleteNodeButton.addEventListener('click', () => {
     const node = selectedNode
     node.friends.forEach((friend) => {
