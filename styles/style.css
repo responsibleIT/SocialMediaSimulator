@@ -908,6 +908,23 @@ FAKEBOOK STYLES
     }
 }
 
+.search-bar {
+    width: calc(100% - .5em);
+    font-size: 1em;
+    border-radius: 2em;
+    border: 1px solid black;
+    padding-block: .5em;
+    padding-inline-start: 2.5em;
+    padding-inline-end: .5em;
+    box-shadow: .1em .1em .1em #0005;
+    margin-inline: .25em;
+    margin-block-end: 1em;
+    background-image: url('../images/search.svg');
+    background-repeat: no-repeat;
+    background-size: 1.5em;
+    background-position: .5em center;
+}
+
 .feed, .liked {
 
     & li {
