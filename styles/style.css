@@ -738,11 +738,11 @@ FAKEBOOK STYLES
 }
 
 .fakebook-profile {
-    display: grid;
-    grid-template-columns: max-content 1fr max-content;
+    /* display: grid; */
+    /* grid-template-columns: max-content 1fr max-content; */
     text-align: center;
     justify-items: center;
-    gap: 0.5em;
+    /* gap: 0.5em; */
 
     & > img {
         width: 4rem;
@@ -768,7 +768,7 @@ FAKEBOOK STYLES
     }
 
     & .username {
-        margin-bottom: 0.5em;
+        margin-top: 0.5em;
         font-weight: bold;
     }
 
@@ -776,6 +776,7 @@ FAKEBOOK STYLES
         display: grid;
         grid-template-columns: max-content max-content;
         column-gap: 1em;
+        justify-content: center;
 
         & span {
             font-weight: bold;
