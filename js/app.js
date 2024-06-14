@@ -5,11 +5,15 @@ import Cursor from "./Cursor.js";
 import UserData from "./UserData.js";
 import FileHandler from "./FileHandler.js";
 import WebData from "./WebData.js";
+import Onboarding from "./Onboarding.js";
+
 
 const cursor = new Cursor();
 const userdata = new UserData();
 const fileHandler = new FileHandler();
 const webData = new WebData();
+const onboarding = new Onboarding();
+
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -810,37 +814,7 @@ importButton.addEventListener('click', async () => {
 })
 
 
-window.onload = function () {
-    document.getElementById('onboarding1').showModal();
-};
 
-document.getElementById('next1').addEventListener('click', function () {
-    document.getElementById('onboarding1').close();
-    document.getElementById('onboarding2').showModal();
-});
-
-document.getElementById('skipOnboarding').addEventListener('click', function () {
-    document.getElementById('onboarding1').close();
-    // Skip the onboarding process
-});
-
-document.getElementById('next2').addEventListener('click', function () {
-    document.getElementById('onboarding2').close();
-    document.getElementById('onboarding2').style.display = "none";
-    document.getElementById('onboarding3').showModal();
-    // Proceed to the next step or complete onboarding
-});
-
-document.getElementById('skipOnboarding2').addEventListener('click', function () {
-    document.getElementById('onboarding2').close();
-    document.getElementById('onboarding2').style.display = "none";
-    // Skip the onboarding process
-});
-
-document.getElementById('next3').addEventListener('click', function () {
-    document.getElementById('onboarding3').close();
-    // Proceed to the next step or complete onboarding
-});
 
 // console.log(deleteNodeButton);
 deleteNodeButton.addEventListener('click', () => {
