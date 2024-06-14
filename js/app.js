@@ -32,10 +32,12 @@ const legendListItems = document.querySelectorAll(".legend li");
 const friendsUl = friends.querySelector("ul");
 const feedUl = feed.querySelector("ul");
 const likedUl = liked.querySelector("ul");
+const calcSection = document.querySelector(".calculated");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
+let calcGroupsBool = true;
 
 //Global map of nodes
 let nodes = new Map();
@@ -87,8 +89,15 @@ legendListItems.forEach((li) => {
 // Click again to remove the line through, show the forward buttons again.
 // the class is liked-link
 
-
-
+calcSection.addEventListener("click", () => {
+    if (calcGroupsBool) {
+        calcGroupsBool = false;
+    } else {
+        calcGroupsBool = true;
+        findAllConnectedComponents();
+    }
+    document.querySelector(".pauseOrPlay").src = `images/pausedImage-${!calcGroupsBool}.svg`;
+});
 
 // function for counter inputs
 countInputs.forEach((input) => {
@@ -203,6 +212,9 @@ function resizeCanvas() {
 
 // ...
 function findAllConnectedComponents() {
+    if (!calcGroupsBool) {
+        return;
+    }
     let visited = new Set();
     let components = [];
     // Filter to include only 'Person' nodes that have at least one friend

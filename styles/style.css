@@ -558,8 +558,16 @@ CALCULATE STYLES
     display: flex;
     gap: 0.5em;
     flex-direction: column;
+    & > div {
+        display: flex;
+        justify-content: space-between;
+    }
     & h2 {
         font-size: 1em;
+    }
+    & img {
+        width: 1em;
+        height: auto;
     }
 }
 
