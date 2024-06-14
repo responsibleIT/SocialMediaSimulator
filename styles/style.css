@@ -805,7 +805,7 @@ FAKEBOOK STYLES
     display: flex;
     justify-content: space-between;
 
-    & button {
+    & .add-button {
         display: flex;
         background-color: transparent;
         padding: .25em;
@@ -988,7 +988,10 @@ FAKEBOOK STYLES
 
 
 .delete-button {
-    --background-color: #d70000;
+    --background-color: transparent;
+    color: red;
+    text-decoration: underline;
+    padding: 0;
 }
 
 /* account  */
