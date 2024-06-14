@@ -524,6 +524,10 @@ LEGEND STYLES
                 width: 100%;
                 animation: none;
             }
+            & img {
+                width: 20px;
+                height: auto;
+            }
             & .post-dot {
                 background-color: red;
                 aspect-ratio: 1/1;
@@ -532,7 +536,7 @@ LEGEND STYLES
                 border-radius: 50%;
             }
         }
-        & li:has(.post-dot ){
+        & li:has(.post-dot, img){
             flex-direction: row;
         }
     }
