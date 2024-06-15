@@ -524,6 +524,10 @@ LEGEND STYLES
                 width: 100%;
                 animation: none;
             }
+            & img {
+                width: 20px;
+                height: auto;
+            }
             & .post-dot {
                 background-color: red;
                 aspect-ratio: 1/1;
@@ -532,7 +536,7 @@ LEGEND STYLES
                 border-radius: 50%;
             }
         }
-        & li:has(.post-dot ){
+        & li:has(.post-dot, img){
             flex-direction: row;
         }
     }
@@ -554,8 +558,16 @@ CALCULATE STYLES
     display: flex;
     gap: 0.5em;
     flex-direction: column;
+    & > div {
+        display: flex;
+        justify-content: space-between;
+    }
     & h2 {
         font-size: 1em;
+    }
+    & img {
+        width: 1em;
+        height: auto;
     }
 }
 
@@ -1068,4 +1080,19 @@ video {
 .button-row {
     display: flex;
     gap: 0.5em;
+}
+
+/* 
+Medal img for MIP
+*/
+
+.mipMedal {
+    display: none;
+    position: fixed;
+    position-anchor: --MIP;
+    top: anchor(0%);
+    left: anchor(start);
+    width: 20px;
+    height: auto;
+    z-index: 9999;
 }
