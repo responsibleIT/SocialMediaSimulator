@@ -176,6 +176,12 @@ stepButton.addEventListener("click", () => {
         if (node.label === "Person") {
             node.step(nodes, links);
             resizeNodes(nodes);
+            filteredEdges.forEach((filteredEdge) => {
+                const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${filteredEdge}`);
+                allLinksOfThatKind.forEach((span) => {
+                    span.style.display = "none";
+                });
+            });
         }
     });
     calculateAdjustedClosenessCentrality();
