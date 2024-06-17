@@ -520,6 +520,7 @@ LEGEND STYLES
             flex-direction: column;
             align-items: center;
             gap: 0.5em;
+            cursor: pointer;
 
             & span {
                 height: 3px;
