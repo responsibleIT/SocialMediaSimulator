@@ -379,7 +379,10 @@ export default class Person extends Node {
     }
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
-    spawnForwardButtons(links) {
+    spawnForwardButtons(links, filteredEdges) {
+        // TODO RUN when filtering
+        //  filteredEdges = ['disliked-link', 'liked-link', 'friend-link', 'info-link']
+
         this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
         if (this.friends.size > 0) {
@@ -388,28 +391,39 @@ export default class Person extends Node {
                 svgIcon.src = "./images/sns_icons_Send.svg";
                 svgIcon.alt = "Forward";
                 let itemNodeData;
+                let score;
+                if (item.score) {
+                    score = item.score;
+                } else {
+                    score = 1;
+                }
                 if (item.post) {
                     itemNodeData = item.post;
                 } else {
                     itemNodeData = item;
                 }
-                let forwardButton = document.createElement("button");
-                forwardButton.classList.add("forwardButton");
-                forwardButton.appendChild(svgIcon);
-                forwardButton.style.position = "absolute";
-                forwardButton.style.left = itemNodeData.x + "px";
-                forwardButton.style.top =
-                    itemNodeData.y - itemNodeData.radius - ((itemNodeData.popularity - itemNodeData.increasedPopularity) * itemNodeData.growFactor) / 2 + "px";
-                forwardButton.addEventListener("click", () => {
-                    this.friends.forEach((friend) => {
-                        if (friend.person) {
-                            friend = friend.person;
-                        }
-                        this.addItemLink(itemNodeData, friend, links);
-                        this.addInfoLink(friend, this, links);
+                if ((score > 0 && !filteredEdges.includes("liked-link")) || (score < 0 && !filteredEdges.includes("disliked-link"))) {
+                    let forwardButton = document.createElement("button");
+                    forwardButton.classList.add("forwardButton");
+                    forwardButton.appendChild(svgIcon);
+                    forwardButton.style.position = "absolute";
+                    forwardButton.style.left = itemNodeData.x + "px";
+                    forwardButton.style.top =
+                        itemNodeData.y -
+                        itemNodeData.radius -
+                        ((itemNodeData.popularity - itemNodeData.increasedPopularity) * itemNodeData.growFactor) / 2 +
+                        "px";
+                    forwardButton.addEventListener("click", () => {
+                        this.friends.forEach((friend) => {
+                            if (friend.person) {
+                                friend = friend.person;
+                            }
+                            this.addItemLink(itemNodeData, friend, links);
+                            this.addInfoLink(friend, this, links);
+                        });
                     });
-                });
-                canvasContainer.appendChild(forwardButton);
+                    canvasContainer.appendChild(forwardButton);
+                }
             });
         }
     }

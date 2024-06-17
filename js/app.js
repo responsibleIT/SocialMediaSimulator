@@ -175,6 +175,11 @@ stepButton.addEventListener("click", () => {
     });
     calculateAdjustedClosenessCentrality();
     findAllConnectedComponents();
+    if (selectedNode) {
+        updateFriendList(selectedNode);
+        updateLikedList(selectedNode);
+        updateFeedList(selectedNode);
+    }
 });
 
 // Add event listener for window resize
@@ -412,9 +417,9 @@ function setEventListeners(node) {
             default:
                 const nodeHovered = nodes.get(hoveredNode);
                 if (nodeHovered.label === "Person") {
-                    selectedNode.linkHandler(nodeHovered, links);
+                    selectedNode.linkHandler(nodeHovered, links, filteredEdges);
                 } else {
-                    nodeHovered.linkHandler(selectedNode, links);
+                    nodeHovered.linkHandler(selectedNode, links, filteredEdges);
                 }
 
                 resizeNodes(nodes);
@@ -739,7 +744,7 @@ function selectNode(node) {
     if (node.label === "Person") {
         showPreLink(node);
         phone.classList.add("phone-selected");
-        node.spawnForwardButtons(links);
+        node.spawnForwardButtons(links, filteredEdges);
     }
     selectedNode = node;
     // showMobile(node);
