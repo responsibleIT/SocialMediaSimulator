@@ -185,7 +185,7 @@ window.addEventListener("resize", resizeCanvas);
 ///////////////////////////
 
 function hasAnchorPos() {
-    return window.matchMedia("(anchor-position: --blabla)").matches;
+    return CSS.supports("position", "absolute") && CSS.supports("top", "anchor(--test-anchor top)");
 }
 
 /**
@@ -472,6 +472,7 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
     nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
+
     if (!hasAnchorPos()) {
         //Move the nodeDataContainer to the position of the node label
         nodeDataContainer.style.left = nodeData.x + 10 + "px";
