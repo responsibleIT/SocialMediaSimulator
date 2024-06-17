@@ -12,7 +12,7 @@ export default class Person extends Node {
         this.userName = user.username;
         this.growFactor = 1.5;
     }
-
+    // TODO private + scores to add infolink
     acceptanceDisctance = 300;
 
     // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
@@ -250,13 +250,15 @@ export default class Person extends Node {
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
                     reader = reader.person;
                     const foundReader = post.readers.get(reader.id);
-                    if (foundReader.score > 0 && reader !== this.id && !this.friends.has(reader)) {
+                    if (foundReader.score > 0 && reader.id !== this.id && !this.friends.has(reader.id)) {
                         return reader;
                     }
                 });
-                //Pick a random person from the list and add them as a friend
-                const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                this.addFriend(randomPerson.person, links);
+                if (peopleThatReadPost.length > 0) {
+                    //Pick a random person from the list and add them as a friend
+                    const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
+                    this.addFriend(randomPerson.person, links);
+                }
             }
         });
     }
@@ -463,10 +465,10 @@ export default class Person extends Node {
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
         if (score > 0) {
-			link.element.classList.add("liked-link");
-		} else {
-			link.element.classList.add("disliked-link");
-		}
+            link.element.classList.add("liked-link");
+        } else {
+            link.element.classList.add("disliked-link");
+        }
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
