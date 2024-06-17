@@ -510,6 +510,7 @@ function showMobile(nodeData) {
     updateFeedList(nodeData);
     updateLikedList(nodeData);
 
+    //
     selectedNodeOptions.classList.remove("hide");
 }
 

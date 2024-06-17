@@ -12,12 +12,14 @@ export default class Person extends Node {
         this.userName = user.username;
         this.growFactor = 1.5;
     }
-    // TODO private + scores to add infolink
-    acceptanceDisctance = 300;
 
+    acceptanceDisctance = 300;
     // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
     defaultScore = 1;
     stepDistance = 5;
+    addInfoLinkThreshold = 3;
+    removeFriendLinkThreshold = -3;
+    removeInfoLinkThreshold = -5;
 
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
@@ -206,16 +208,17 @@ export default class Person extends Node {
                 score = aFriend.score;
                 friend = aFriend.person;
             } else {
+                // TODO if the friend has no score
                 score = 3;
                 friend = aFriend;
             }
 
             //Check if there are any friends that have a score of -3 or lower and remove them
-            if (score <= -3) {
+            if (score <= this.removeFriendLinkThreshold) {
                 this.removeFriend(friend, links);
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
-            if (score >= 3) {
+            if (score >= this.addInfoLinkThreshold) {
                 //  check if someone already is an infolink
                 const link = this.infoLinks.has(friend.id);
                 if (link === true) {
@@ -228,7 +231,7 @@ export default class Person extends Node {
         //Check if there are any infolinks that have a score of -5 or lower and remove them
         this.infoLinks.forEach((link) => {
             // link.person, link.scrore
-            if (link.score <= -5) {
+            if (link.score <= this.removeInfoLinkThreshold) {
                 this.removeInfoLink(this, friend, links);
             }
         });
