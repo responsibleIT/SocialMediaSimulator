@@ -539,6 +539,9 @@ LEGEND STYLES
         & li:has(.post-dot, img){
             flex-direction: row;
         }
+        & li:has(.disliked-link){
+            text-decoration: line-through;
+        }
     }
 }
 

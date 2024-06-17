@@ -52,7 +52,7 @@ let selectedNode = null;
 let hoveredNode = null;
 
 // variables for filtering edges
-let filteredEdges = [];
+let filteredEdges = ["disliked-link"]; // disliked-link standard filtered
 
 const borderDistanceNode = 15;
 
