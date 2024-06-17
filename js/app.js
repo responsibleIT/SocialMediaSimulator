@@ -36,6 +36,7 @@ let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
+let playing = false;
 
 //Global map of nodes
 let nodes = new Map();
@@ -160,6 +161,34 @@ stepButton.addEventListener("click", () => {
     calculateAdjustedClosenessCentrality();
     findAllConnectedComponents();
 });
+
+playButton.addEventListener("click", () => {
+    if(playing) {
+        playing = false;
+        playButton.querySelector("img").src = "./images/play.svg";
+    } else {
+        playing = true;
+        playButton.querySelector("img").src = "./images/pause.svg";
+        framelooper();
+    }
+});
+
+function framelooper() {
+    if(playing) {
+        setTimeout(() => {
+            window.requestAnimationFrame(framelooper);
+        }, 500);
+    }
+
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+            resizeNodes(nodes);
+        }
+    });
+    calculateAdjustedClosenessCentrality();
+    findAllConnectedComponents();
+}
 
 // Add event listener for window resize
 window.addEventListener("resize", resizeCanvas);

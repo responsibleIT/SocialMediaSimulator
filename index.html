@@ -129,10 +129,10 @@
                         <h3>Simulate</h3>
                         <div class="tools">
                             <button type="button" id="stepButton">
-                                <img src="./images/start.svg" /> Step
+                                <img src="./images/start.svg" alt=""/>
                             </button>
-                            <button type="button" id="resetButton">
-                                <img src="./images/reset.svg" alt="resets" /> Reset
+                            <button type="button" id="playButton">
+                                <img src="./images/play.svg" alt=""/>
                             </button>
                         </div>
                     </section>
@@ -227,7 +227,7 @@
                     <section class="friends" id="friends">
                         <div class="section-heading">
                             <h3>Friends</h3>
-                            <button><img src="./images/addIcon.svg" alt="">Add Friends</button>
+                            <button class="add-button"><img src="./images/addIcon.svg" alt="">Add Friends</button>
                         </div>
 
                         <ul>
@@ -238,29 +238,8 @@
                         <template id="friendsTemplate">
                             <li>
                                 <img src="./images/reset.svg" alt="" />
-                                <p class="friend-name">Christiana</p>
+                                <p>Christiana</p>
                                 <button class="unfriend-button">Unfriend</button>
-                            </li>
-                        </template>
-                    </section>
-
-                    <section class="friends" id="search-friends">
-                        <div class="section-heading">
-                            <h3>Search Friends</h3>
-                        </div>
-
-                        <input type="search" name="friends-search" id="friendsSearchBar" class="search-bar">
-
-                        <ul>
-                            <li>
-                                <p>No one is here</p>
-                            </li>
-                        </ul>
-                        <template id="toBeFriendsTemplate">
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p class="friend-name">Christiana</p>
-                                <button class="friend-button">Add as Friend</button>
                             </li>
                         </template>
                     </section>
@@ -295,6 +274,8 @@
                     <section class="liked" id="liked">
                         <div class="section-heading">
                             <h3>Liked</h3>
+                            <button class="delete-button" id="deleteButtonLikes">Delete all likes</button>
+                            
                         </div>
                         <ul>
                             <li>
@@ -302,6 +283,7 @@
                             </li>
                             
                         </ul>
+                        
                     </section>
                 </div>
 
@@ -335,8 +317,12 @@
                 </nav>
             </section>
             <section class="calculated">
-                <h2>Calculations</h2>
-                <p>Most important person: <span id="calcMostImportantPerson"> Unknown</span></p>
+                <div>
+                    <h2>Calculations</h2>
+                    <!-- <p>Most important person: <span id="calcMostImportantPerson"> Unknown</span></p> -->
+                    <img src="images/pausedImage-false.svg" class="pauseOrPlay" alt="An image of a pause button">
+                </div>
+           
                 <p>Number of groups: <span id="calcGroups"></span></p>
                 <!-- <div class="tools"> -->
                     <!-- <button type="button" id="calcClosenessCentrality">Closeness Centrality</button> -->
@@ -352,6 +338,7 @@
                     <li>Liked<span class="liked-link"></span></li>
                     <li>Post<span class="post-dot"></span></li>
                     <li>Disliked post<span class="disliked-link"></span></li>
+                    <li>Most important person medal <img src="images/goldMedal.png" alt=""></li>
                 </ul>
             </section>
 
