@@ -824,10 +824,18 @@ function addMedalToMip(mostImportantPersons, mostImportantPersonsInText) {
         const img = document.createElement("img");
         img.src = "images/goldMedal.png";
         img.classList.add("mipMedal");
-        canvasContainer.append(img);
-        img.style.positionAnchor = `--MIP${person.id}`;
-        img.style.display = "block";
-        person.element.style.anchorName = `--MIP${person.id}`;
+        if (hasAnchorPos()) {
+            canvasContainer.append(img);
+            img.style.positionAnchor = `--MIP${person.id}`;
+            img.style.display = "block";
+            person.element.style.anchorName = `--MIP${person.id}`;
+        } else {
+            person.element.append(img);
+            img.style.position = "relative";
+            img.style.top = "50%";
+            img.style.left = "50%";
+            img.style.display = "block";
+        }
     });
 }
 

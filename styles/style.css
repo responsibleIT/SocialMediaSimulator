@@ -387,7 +387,6 @@ NODE STYLES
     background-color: blue;
     background-repeat: no-repeat;
     background-size: contain;
-    overflow: hidden;
     border-radius: 50%;
 
     &.selected {
