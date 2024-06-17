@@ -54,6 +54,8 @@ let hoveredNode = null;
 // variables for filtering edges
 let filteredEdges = [];
 
+const borderDistanceNode = 15;
+
 // Initial resize to set canvas size
 resizeCanvas();
 
@@ -302,8 +304,19 @@ function drawRandom(label, count, userData) {
         let node;
 
         const id = nodes.size;
-        const x = Math.random() * canvasSize.width;
-        const y = Math.random() * canvasSize.height;
+        let x = Math.random() * canvasSize.width;
+        let y = Math.random() * canvasSize.height;
+        if (x < borderDistanceNode) {
+            x = x + borderDistanceNode;
+            console.log(x);
+        } else if (x > canvasSize.width - borderDistanceNode) {
+            x = x - borderDistanceNode;
+        }
+        if (y < borderDistanceNode) {
+            y = y + borderDistanceNode;
+        } else if (y > canvasSize.height - borderDistanceNode) {
+            y = y - borderDistanceNode;
+        }
 
         switch (label) {
             case "Person":
