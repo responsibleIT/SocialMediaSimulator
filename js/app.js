@@ -62,50 +62,37 @@ resizeCanvas();
 ///////////////////////////
 
 
+// Existing functionality for legendListItems
+legendListItems.forEach((li) => {
+    li.addEventListener("click", () => {
+        const span = li.querySelector("span");
+        const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${span.classList[0]}`);
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Existing functionality for legendListItems
-    legendListItems.forEach((li) => {
-        li.addEventListener("click", () => {
-            const span = li.querySelector("span");
-            const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${span.classList[0]}`);
-
-            if (filteredEdges.includes(span.classList[0])) {
-                allLinksOfThatKind.forEach((span) => {
-                    span.style.display = "flex";
-                });
-                li.style.textDecoration = "none";
-                const index = filteredEdges.indexOf(span.classList[0]);
-                if (index > -1) {
-                    filteredEdges.splice(index, 1);
-                }
-            } else {
-                filteredEdges.push(span.classList[0]);
-                allLinksOfThatKind.forEach((span) => {
-                    span.style.display = "none";
-                });
-                li.style.textDecoration = "line-through";
+        if (filteredEdges.includes(span.classList[0])) {
+            allLinksOfThatKind.forEach((span) => {
+                span.style.display = "flex";
+            });
+            li.style.textDecoration = "none";
+            const index = filteredEdges.indexOf(span.classList[0]);
+            if (index > -1) {
+                filteredEdges.splice(index, 1);
             }
-
-            // Check if the clicked list item contains the liked-link class
-            if (span.classList.contains("liked-link")) {
-                // Toggle forwardButton visibility based on text decoration
-                const forwardButtons = document.querySelectorAll(".forwardButton");
-                const isLineThrough = li.style.textDecoration === "line-through";
-
-                forwardButtons.forEach((button) => {
-                    button.style.display = isLineThrough ? "none" : "flex";
-                });
-            }
-        });
-    });
-
-    // Initial hiding of forward buttons
-    const forwardButtons = document.querySelectorAll(".forwardButton");
-    forwardButtons.forEach((button) => {
-        button.style.display = "none";
+        } else {
+            filteredEdges.push(span.classList[0]);
+            allLinksOfThatKind.forEach((span) => {
+                span.style.display = "none";
+            });
+            li.style.textDecoration = "line-through";
+        }
     });
 });
+
+// Initial hiding of forward buttons
+// const forwardButtons = document.querySelectorAll(".forwardButton");
+// forwardButtons.forEach((button) => {
+//     button.style.display = "none";
+// });
+
 
 
 

@@ -985,6 +985,16 @@ FAKEBOOK STYLES
     animation: like 0.3s ease;
 }
 
+.help{
+padding: 0;
+--background-color: transparent;
+margin-top: 1.5em;
+    & img{
+        width: 24px;
+        height: 24px;
+    }
+}
+
 @keyframes like {
     0% {
         transform: scale(1);

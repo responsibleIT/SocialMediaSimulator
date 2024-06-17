@@ -39,14 +39,6 @@ export default class Onboarding {
             // Proceed to the next step or complete onboarding
         });
 
-        // Add event listener to onboarding button
-        const onboardingButton = document.getElementById('onboardingButton');
-        onboardingButton.addEventListener('click', function () {
-            localStorage.removeItem('onboardingComplete');
-            console.log('Onboarding localStorage item removed');
-            // Reload the window to restart the onboarding process
-        });
-
         // Add event listener for help button to show the 3rd dialog
         const helpButton = document.getElementById('help');
         helpButton.addEventListener('click', function () {
