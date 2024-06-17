@@ -151,6 +151,7 @@ increasedPopularityInput.addEventListener("change", () => {
 findAllConnectedComponents();
 // });
 
+// single animation frame (step)
 stepButton.addEventListener("click", () => {
     nodes.forEach((node) => {
         if (node.label === "Person") {
@@ -162,6 +163,7 @@ stepButton.addEventListener("click", () => {
     findAllConnectedComponents();
 });
 
+// play/pause automatically stepping
 playButton.addEventListener("click", () => {
     if(playing) {
         playing = false;
@@ -172,23 +174,6 @@ playButton.addEventListener("click", () => {
         framelooper();
     }
 });
-
-function framelooper() {
-    if(playing) {
-        setTimeout(() => {
-            window.requestAnimationFrame(framelooper);
-        }, 500);
-    }
-
-    nodes.forEach((node) => {
-        if (node.label === "Person") {
-            node.step(nodes, links);
-            resizeNodes(nodes);
-        }
-    });
-    calculateAdjustedClosenessCentrality();
-    findAllConnectedComponents();
-}
 
 // Add event listener for window resize
 window.addEventListener("resize", resizeCanvas);
@@ -806,6 +791,27 @@ function bfsShortestPath(graph, startNode) {
         });
     }
     return distances;
+}
+
+/**
+ * Function for automatically playing animation frames
+ */
+
+function framelooper() {
+    if(playing) {
+        setTimeout(() => { // Set the speed manually
+            window.requestAnimationFrame(framelooper); // Request the next frame by calling this function
+        }, 500);
+    }
+
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+            resizeNodes(nodes);
+        }
+    });
+    calculateAdjustedClosenessCentrality();
+    findAllConnectedComponents();
 }
 
 // Switch the mobile pages
