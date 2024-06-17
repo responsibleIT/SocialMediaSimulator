@@ -630,7 +630,10 @@ function addPostToFeedList(feedUl, item, nodeData) {
 
     const likeButton = clone.querySelector(".like-button");
     if (nodeData.items.has(item.id)) {
-        likeButton.classList.add("active");
+        const foundItem = nodeData.items.get(item.id);
+        if (foundItem.score > 0) {
+            likeButton.classList.add("active");
+        }
     } else {
         likeButton.classList.remove("active");
     }
@@ -683,30 +686,32 @@ deleteButtonLikes.addEventListener("click", () => {
 });
 
 function addPostToLikedList(likedUl, item, nodeData) {
-    const clone = feedTemplate.content.cloneNode(true);
-    const img = clone.querySelector("img");
-    img.src = item.post.image;
-    const heading = clone.querySelector("h4");
-    heading.textContent = item.post.title;
+    if (item.score > 0) {
+        const clone = feedTemplate.content.cloneNode(true);
+        const img = clone.querySelector("img");
+        img.src = item.post.image;
+        const heading = clone.querySelector("h4");
+        heading.textContent = item.post.title;
 
-    const likeButton = clone.querySelector(".like-button");
-    likeButton.classList.add("active");
-    likeButton.addEventListener("click", () => {
-        if (nodeData.items.has(item.post.id)) {
-            nodeData.removeItemLink(item.post, links);
-            // transparent
-            likeButton.classList.remove("active");
-            updateFeedList(nodeData);
-            likeButton.parentElement.parentElement.remove();
-        } else {
-            nodeData.addItemLink(item.post, nodeData, links);
-            likeButton.classList.add("active");
-            updateFeedList(nodeData);
-            likeButton.parentElement.parentElement.remove();
-        }
-    });
+        const likeButton = clone.querySelector(".like-button");
+        likeButton.classList.add("active");
+        likeButton.addEventListener("click", () => {
+            if (nodeData.items.has(item.post.id)) {
+                nodeData.removeItemLink(item.post, links);
+                // transparent
+                likeButton.classList.remove("active");
+                updateFeedList(nodeData);
+                likeButton.parentElement.parentElement.remove();
+            } else {
+                nodeData.addItemLink(item.post, nodeData, links);
+                likeButton.classList.add("active");
+                updateFeedList(nodeData);
+                likeButton.parentElement.parentElement.remove();
+            }
+        });
 
-    likedUl.appendChild(clone);
+        likedUl.appendChild(clone);
+    }
 }
 
 /**
