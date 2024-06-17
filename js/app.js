@@ -184,6 +184,10 @@ window.addEventListener("resize", resizeCanvas);
 //////// Functions ////////
 ///////////////////////////
 
+function hasAnchorPos() {
+    return window.matchMedia("(anchor-position: --blabla)").matches;
+}
+
 /**
  * Function to calculate the popularity of the post
  * @param {Number} numOfReaders - number of readers of the post
@@ -352,7 +356,6 @@ async function spawnNode(evt) {
     setEventListeners(node);
 }
 
-
 let hiddenImg;
 /**
  * ...
@@ -469,11 +472,11 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
     nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
-    // if (hasAnchorPos()) {
-    //     //Move the nodeDataContainer to the position of the node label
-    //     nodeDataContainer.style.left = nodeData.x + 10 + "px";
-    //     nodeDataContainer.style.top = nodeData.y + 10 + "px";
-    // }
+    if (!hasAnchorPos()) {
+        //Move the nodeDataContainer to the position of the node label
+        nodeDataContainer.style.left = nodeData.x + 10 + "px";
+        nodeDataContainer.style.top = nodeData.y + 10 + "px";
+    }
 }
 
 function getNodesWithReaders(nodes) {
