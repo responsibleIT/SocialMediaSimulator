@@ -158,6 +158,7 @@ canvas {
 
 @supports not (anchor-name: --anchor) {
     .node-popover {
+        position-visibility: anchors-visible;
         position: absolute; 
         /* TODO VRAGEN BIJ SANNE WAAROM DIT UIT MOET EN BIJ DE TEST AAN */ 
     }
@@ -387,7 +388,6 @@ NODE STYLES
     background-color: blue;
     background-repeat: no-repeat;
     background-size: contain;
-    overflow: hidden;
     border-radius: 50%;
 
     &.selected {
@@ -538,6 +538,9 @@ LEGEND STYLES
         }
         & li:has(.post-dot, img){
             flex-direction: row;
+        }
+        & li:has(.disliked-link){
+            text-decoration: line-through;
         }
     }
 }
@@ -921,6 +924,23 @@ FAKEBOOK STYLES
     }
 }
 
+.search-bar {
+    width: calc(100% - .5em);
+    font-size: 1em;
+    border-radius: 2em;
+    border: 1px solid black;
+    padding-block: .5em;
+    padding-inline-start: 2.5em;
+    padding-inline-end: .5em;
+    box-shadow: .1em .1em .1em #0005;
+    margin-inline: .25em;
+    margin-block-end: 1em;
+    background-image: url('../images/search.svg');
+    background-repeat: no-repeat;
+    background-size: 1.5em;
+    background-position: .5em center;
+}
+
 .feed, .liked {
 
     & li {
@@ -1090,6 +1110,7 @@ Medal img for MIP
     display: none;
     position: fixed;
     position-anchor: --MIP;
+    position-visibility: anchors-visible;
     top: anchor(0%);
     left: anchor(start);
     width: 20px;
