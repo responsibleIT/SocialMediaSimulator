@@ -380,9 +380,6 @@ export default class Person extends Node {
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
     spawnForwardButtons(links, filteredEdges) {
-        // TODO RUN when filtering
-        //  filteredEdges = ['disliked-link', 'liked-link', 'friend-link', 'info-link']
-
         this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
         if (this.friends.size > 0) {

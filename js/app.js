@@ -82,6 +82,9 @@ legendListItems.forEach((li) => {
             });
             li.style.textDecoration = "line-through";
         }
+        if (selectedNode) {
+            selectedNode.spawnForwardButtons(links, filteredEdges);
+        }
     });
 });
 
@@ -910,7 +913,7 @@ importButton.addEventListener("click", async () => {
 
 
 deleteNodeButton.addEventListener('click', () => {
-    const node = selectedNode
+    const node = selectedNode;
     node.friends.forEach((friend) => {
         friend.person.removeFriend(node, links);
     });
@@ -926,9 +929,7 @@ deleteNodeButton.addEventListener('click', () => {
     nodes.delete(node.id);
     // showMobile(node);
 
-
     // updateFriendList(node);
-    console.log(nodes);
 });
 
 

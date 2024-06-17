@@ -48,7 +48,7 @@ export default class Node {
             this.friendsHandler(node, links);
             this.spawnForwardButtons(links, filteredEdges);
         } else if (this.label === "Social Media Post") {
-            this.itemHandler(node, links);
+            this.itemHandler(node, links, filteredEdges);
             node.spawnForwardButtons(links, filteredEdges);
         }
     }
@@ -63,14 +63,14 @@ export default class Node {
     }
 
     //Function for handling item actions
-    itemHandler(node, links) {
+    itemHandler(node, links, filteredEdges) {
         if (node.items.get(this.id)) {
             node.removeItemLink(this, links);
             node.removeForwardButtons();
-            node.spawnForwardButtons(links);
+            node.spawnForwardButtons(links, filteredEdges);
         } else {
             node.addItemLink(this, node, links);
-            node.spawnForwardButtons(links);
+            node.spawnForwardButtons(links, filteredEdges);
         }
     }
 }
