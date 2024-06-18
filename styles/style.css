@@ -287,6 +287,12 @@ TOOLBAR STYLES
     align-items: center;
 }
 
+.tools button img {
+    height: 1em;
+    filter: invert(1);
+    display: block;
+}
+
 
 /*
 SPECIAL INPUTS
