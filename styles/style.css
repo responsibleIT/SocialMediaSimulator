@@ -605,6 +605,16 @@ PHONE STYLES
     opacity: 0;
     transition: 200ms;
     transform: translate(6%, 0);
+
+    & button {
+        transition: none;
+    }
+
+    & button:hover,
+    & button:active {
+        box-shadow: none;
+        opacity: .7;
+    }
     
 }
 
@@ -831,14 +841,17 @@ FAKEBOOK STYLES
 .fakebook .section-heading {
     text-align: left;
     display: flex;
-    justify-content: space-between;
 
-    & .add-button {
+    & button {
+        --background-color: transparent;
         display: flex;
-        background-color: transparent;
         padding: .25em;
         color: #0075ff;
         align-items: center;
+    }
+
+    & * + button {
+        margin-left: auto;
     }
 }
 

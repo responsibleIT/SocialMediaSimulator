@@ -32,7 +32,7 @@ const legendListItems = document.querySelectorAll(".legend li");
 const friendsUl = friends.querySelector("ul");
 const feedUl = feed.querySelector("ul");
 const likedUl = liked.querySelector("ul");
-const toBeFriendsUl = searchFriends.querySelector("ul");
+const addFriendsUl = addFriends.querySelector("ul");
 const calcSection = document.querySelector(".calculated");
 let linkStripe;
 let mouseMoveHandler;
@@ -452,7 +452,7 @@ function setEventListeners(node) {
                 calculateAdjustedClosenessCentrality();
                 findAllConnectedComponents();
                 if (node.label === "Person") {
-                    updateFriendList(selectedNode, node);
+                    updateFriendsList(selectedNode, node);
                 } else {
                     updateLikedList(selectedNode);
                     updateFeedList(selectedNode);
@@ -537,8 +537,8 @@ function showMobile(nodeData) {
     feedUl.innerHTML = "";
     likedUl.innerHTML = "";
 
-    updateFriendList(nodeData);
-    updateAddFriendList(nodeData);
+    updateFriendsList(nodeData);
+    updateAddFriendsList(nodeData);
     updateFeedList(nodeData);
     updateLikedList(nodeData);
 
@@ -546,7 +546,7 @@ function showMobile(nodeData) {
     selectedNodeOptions.classList.remove("hide");
 }
 
-function updateFriendList(nodeData, node) {
+function updateFriendsList(nodeData, node) {
     // friends
     if (nodeData.friends.size !== 0) {
         nodeData.friends.forEach((friend) => {
@@ -596,23 +596,22 @@ function addPostToFriendList(friendsUl, friend, nodeData) {
     friendsUl.appendChild(clone);
 }
 
-function updateAddFriendList(nodeData) {
+function updateAddFriendsList(nodeData) {
     const personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
     const notFriends = new Map([...nodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
 
     if (notFriends.size !== 0) {
-        toBeFriendsUl.innerHTML = "";
+        addFriendsUl.innerHTML = "";
         notFriends.forEach(friend => {
-            addFriendToAddFriendList(toBeFriendsUl, friend, nodeData);
+            addFriendToAddFriendList(addFriendsUl, friend, nodeData);
         });
     } else {
-        toBeFriendsUl.innerHTML = "";
+        addFriendsUl.innerHTML = "";
     }
-    updateFriendList(nodeData);
 }
 
 function addFriendToAddFriendList(friendsUl, friend, nodeData) {
-    const clone = toBeFriendsTemplate.content.cloneNode(true);
+    const clone = addFriendsTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
     const p = clone.querySelector("p");
     const friendButton = clone.querySelector(".friend-button");
@@ -625,7 +624,7 @@ function addFriendToAddFriendList(friendsUl, friend, nodeData) {
         nodeData.addFriend(friend, links);
         resizeNodes(nodes);
     });
-    toBeFriendsUl.appendChild(clone);
+    addFriendsUl.appendChild(clone);
 }
 
 function updateFeedList(nodeData) {
@@ -955,7 +954,7 @@ function stepAllNodes() {
     calculateAdjustedClosenessCentrality();
     findAllConnectedComponents();
     if (selectedNode) {
-        updateFriendList(selectedNode);
+        updateFriendsList(selectedNode);
         updateLikedList(selectedNode);
         updateFeedList(selectedNode);
     }
@@ -982,11 +981,17 @@ function framelooper() {
 function navigateToPage(pageId) {
     const pages = Array.from(mobilePages.children);
     const targetPage = document.getElementById(pageId);
+    const updateFunction = `update${pageId.charAt(0).toUpperCase() + pageId.slice(1)}List`;
+    if(eval(`typeof ${updateFunction} === 'function'`)) {
+        eval(`${updateFunction}(selectedNode)`);
+    }
 
     pages.forEach(page => page.style.display = "none");
     targetPage.style.display = "block";
     if (pageId === "profile") {
         selectedProfile.style.display = "block";
+    } else {
+        selectedProfile.style.display = "none";
     }
 }
 
@@ -1038,7 +1043,7 @@ deleteNodeButton.addEventListener('click', () => {
     nodes.delete(node.id);
     // showMobile(node);
 
-    // updateFriendList(node);
+    // updateFriendsList(node);
 });
 
 

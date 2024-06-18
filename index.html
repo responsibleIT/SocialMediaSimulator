@@ -237,7 +237,7 @@
                         <section class="friends" id="friends">
                             <div class="section-heading">
                                 <h3>Friends</h3>
-                                <button class="add-button" id="addFriendsButton" data-page="searchFriends"><img src="./images/addIcon.svg" alt="">Add Friends</button>
+                                <button class="add-button" id="addFriendsButton" data-page="addFriends"><img src="./images/addIcon.svg" alt="">Add Friends</button>
                             </div>
 
                             <ul>
@@ -255,9 +255,10 @@
                         </section>
 
 
-                        <section class="friends" id="searchFriends">
+                        <section class="friends" id="addFriends">
                             <div class="section-heading">
-                                <h3>Search Friends</h3>
+                                <button data-page="friends" aria-label="back"><img src="./images/chevron-left.svg" alt=""></button>
+                                <h3>Add Friends</h3>
                             </div>
 
                             <!-- <input type="search" name="friends-search" id="friendsSearchBar" class="search-bar"> -->
@@ -267,7 +268,7 @@
                                     <p>No one is here</p>
                                 </li>
                             </ul>
-                            <template id="toBeFriendsTemplate">
+                            <template id="addFriendsTemplate">
                                 <li>
                                     <img src="./images/reset.svg" alt="" />
                                     <p class="friend">Christiana</p>
