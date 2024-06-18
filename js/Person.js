@@ -507,6 +507,7 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links, score = 0) {
+        console.log(from, to);
         // check if
         if (to.person) {
             to = to.person;
