@@ -68,6 +68,9 @@ resizeCanvas();
 legendListItems.forEach((li) => {
     li.addEventListener("click", () => {
         const span = li.querySelector("span");
+        if (!span) {
+            return;
+        }
         const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${span.classList[0]}`);
 
         if (filteredEdges.includes(span.classList[0])) {
