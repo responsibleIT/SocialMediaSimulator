@@ -7,13 +7,11 @@ import FileHandler from "./FileHandler.js";
 import WebData from "./WebData.js";
 import Onboarding from "./Onboarding.js";
 
-
 const cursor = new Cursor();
 const userdata = new UserData();
 const fileHandler = new FileHandler();
 const webData = new WebData();
 const onboarding = new Onboarding();
-
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -31,6 +29,7 @@ const legendListItems = document.querySelectorAll(".legend li");
 const friendsUl = friends.querySelector("ul");
 const feedUl = feed.querySelector("ul");
 const likedUl = liked.querySelector("ul");
+const addFriendsUl = addFriends.querySelector("ul");
 const calcSection = document.querySelector(".calculated");
 let linkStripe;
 let mouseMoveHandler;
@@ -94,7 +93,7 @@ legendListItems.forEach((li) => {
     });
 });
 
-traitSelect.addEventListener("change", (e) => {
+traitSelect.addEventListener("change", () => {
     selectedNode.socialScore = traitSelect.value;
 });
 
@@ -442,7 +441,7 @@ function setEventListeners(node) {
                 calculateAdjustedClosenessCentrality();
                 findAllConnectedComponents();
                 if (node.label === "Person") {
-                    updateFriendList(selectedNode, node);
+                    updateFriendsList(selectedNode, node);
                 } else {
                     updateLikedList(selectedNode);
                     updateFeedList(selectedNode);
@@ -524,14 +523,16 @@ function showMobile(nodeData) {
     feedUl.innerHTML = "";
     likedUl.innerHTML = "";
 
-    updateFriendList(nodeData);
+    updateFriendsList(nodeData);
+    updateAddFriendsList(nodeData);
     updateFeedList(nodeData);
     updateLikedList(nodeData);
 
     selectedNodeOptions.classList.remove("hide");
 }
 
-function updateFriendList(nodeData, node) {
+function updateFriendsList(nodeData, node) {
+    // friends
     if (nodeData.friends.size !== 0) {
         nodeData.friends.forEach((friend) => {
             if (friend.person) {
@@ -549,11 +550,11 @@ function updateFriendList(nodeData, node) {
                     }
                 });
                 if (!dontAddToList) {
-                    addPostToFriendList(friendsUl, friend, nodeData);
+                    addFriendToFriendList(friendsUl, friend, nodeData);
                 }
             } else {
                 friendsUl.innerHTML = "";
-                addPostToFriendList(friendsUl, friend, nodeData);
+                addFriendToFriendList(friendsUl, friend, nodeData);
             }
         });
     } else {
@@ -561,24 +562,72 @@ function updateFriendList(nodeData, node) {
     }
 }
 
-function addPostToFriendList(friendsUl, friend, nodeData) {
+function addFriendToFriendList(friendsUl, friend, nodeData) {
     const clone = friendsTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
     const p = clone.querySelector("p");
-    p.classList.add("friend");
-    const unfriendButton = clone.querySelector(".unfriend-button");
+    const friendButton = clone.querySelector(".friend-button");
     p.textContent = friend.userName;
     img.src = friend.profileImage;
-    unfriendButton.addEventListener("click", () => {
+    friendButton.addEventListener("click", function () {
         if (nodeData.person) {
             nodeData = nodeData.person;
         }
-        nodeData.removeFriend(friend, links);
-        unfriendButton.parentElement.remove();
-
+        if (nodeData.friends.has(friend.id)) {
+            nodeData.removeFriend(friend, links);
+            this.classList.remove("delete-button");
+            this.classList.add("add-button");
+            this.textContent = "Add as friend";
+        } else {
+            nodeData.addFriend(friend, links);
+            this.classList.remove("add-button");
+            this.classList.add("delete-button");
+            this.textContent = "Unfriend";
+        }
         resizeNodes(nodes);
     });
     friendsUl.appendChild(clone);
+}
+
+function updateAddFriendsList(nodeData) {
+    const personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
+    const notFriends = new Map([...nodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
+
+    if (notFriends.size !== 0) {
+        addFriendsUl.innerHTML = "";
+        notFriends.forEach((friend) => {
+            addFriendToAddFriendList(addFriendsUl, friend, nodeData);
+        });
+    } else {
+        addFriendsUl.innerHTML = "";
+    }
+}
+
+function addFriendToAddFriendList(friendsUl, friend, nodeData) {
+    const clone = addFriendsTemplate.content.cloneNode(true);
+    const img = clone.querySelector("img");
+    const p = clone.querySelector("p");
+    const friendButton = clone.querySelector(".friend-button");
+    p.textContent = friend.userName;
+    img.src = friend.profileImage;
+    friendButton.addEventListener("click", function () {
+        if (nodeData.person) {
+            nodeData = nodeData.person;
+        }
+        if (nodeData.friends.has(friend.id)) {
+            nodeData.removeFriend(friend, links);
+            this.classList.remove("delete-button");
+            this.classList.add("add-button");
+            this.textContent = "Add as friend";
+        } else {
+            nodeData.addFriend(friend, links);
+            this.classList.remove("add-button");
+            this.classList.add("delete-button");
+            this.textContent = "Unfriend";
+        }
+        resizeNodes(nodes);
+    });
+    addFriendsUl.appendChild(clone);
 }
 
 function updateFeedList(nodeData) {
@@ -636,6 +685,20 @@ function addPostToFeedList(feedUl, item, nodeData) {
             e.target.classList.add("active");
             updateLikedList(nodeData);
         }
+    });
+
+    const forwardButton = clone.querySelector(".forward-button-mobile");
+
+    forwardButton.addEventListener("click", () => {
+        nodeData.friends.forEach((friend) => {
+            // TODO don't add a info link at this moment, calculate if the friend likes this post and adjust
+            // the relationship score. Then if the score is higher of the same as the addInfoLink threshold,
+            // add an infolink (node.step does this already)
+            if (!friend.person.items.has(item.id)) {
+                nodeData.addItemLink(item, friend.person, links);
+                nodeData.addInfoLink(friend.person, nodeData, links);
+            }
+        });
     });
 
     feedUl.appendChild(clone);
@@ -902,7 +965,7 @@ function stepAllNodes() {
     calculateAdjustedClosenessCentrality();
     findAllConnectedComponents();
     if (selectedNode) {
-        updateFriendList(selectedNode);
+        updateFriendsList(selectedNode);
         updateLikedList(selectedNode);
         updateFeedList(selectedNode);
     }
@@ -923,23 +986,38 @@ function framelooper() {
     stepAllNodes();
 }
 
-// Switch the mobile pages
-document.addEventListener("DOMContentLoaded", function () {
-    const phoneNav = document.getElementById("phoneNav");
-    const buttons = phoneNav.querySelectorAll("button");
-    const pages = document.querySelectorAll("#friends, #profile, #liked, #selectedProfile, #feed");
+/**
+ * Function for switching pages in the mobile interface
+ */
 
-    buttons.forEach((button) => {
+function navigateToPage(pageId) {
+    const pages = Array.from(mobilePages.children);
+    const targetPage = document.getElementById(pageId);
+    const updateFunction = `update${pageId.charAt(0).toUpperCase() + pageId.slice(1)}List`;
+    if (eval(`typeof ${updateFunction} === 'function'`)) {
+        eval(`${updateFunction}(selectedNode)`);
+    }
+
+    pages.forEach((page) => (page.style.display = "none"));
+    targetPage.style.display = "block";
+    if (pageId === "profile") {
+        selectedProfile.style.display = "block";
+    } else {
+        selectedProfile.style.display = "none";
+    }
+}
+
+// Mobile navigation
+document.addEventListener("DOMContentLoaded", function () {
+    const mobileButtons = document.querySelectorAll(".phone [data-page]");
+
+    mobileButtons.forEach((button) => {
         button.addEventListener("click", function () {
-            buttons.forEach((btn) => btn.classList.remove("active"));
+            mobileButtons.forEach((btn) => btn.classList.remove("active"));
 
             this.classList.add("active");
 
-            pages.forEach((page) => (page.style.display = "none"));
-            document.getElementById(this.dataset.page).style.display = "block";
-            if (this.dataset.page === "profile") {
-                selectedProfile.style.display = "block";
-            }
+            navigateToPage(this.dataset.page);
         });
     });
 });
@@ -973,5 +1051,3 @@ deleteNodeButton.addEventListener("click", () => {
     node.element.remove();
     nodes.delete(node.id);
 });
-
-

@@ -1,5 +1,5 @@
-import Node from './Node.js';
-import Edge from './Edge.js';
+import Node from "./Node.js";
+import Edge from "./Edge.js";
 
 export default class Person extends Node {
     constructor(id, label, x, y, user) {
@@ -120,7 +120,7 @@ export default class Person extends Node {
         let similarityThreshold = 150;
         const amountSimilarPosts = Array.from(this.items.values()).filter((item) => {
             item = item.post;
-            
+
             const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
             // TODO FIX: similarPostsArray returns false
             return similarPostsArray.length;
@@ -216,8 +216,8 @@ export default class Person extends Node {
         });
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
-            if (Math.random() > this.socialScore) {
-                // TODO change this back to 0.5?
+            if (Math.random() < this.socialScore) {
+                // change this back to 0.5?
                 post = post.post;
                 //Get all people who have read the post and liked it
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
