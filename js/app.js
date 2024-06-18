@@ -102,11 +102,9 @@ legendListItems.forEach((li) => {
 //     button.style.display = "none";
 // });
 
-traitSelect.addEventListener("change", (e) => {
+traitSelect.addEventListener("change", () => {
     selectedNode.socialScore = traitSelect.value;
 });
-
-
 
 calcSection.addEventListener("click", () => {
     if (calcGroupsBool) {
@@ -190,7 +188,7 @@ stepButton.addEventListener("click", () => stepAllNodes());
 
 // play/pause automatically stepping
 playButton.addEventListener("click", () => {
-    if(playing) {
+    if (playing) {
         playing = false;
         playButton.querySelector("img").src = "./images/play.svg";
     } else {
@@ -654,6 +652,20 @@ function addPostToFeedList(feedUl, item, nodeData) {
             e.target.classList.add("active");
             updateLikedList(nodeData);
         }
+    });
+
+    const forwardButton = clone.querySelector(".forward-button-mobile");
+
+    forwardButton.addEventListener("click", () => {
+        nodeData.friends.forEach((friend) => {
+            // TODO don't add a info link at this moment, calculate if the friend likes this post and adjust
+            // the relationship score. Then if the score is higher of the same as the addInfoLink threshold,
+            // add an infolink (node.step does this already)
+            if (!friend.person.items.has(item.id)) {
+                nodeData.addItemLink(item, friend.person, links);
+                nodeData.addInfoLink(friend.person, nodeData, links);
+            }
+        });
     });
 
     feedUl.appendChild(clone);
