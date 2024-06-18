@@ -339,7 +339,7 @@ export default class Person extends Node {
         if (this.friends.size > 0) {
             this.items.forEach((item) => {
                 let svgIcon = document.createElement("img");
-                svgIcon.src = "./images/sns_icons_Send.svg";
+                svgIcon.src = "./images/share.svg";
                 svgIcon.alt = "Forward";
                 let itemNodeData = item.post;
                 let score = item.score;

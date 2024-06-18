@@ -35,7 +35,7 @@ let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
-let calcGroupsBool = true;
+let calculating = true;
 let playing = false;
 
 //Global map of nodes
@@ -98,13 +98,14 @@ traitSelect.addEventListener("change", () => {
 });
 
 calcSection.addEventListener("click", () => {
-    if (calcGroupsBool) {
-        calcGroupsBool = false;
+    if (calculating) {
+        calculating = false;
+        calcSection.querySelector('img').src = 'images/play.svg';
     } else {
-        calcGroupsBool = true;
+        calculating = true;
+        calcSection.querySelector('img').src = 'images/pause.svg';
         findAllConnectedComponents();
     }
-    document.querySelector(".pauseOrPlay").src = `images/pausedImage-${!calcGroupsBool}.svg`;
 });
 
 // function for counter inputs
@@ -227,7 +228,7 @@ function resizeCanvas() {
 
 // A function to calculate the number of groups in the network.
 function findAllConnectedComponents() {
-    if (!calcGroupsBool) {
+    if (!calculating) {
         return;
     }
     let visited = new Set();
