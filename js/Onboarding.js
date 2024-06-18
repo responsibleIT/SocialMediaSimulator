@@ -5,7 +5,6 @@ export default class Onboarding {
                 if (!localStorage.getItem('onboardingComplete')) {
                     onboarding1.showModal();
                 }
-
             }
         });
 
@@ -38,6 +37,18 @@ export default class Onboarding {
             onboarding3.close();
             localStorage.setItem('onboardingComplete', true);
             // Proceed to the next step or complete onboarding
+        });
+
+        // Add event listener for help button to show the 3rd dialog
+        const helpButton = document.getElementById('help');
+        helpButton.addEventListener('click', function () {
+            onboarding3.showModal();
+        });
+
+        // Add event listener for next3 button to close the 3rd dialog
+        const next3Button = document.getElementById('next3');
+        next3Button.addEventListener('click', function () {
+            onboarding3.close();
         });
     }
 }
