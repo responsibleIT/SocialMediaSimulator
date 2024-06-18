@@ -17,7 +17,7 @@ export default class Person extends Node {
     // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
     defaultScore = 1;
     stepDistance = 5;
-    addInfoLinkThreshold = 3;
+    addInfoLinkThreshold = 2;
     removeFriendLinkThreshold = -3;
     removeInfoLinkThreshold = -5;
 
@@ -136,10 +136,11 @@ export default class Person extends Node {
 
             return similarPostsArray.length;
         });
-        let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false;
-
+        let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false; // amountSimilarPosts = []
+        console.log(isSimilar, amountSimilarPosts, ">", this.items.size, "/", 2, "?", true, ":", false);
         //Calculate a score for the post based on the relationship score and the similarity
         let postScore = relationshipScore + (isSimilar ? 1 : -1);
+        console.log(postScore); // TODO NAN
 
         if (relationship === "friend") {
             // TODO use function = addItemLink()
@@ -171,7 +172,9 @@ export default class Person extends Node {
         }
 
         //if the postScore was negative, reduce the score between me and the sender by 1
+        console.log(postScore);
         if (postScore < 0) {
+            console.log(relationship, relationshipScore, sender);
             if (relationship === "friend") {
                 this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 });
             } else if (relationship === "infoLink") {
@@ -208,8 +211,8 @@ export default class Person extends Node {
                 score = aFriend.score;
                 friend = aFriend.person;
             } else {
-                // TODO if the friend has no score
-                score = 3;
+                // if the friend has no score
+                score = 1;
                 friend = aFriend;
             }
 
@@ -219,9 +222,11 @@ export default class Person extends Node {
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
             if (score >= this.addInfoLinkThreshold) {
+                console.log("make this relation a info link", score);
                 //  check if someone already is an infolink
                 const link = this.infoLinks.has(friend.id);
-                if (link === true) {
+                if (!link) {
+                    console.log("info link added");
                     this.addInfoLink(this, friend, links);
                     // TODO FRIEND BECOMES INFOLINK
                 }
@@ -260,6 +265,10 @@ export default class Person extends Node {
                 if (peopleThatReadPost.length > 0) {
                     //Pick a random person from the list and add them as a friend
                     const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
+
+                    // // TODO add score between you and the person // this code to calc the score needs to be changed I think
+                    // const myScore = 1;
+                    // const score = this.calculateScore(myScore, post);
                     this.addFriend(randomPerson.person, links);
                 }
             }
