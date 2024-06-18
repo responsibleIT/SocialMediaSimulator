@@ -15,44 +15,28 @@ ROOT VARIABLES
 
 :root {
     --background-color: #d9dfe2;
-    --button-color: #0075ff;
-    --button-hover-color: color-mix(in srgb, var(--button-color), #ffffff 30%);
-    --button-active-color: color-mix(in srgb, var(--button-color), #000000 30%);
+    --main-color:#0075ff;
+    --main-white-color: #ffffff; 
     --button-focus-outline: 2px solid orange;
     --button-shadow: 0 0 2px 1px #0009;
     --button-active-shadow: inset 0 0 3px 1px #0009;
     --label-background-color: rgba(0, 117, 255, 0.3);
-    --header-hover-opacity: 0;
-    --header-hover-filter: alpha(opacity=0);
     --node-background-color: blue;
     --node-selected-border: 2px solid orange;
-    --popover-background-color: white;
     --popover-color: black;
     --popover-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
     --popover-border: solid black 1px;
-    --link-info-color: #0075ff;
     --link-friend-color: #00b000;
-    --link-liked-color: #ff9900;
     --link-disliked-color: black;
     --pre-link-color: #999;
-    --pre-link-hover-person-color: #00b000;
-    --pre-link-hover-post-color: #ff9900;
-    --post-node-selected-color: color-mix(in srgb, red, var(--background-color) 50%);
     --battery-background: #D9D9D9;
     --battery-level-color: lightgreen;
     --battery-text-color: black;
     --search-bar-shadow: .1em .1em .1em #0005;
     --fakebook-header-background: transparent;
-    --fakebook-header-color: #0075ff;
-    --fakebook-background: white;
-    --fakebook-hover-color: #0075ff;
     --delete-button-color: red;
     --profile-username-color: #0966ff;
     --skip-button-background: #6c757d;
-    --skip-button-color: white;
-    --medal-z-index: 9999;
-    --phone-nav-background: #0075ff;
-    --phone-nav-color: white;
     --liked-link-color: #ff9900;
 }
 
@@ -101,7 +85,7 @@ button {
 
 button {
     font: inherit;
-    --background-color: var(--button-color);
+    --background-color: var(--main-color);
     background-color: color-mix(in srgb, var(--background-color), #ffffff 0%);
     color: white;
     border: none;
@@ -121,13 +105,13 @@ button {
 
     &:hover,
     &:focus-visible {
-        box-shadow: var(--button-shadow);
-        background-color: var(--button-hover-color);
+        box-shadow: 0 0 2px 1px #0009;
+        background-color: color-mix(in srgb, var(--background-color), #ffffff 30%);
     }
-
+    
     &:active {
-        box-shadow: var(--button-active-shadow);
-        background-color: var(--button-active-color);
+        box-shadow: inset 0 0 3px 1px #0009;
+        background-color: color-mix(in srgb, var(--background-color), #000000 30%);
     }
 }
 
@@ -169,8 +153,8 @@ body > header {
     z-index: 12;
     transition: 200ms;
     &:hover {
-        opacity: var(--header-hover-opacity);
-        filter: var(--header-hover-filter);
+        opacity:0;
+        filter: alpha(opacity=0);
         z-index: 12;
     }
     & h1 {
@@ -215,13 +199,13 @@ canvas {
     z-index: 99;
     width: fit-content;
     height: fit-content;
-    border-radius: 12px;
+    border-radius: 0.75em;
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 48px 1fr;
     padding: 12px 16px 12px 12px;
     gap: 8px;
-    background-color: var(--popover-background-color);
+    background-color: var(--main-white-color);
     color: var(--popover-color);
     box-shadow: var(--popover-shadow);
     border: none;
@@ -229,7 +213,7 @@ canvas {
     top: anchor(50%);
     left: anchor(end);
     & img {
-        width: 48px;
+        width: 3em;
         aspect-ratio: 1;
         border-radius: 50%;
         border: var(--popover-border);
@@ -243,13 +227,13 @@ canvas {
 
     & p {
         display: flex;
-        gap: 8px;
+        gap: 0.5em;
     }
 
     & p span:nth-of-type(2) {
         overflow: hidden;
-        width: 4px;
-        height: 4px;
+        width: 0.25em;
+        height: 0.25em;
         display: block;
         border-radius: 50%;
         border: black solid 2px;
@@ -259,7 +243,7 @@ canvas {
 
 .forwardButton {
     border: none;
-    border-radius: 8px;
+    border-radius: 0.5em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -315,7 +299,7 @@ TOOLBAR STYLES
     flex-direction: row;
     padding-inline: 1em;
     padding-block: 0.5em;
-    background-color: var(--popover-background-color);
+    background-color: var(--main-white-color);
     border-radius: 0.75rem;
     top: 0;
     gap: 0.75em;
@@ -343,8 +327,8 @@ TOOLBAR STYLES
 }
 
 .info-button{
-    width: 24px;
-    height: 24px;
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .wide-shown {
@@ -506,7 +490,7 @@ NODE STYLES
 }
 
 .postNode.selected {
-    background-color: var(--post-node-selected-color);
+    background-color: color-mix(in srgb, red, var(--background-color) 50%);
 }
 
 /* LINK STYLES */
@@ -529,7 +513,7 @@ NODE STYLES
 }
 
 .info-link {
-    background-color: var(--link-info-color);
+    background-color: var(--main-color);
 }
 .friend-link {
     background-color: var(--link-friend-color);
@@ -553,7 +537,7 @@ NODE STYLES
 /* pre link als een persoon wordt gehovered */
 .canvas-container:has(.personNode:hover) {
     & .pre-link {
-        background-color: var(--pre-link-hover-person-color);
+        background-color: var(--link-friend-color);
         height: 2px;
     }
 }
@@ -561,7 +545,7 @@ NODE STYLES
 /* pre link als een post wordt gehovered */
 .canvas-container:has(.postNode:hover) {
     & .pre-link {
-        background-color: var(--pre-link-hover-post-color);
+        background-color: var(--liked-link-color);
         height: 2px;
     }
 }
@@ -583,7 +567,7 @@ LEGEND STYLES
     flex-direction: column;
     padding-block: 0.75em;
     padding-inline: 1em;
-    background-color: var(--popover-background-color);
+    background-color: var(--main-white-color);
     border-radius: 0.75rem;
     grid-column: 2 / 3;
     grid-row: 2 / 3;
@@ -614,15 +598,8 @@ LEGEND STYLES
                 animation: none;
             }
             & img {
-                width: 20px;
+                width: 1.25em;
                 height: auto;
-            }
-            & .post-dot {
-                background-color: red;
-                aspect-ratio: 1/1;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
             }
         }
         & li:has(.post-dot, img){
@@ -646,7 +623,7 @@ CALCULATE STYLES
 .calculated {
     grid-column: 2 / 3;
     grid-row: 3 / 4;
-    background-color: var(--popover-background-color);
+    background-color: var(--main-white-color);
     flex-direction: column;
     padding-block: 0.75em;
     padding-inline: 1em;
@@ -706,7 +683,7 @@ PHONE STYLES
 
 .phone-status-bar {
     width: 100%;
-    background-color: var(--popover-background-color);
+    background-color: var(--main-white-color);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 0.5em;
@@ -739,7 +716,7 @@ FAKEBOOK STYLES
     column-gap: 1em;
     row-gap: 1rem;
 
-    background-color: var(--fakebook-background);
+    background-color: var(--main-white-color);
 
     width: 100%;
     aspect-ratio: 1 / 2.08;
@@ -813,8 +790,8 @@ FAKEBOOK STYLES
     list-style: none;
     padding: 0.25rem 0 0.5rem 0;
     justify-content: center;
-    background-color: var(--phone-nav-background);
-    color: var(--phone-nav-color);
+    background-color: var(--main-color);
+    color: var(--main-white-color);
     bottom: 0;
     right: 0;
     left: 0;
@@ -900,7 +877,7 @@ FAKEBOOK STYLES
     list-style: none;
 
     & li {
-        background-color: var(--fakebook-background);
+        background-color: var(--main-white-color);
     }
 }
 
@@ -913,7 +890,7 @@ FAKEBOOK STYLES
         display: flex;
         background-color: var(--fakebook-header-background);
         padding: .25em;
-        color: var(--fakebook-header-color);
+        color: var(--main-color);
         align-items: center;
     }
 }
@@ -1168,7 +1145,7 @@ dialog {
 
 .skip-button {
     --background-color: var(--skip-button-background);
-    color: var(--skip-button-color);
+    color: var(--main-white-color);
 }
 
 video {
@@ -1191,7 +1168,7 @@ Medal img for MIP
     position-visibility: anchors-visible;
     top: anchor(0%);
     left: anchor(start);
-    width: 20px;
+    width: 1.25em;
     height: auto;
-    z-index: var(--medal-z-index);
+    z-index: 9999;
 }
