@@ -60,7 +60,7 @@
                     <h2>How to start connection?</h2>
                     <p>When you click on a person, you can click on people to add them as a friend and click on a post to like the post. When you forward a post it gets send to all your friends.</p>
                     <video width="400" height="300" autoplay muted loop>
-                        <source src="./images/gif2.mp4" type="video/mp4">
+                        <source src="./images/intro.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                     <button id="next3">Go</button>
@@ -105,8 +105,9 @@
                                 <input type="number" id="people-count" value="10" min="3" max="50" />
                                 <button tabindex="-1">+</button>
                             </div>
-                            <button type="button" id="addRandomPeopleButton">
-                                Add people
+                            <button type="button" id="addRandomPeopleButton" class="add-random-people-button">
+                                <span class="small-hidden">Add</span>
+                                <img src="images/sns_icons_User.svg" alt="" />
                             </button>
 
                             <div class="vertical-line"></div>
@@ -117,8 +118,9 @@
                                 <button tabindex="-1">+</button>
                             </div>
 
-                            <button type="button" id="addRandomContentButton">
-                                Post content
+                            <button type="button" id="addRandomContentButton" class="add-random-content-button">
+                                <span class="small-hidden">Add</span>
+                                <img src="images/sns_icons_Post.svg" alt="" />
                             </button>
                         </div>
                     </section>
@@ -128,13 +130,17 @@
                     <section>
                         <h3>Simulate</h3>
                         <div class="tools">
-                            <button type="button" id="stepButton">
-                                <img src="" alt=""/>
+                            <button type="button" id="stepButton" class="step-button">
+                                <img src="./images/foot.svg" />
+                                <span class="wide-shown">Step</span>
                             </button>
-                            <button type="button" id="playButton">
-                                <img src="./images/play.svg" alt=""/>
+                            <button type="button" id="playButton" >
+                                <img src="./images/play.svg" /> 
+                                <span class="wide-shown">Start</span>
                             </button>
                         </div>
+
+                        
                     </section>
 
                     <div class="vertical-line"></div>
@@ -143,10 +149,12 @@
                         <h3>File</h3>
                         <div class="tools">
                             <button type="button" id="importButton">
-                                Import
+                                <img src="./images/import.svg" alt="import button"/>
+                                <span class="wide-shown">Import</span>
                             </button>
                             <button type="button" id="exportButton">
-                                Export
+                                <img src="./images/export.svg" alt="export button"/>
+                                <span class="wide-shown">Export</span>
                             </button>
                         </div>
                     </section>
@@ -155,9 +163,13 @@
 
                     <section>
                         <div class="tools"> 
-                            <button type="button" id="help" class="help"><img src="./images/help.svg"></button>
+                            <!-- <h3>Info</h3> -->
+                            <button type="button" id="help" class="help">
+                                <img src="./images/help.svg" alt="info button" class="info-button">
+                            </button>
                             
                         </div>
+                </section>
                 </section>
             </div>
 
