@@ -63,6 +63,8 @@ resizeCanvas();
 ///// Event listeners /////
 ///////////////////////////
 
+
+// Existing functionality for legendListItems
 legendListItems.forEach((li) => {
     li.addEventListener("click", () => {
         const span = li.querySelector("span");
@@ -90,9 +92,16 @@ legendListItems.forEach((li) => {
     });
 });
 
-// Liked is line through, remove forward buttons.
-// Click again to remove the line through, show the forward buttons again.
-// the class is liked-link
+// Initial hiding of forward buttons
+// const forwardButtons = document.querySelectorAll(".forwardButton");
+// forwardButtons.forEach((button) => {
+//     button.style.display = "none";
+// });
+
+
+
+
+
 
 calcSection.addEventListener("click", () => {
     if (calcGroupsBool) {
