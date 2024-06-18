@@ -119,9 +119,8 @@ export default class Person extends Node {
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
         let similarityThreshold = 150;
         const amountSimilarPosts = Array.from(this.items.values()).filter((item) => {
-            if (item.post) {
-                item = item.post;
-            }
+            item = item.post;
+            
             const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
             // TODO FIX: similarPostsArray returns false
             return similarPostsArray.length;
@@ -265,11 +264,8 @@ export default class Person extends Node {
         let averageY = this.y;
 
         positiveFriends.forEach((friend) => {
-            if (friend.person) {
-                friend = friend.person;
-            }
-            averageX += friend.x;
-            averageY += friend.y;
+            averageX += friend.person.x;
+            averageY += friend.person.y;
         });
         positiveInfoLinks.forEach((infoLink) => {
             infoLink = infoLink.person;
@@ -278,11 +274,8 @@ export default class Person extends Node {
             averageY += infoLink.y;
         });
         positiveItems.forEach((item) => {
-            if (item.post) {
-                item = item.post;
-            }
-            averageX += item.x;
-            averageY += item.y;
+            averageX += item.post.x;
+            averageY += item.post.y;
         });
         averageX = averageX / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
         averageY = averageY / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
@@ -348,18 +341,8 @@ export default class Person extends Node {
                 let svgIcon = document.createElement("img");
                 svgIcon.src = "./images/sns_icons_Send.svg";
                 svgIcon.alt = "Forward";
-                let itemNodeData;
-                let score;
-                if (item.score) {
-                    score = item.score;
-                } else {
-                    score = 1;
-                }
-                if (item.post) {
-                    itemNodeData = item.post;
-                } else {
-                    itemNodeData = item;
-                }
+                let itemNodeData = item.post;
+                let score = item.score;
                 if ((score > 0 && !filteredEdges.includes("liked-link")) || (score < 0 && !filteredEdges.includes("disliked-link"))) {
                     let forwardButton = document.createElement("button");
                     forwardButton.classList.add("forwardButton");
@@ -457,10 +440,6 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links, score = 0) {
-        if (to.person) {
-            to = to.person;
-        }
-
         let friendLink = links.get(`${from.id}-${to.id}`);
         if (!friendLink) {
             friendLink = links.get(`${to.id}-${from.id}`);
