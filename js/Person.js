@@ -95,10 +95,10 @@ export default class Person extends Node {
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
                     if (friend.person) {
-                        friend.person.receiveSocialMediaPost(this, postObject.post, links);
+                        friend.person.receiveSocialMediaPost(this, postObject, links);
                     } else {
                         console.error("friend.person doesnt exist");
-                        friend.receiveSocialMediaPost(this, postObject.post, links);
+                        friend.receiveSocialMediaPost(this, postObject, links);
                     }
                 });
             }
@@ -112,7 +112,11 @@ export default class Person extends Node {
         //Check the relationship score between me and the sender
         // TODO if statement
         let relationshipScore = 0;
+        if (sender.post) {
+            sender = sender.post;
+        }
         relationshipScore = sender.score;
+        console.log("relationshipScore", relationshipScore, "sender", sender);
 
         let relationship = "friend"; // GET REALTIONSHIP BETWEEN THIS AND SENDER
         this.infoLinks.forEach((person) => {
@@ -128,19 +132,22 @@ export default class Person extends Node {
 
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
         let similarityThreshold = 150;
-        const amountSimilarPosts = Array.from(this.items.keys()).filter((item) => {
+        const amountSimilarPosts = Array.from(this.items.values()).filter((item) => {
+            // console.log(item);
             if (item.post) {
                 item = item.post;
             }
+            console.log(item, post);
             const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
-
+            console.log(similarPostsArray); // returns false
             return similarPostsArray.length;
         });
         let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false; // amountSimilarPosts = []
+
         console.log(isSimilar, amountSimilarPosts, ">", this.items.size, "/", 2, "?", true, ":", false);
         //Calculate a score for the post based on the relationship score and the similarity
         let postScore = relationshipScore + (isSimilar ? 1 : -1);
-        console.log(postScore); // TODO NAN
+        // console.log(postScore); // TODO NAN
 
         if (relationship === "friend") {
             // TODO use function = addItemLink()
@@ -173,7 +180,7 @@ export default class Person extends Node {
 
         //if the postScore was negative, reduce the score between me and the sender by 1
         console.log(postScore);
-        if (postScore < 0) {
+        if (postScore < 0 || postScore !== NaN) {
             console.log(relationship, relationshipScore, sender);
             if (relationship === "friend") {
                 this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 });
