@@ -14,7 +14,7 @@ export default class Node {
     // Add node label was the div above the drawn node
     draw() {
         const nodeElement = document.createElement("div");
-        nodeElement.className = "node";   
+        nodeElement.className = "node";
 
         switch (this.label) {
             case "Person":
@@ -43,13 +43,13 @@ export default class Node {
     }
 
     //Function for handling link actions
-    linkHandler(node, links) {
+    linkHandler(node, links, filteredEdges) {
         if (this.label === "Person") {
             this.friendsHandler(node, links);
-            this.spawnForwardButtons(links);
+            this.spawnForwardButtons(links, filteredEdges);
         } else if (this.label === "Social Media Post") {
-            this.itemHandler(node, links);
-            node.spawnForwardButtons(links);
+            this.itemHandler(node, links, filteredEdges);
+            node.spawnForwardButtons(links, filteredEdges);
         }
     }
 
@@ -63,14 +63,14 @@ export default class Node {
     }
 
     //Function for handling item actions
-    itemHandler(node, links) {
+    itemHandler(node, links, filteredEdges) {
         if (node.items.get(this.id)) {
             node.removeItemLink(this, links);
             node.removeForwardButtons();
-            node.spawnForwardButtons(links);
+            node.spawnForwardButtons(links, filteredEdges);
         } else {
             node.addItemLink(this, node, links);
-            node.spawnForwardButtons(links);
+            node.spawnForwardButtons(links, filteredEdges);
         }
     }
 }

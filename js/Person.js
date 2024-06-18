@@ -14,10 +14,12 @@ export default class Person extends Node {
     }
 
     acceptanceDisctance = 300;
-
     // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
     defaultScore = 1;
     stepDistance = 5;
+    addInfoLinkThreshold = 3;
+    removeFriendLinkThreshold = -3;
+    removeInfoLinkThreshold = -5;
 
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
@@ -206,16 +208,17 @@ export default class Person extends Node {
                 score = aFriend.score;
                 friend = aFriend.person;
             } else {
+                // TODO if the friend has no score
                 score = 3;
                 friend = aFriend;
             }
 
             //Check if there are any friends that have a score of -3 or lower and remove them
-            if (score <= -3) {
+            if (score <= this.removeFriendLinkThreshold) {
                 this.removeFriend(friend, links);
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
-            if (score >= 3) {
+            if (score >= this.addInfoLinkThreshold) {
                 //  check if someone already is an infolink
                 const link = this.infoLinks.has(friend.id);
                 if (link === true) {
@@ -228,7 +231,7 @@ export default class Person extends Node {
         //Check if there are any infolinks that have a score of -5 or lower and remove them
         this.infoLinks.forEach((link) => {
             // link.person, link.scrore
-            if (link.score <= -5) {
+            if (link.score <= this.removeInfoLinkThreshold) {
                 this.removeInfoLink(this, friend, links);
             }
         });
@@ -250,13 +253,15 @@ export default class Person extends Node {
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
                     reader = reader.person;
                     const foundReader = post.readers.get(reader.id);
-                    if (foundReader.score > 0 && reader !== this.id && !this.friends.has(reader)) {
+                    if (foundReader.score > 0 && reader.id !== this.id && !this.friends.has(reader.id)) {
                         return reader;
                     }
                 });
-                //Pick a random person from the list and add them as a friend
-                const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                this.addFriend(randomPerson.person, links);
+                if (peopleThatReadPost.length > 0) {
+                    //Pick a random person from the list and add them as a friend
+                    const randomPerson = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
+                    this.addFriend(randomPerson.person, links);
+                }
             }
         });
     }
@@ -374,7 +379,7 @@ export default class Person extends Node {
     }
 
     //Function that spawns 'forward' buttons under each read social media post by the currently selected person node
-    spawnForwardButtons(links) {
+    spawnForwardButtons(links, filteredEdges) {
         this.removeForwardButtons();
         //Get the node ids of every social media post that the selected person node has read
         if (this.friends.size > 0) {
@@ -383,28 +388,39 @@ export default class Person extends Node {
                 svgIcon.src = "./images/sns_icons_Send.svg";
                 svgIcon.alt = "Forward";
                 let itemNodeData;
+                let score;
+                if (item.score) {
+                    score = item.score;
+                } else {
+                    score = 1;
+                }
                 if (item.post) {
                     itemNodeData = item.post;
                 } else {
                     itemNodeData = item;
                 }
-                let forwardButton = document.createElement("button");
-                forwardButton.classList.add("forwardButton");
-                forwardButton.appendChild(svgIcon);
-                forwardButton.style.position = "absolute";
-                forwardButton.style.left = itemNodeData.x + "px";
-                forwardButton.style.top =
-                    itemNodeData.y - itemNodeData.radius - ((itemNodeData.popularity - itemNodeData.increasedPopularity) * itemNodeData.growFactor) / 2 + "px";
-                forwardButton.addEventListener("click", () => {
-                    this.friends.forEach((friend) => {
-                        if (friend.person) {
-                            friend = friend.person;
-                        }
-                        this.addItemLink(itemNodeData, friend, links);
-                        this.addInfoLink(friend, this, links);
+                if ((score > 0 && !filteredEdges.includes("liked-link")) || (score < 0 && !filteredEdges.includes("disliked-link"))) {
+                    let forwardButton = document.createElement("button");
+                    forwardButton.classList.add("forwardButton");
+                    forwardButton.appendChild(svgIcon);
+                    forwardButton.style.position = "absolute";
+                    forwardButton.style.left = itemNodeData.x + "px";
+                    forwardButton.style.top =
+                        itemNodeData.y -
+                        itemNodeData.radius -
+                        ((itemNodeData.popularity - itemNodeData.increasedPopularity) * itemNodeData.growFactor) / 2 +
+                        "px";
+                    forwardButton.addEventListener("click", () => {
+                        this.friends.forEach((friend) => {
+                            if (friend.person) {
+                                friend = friend.person;
+                            }
+                            this.addItemLink(itemNodeData, friend, links);
+                            this.addInfoLink(friend, this, links);
+                        });
                     });
-                });
-                canvasContainer.appendChild(forwardButton);
+                    canvasContainer.appendChild(forwardButton);
+                }
             });
         }
     }
@@ -463,10 +479,10 @@ export default class Person extends Node {
         const link = new Edge(from, item, "item-link");
         links.set(from.id + "-" + item.id, link);
         if (score > 0) {
-			link.element.classList.add("liked-link");
-		} else {
-			link.element.classList.add("disliked-link");
-		}
+            link.element.classList.add("liked-link");
+        } else {
+            link.element.classList.add("disliked-link");
+        }
     }
 
     //Function for removing an item link between the currently selected node and the node with the given id
