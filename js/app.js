@@ -565,11 +565,11 @@ function updateFriendsList(nodeData, node) {
                     }
                 });
                 if (!dontAddToList) {
-                    addPostToFriendList(friendsUl, friend, nodeData);
+                    addFriendToFriendList(friendsUl, friend, nodeData);
                 }
             } else {
                 friendsUl.innerHTML = "";
-                addPostToFriendList(friendsUl, friend, nodeData);
+                addFriendToFriendList(friendsUl, friend, nodeData);
             }
         });
     } else {
@@ -577,20 +577,28 @@ function updateFriendsList(nodeData, node) {
     }
 }
 
-function addPostToFriendList(friendsUl, friend, nodeData) {
+function addFriendToFriendList(friendsUl, friend, nodeData) {
     const clone = friendsTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
     const p = clone.querySelector("p");
-    const unfriendButton = clone.querySelector(".unfriend-button");
+    const friendButton = clone.querySelector(".friend-button");
     p.textContent = friend.userName;
     img.src = friend.profileImage;
-    unfriendButton.addEventListener("click", () => {
+    friendButton.addEventListener("click", function () {
         if (nodeData.person) {
             nodeData = nodeData.person;
         }
-        nodeData.removeFriend(friend, links);
-        unfriendButton.parentElement.remove();
-
+        if (nodeData.friends.has(friend.id)) {
+            nodeData.removeFriend(friend, links);
+            this.classList.remove('delete-button');
+            this.classList.add('add-button');
+            this.textContent = 'Add as friend';
+        } else {
+            nodeData.addFriend(friend, links);
+            this.classList.remove('add-button');
+            this.classList.add('delete-button');
+            this.textContent = 'Unfriend';
+        }
         resizeNodes(nodes);
     });
     friendsUl.appendChild(clone);
@@ -617,11 +625,21 @@ function addFriendToAddFriendList(friendsUl, friend, nodeData) {
     const friendButton = clone.querySelector(".friend-button");
     p.textContent = friend.userName;
     img.src = friend.profileImage;
-    friendButton.addEventListener("click", () => {
+    friendButton.addEventListener("click", function () {
         if (nodeData.person) {
             nodeData = nodeData.person;
         }
-        nodeData.addFriend(friend, links);
+        if (nodeData.friends.has(friend.id)) {
+            nodeData.removeFriend(friend, links);
+            this.classList.remove('delete-button');
+            this.classList.add('add-button');
+            this.textContent = 'Add as friend';
+        } else {
+            nodeData.addFriend(friend, links);
+            this.classList.remove('add-button');
+            this.classList.add('delete-button');
+            this.textContent = 'Unfriend';
+        }
         resizeNodes(nodes);
     });
     addFriendsUl.appendChild(clone);

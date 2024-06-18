@@ -943,8 +943,6 @@ FAKEBOOK STYLES
 
         & button {
             padding: 0;
-            color: red;
-            background-color: transparent;
             text-decoration: underline;
         }
     }
@@ -1058,6 +1056,13 @@ margin-top: 1.5em;
 .delete-button {
     --background-color: transparent;
     color: red;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.add-button {
+    --background-color: transparent;
+    color: #0075ff;
     text-decoration: underline;
     padding: 0;
 }
