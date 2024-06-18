@@ -993,7 +993,6 @@ FAKEBOOK STYLES
 
         & button {
             padding: 0;
-            color: var(--delete-button-color);
             background-color: transparent;
             text-decoration: underline;
         }
