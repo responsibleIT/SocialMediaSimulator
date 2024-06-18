@@ -17,9 +17,10 @@ export default class Person extends Node {
     // It is positive by default because nothing would be forwarded if everyone is neutral about the posts, if its to far away it will become negative.
     defaultScore = 1;
     stepDistance = 5;
-    addInfoLinkThreshold = 2;
-    removeFriendLinkThreshold = -3;
+    addInfoLinkThreshold = 3;
+    removeFriendLinkThreshold = -2;
     removeInfoLinkThreshold = -5;
+    defaultRelationshipScore = 1;
 
     //Function for choosing a random social media post to read
     readSocialMediaPost(nodes, links) {
@@ -95,10 +96,10 @@ export default class Person extends Node {
             if (Math.random() < this.socialScore) {
                 this.friends.forEach((friend) => {
                     if (friend.person) {
-                        friend.person.receiveSocialMediaPost(this, postObject, links);
+                        friend.person.receiveSocialMediaPost(this, postObject.post, friend.score, links);
                     } else {
                         console.error("friend.person doesnt exist");
-                        friend.receiveSocialMediaPost(this, postObject, links);
+                        friend.receiveSocialMediaPost(this, postObject.post, 0, links);
                     }
                 });
             }
@@ -108,15 +109,8 @@ export default class Person extends Node {
     // friend wordt pas infolink wanneer er meerdere keren leuke posts worden doorgestuurd.
 
     //Function for receiving forwarded social media posts
-    receiveSocialMediaPost(sender, post, links) {
-        //Check the relationship score between me and the sender
-        // TODO if statement
-        let relationshipScore = 0;
-        if (sender.post) {
-            sender = sender.post;
-        }
-        relationshipScore = sender.score;
-        console.log("relationshipScore", relationshipScore, "sender", sender);
+    receiveSocialMediaPost(sender, post, relationshipScore, links) {
+        // console.log("relationshipScore", relationshipScore, "sender", sender);
 
         let relationship = "friend"; // GET REALTIONSHIP BETWEEN THIS AND SENDER
         this.infoLinks.forEach((person) => {
@@ -133,18 +127,16 @@ export default class Person extends Node {
         //Check if the post is similar to posts I have read before by retrieving the x and y coordinates of the post and comparing them with the coordinates of my items
         let similarityThreshold = 150;
         const amountSimilarPosts = Array.from(this.items.values()).filter((item) => {
-            // console.log(item);
             if (item.post) {
                 item = item.post;
             }
-            console.log(item, post);
             const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
-            console.log(similarPostsArray); // returns false
+            // console.log(similarPostsArray); // returns false
             return similarPostsArray.length;
         });
         let isSimilar = amountSimilarPosts > this.items.size / 2 ? true : false; // amountSimilarPosts = []
 
-        console.log(isSimilar, amountSimilarPosts, ">", this.items.size, "/", 2, "?", true, ":", false);
+        // console.log(isSimilar, amountSimilarPosts, ">", this.items.size, "/", 2, "?", true, ":", false);
         //Calculate a score for the post based on the relationship score and the similarity
         let postScore = relationshipScore + (isSimilar ? 1 : -1);
         // console.log(postScore); // TODO NAN
@@ -179,9 +171,8 @@ export default class Person extends Node {
         }
 
         //if the postScore was negative, reduce the score between me and the sender by 1
-        console.log(postScore);
-        if (postScore < 0 || postScore !== NaN) {
-            console.log(relationship, relationshipScore, sender);
+        if (postScore < 0) {
+            // console.log(postScore, relationship, relationshipScore, sender);
             if (relationship === "friend") {
                 this.friends.set(sender.id, { person: sender, score: relationshipScore - 1 });
             } else if (relationship === "infoLink") {
@@ -214,26 +205,28 @@ export default class Person extends Node {
         this.friends.forEach((aFriend) => {
             let score;
             let friend;
-            if (!aFriend.person) {
+            if (aFriend.person) {
                 score = aFriend.score;
                 friend = aFriend.person;
-            } else {
-                // if the friend has no score
-                score = 1;
-                friend = aFriend;
             }
+            // else {
+            //     // if the friend has no score
+            //     score = 1;
+            //     friend = aFriend;
+            // }
 
             //Check if there are any friends that have a score of -3 or lower and remove them
             if (score <= this.removeFriendLinkThreshold) {
+                // console.log("REMOVE FRIEND", this, friend);
                 this.removeFriend(friend, links);
             }
             //Check if there are any friends that have a score of 3 or higher. If so, add person as infoLink
             if (score >= this.addInfoLinkThreshold) {
-                console.log("make this relation a info link", score);
+                // console.log("make this relation a info link", score);
                 //  check if someone already is an infolink
                 const link = this.infoLinks.has(friend.id);
                 if (!link) {
-                    console.log("info link added");
+                    // console.log("info link added");
                     this.addInfoLink(this, friend, links);
                     // TODO FRIEND BECOMES INFOLINK
                 }
@@ -245,6 +238,7 @@ export default class Person extends Node {
             // link.person, link.scrore
             if (link.score <= this.removeInfoLinkThreshold) {
                 this.removeInfoLink(this, friend, links);
+                // console.log("REMOVE INFOLINK", this, friend);
             }
         });
     }
@@ -450,7 +444,7 @@ export default class Person extends Node {
     }
 
     //Function for adding a friend link between the currently selected node and the node with the given id
-    addFriend(node, links, score = 0) {
+    addFriend(node, links, score = this.defaultRelationshipScore) {
         const friend = this.friends.has(node.id);
         if (friend === false) {
             let toBeFriend = node;
