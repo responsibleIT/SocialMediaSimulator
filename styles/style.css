@@ -309,6 +309,16 @@ TOOLBAR STYLES
 .wide-shown {
     display: none;
 }
+.small-hidden{
+    display: inline;
+}
+
+@media(max-width: 1100px) {
+    .small-hidden {
+        display: none;
+    }
+
+}
 
 @media (min-width: 1310px) {
     .wide-shown {
