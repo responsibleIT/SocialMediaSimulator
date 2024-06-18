@@ -687,14 +687,12 @@ function addPostToLikedList(likedUl, item, nodeData) {
             if (nodeData.items.has(item.post.id)) {
                 nodeData.removeItemLink(item.post, links);
                 likeButton.classList.remove("active");
-                updateFeedList(nodeData);
-                likeButton.parentElement.parentElement.remove();
             } else {
                 nodeData.addItemLink(item.post, nodeData, links);
                 likeButton.classList.add("active");
-                updateFeedList(nodeData);
-                likeButton.parentElement.parentElement.remove();
             }
+            updateFeedList(nodeData);
+            likeButton.parentElement.parentElement.remove(); // TODO this should not be removed but is easiliy fixed when you reload the page when changing page.
         });
 
         likedUl.appendChild(clone);
