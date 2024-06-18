@@ -9,7 +9,7 @@
     <body> 
         <header>
             <h1>Social Media Simulator</h1>
-            <img src="images/logo.svg" alt="" class="logo" />
+            <img src="images/logo.svg" alt="logo van Responsible IT" class="logo" />
         </header>
         <main>
             <!-- Dialog for Onboarding Step 1 -->
@@ -76,19 +76,19 @@
                         <div class="tools">
                             <label for="emptyStateCheckbox" class="label-with-icon">
                                 <input type="radio" id="emptyStateCheckbox" name="group1" checked value="select" />
-                                <img src="images/sns_icons_Select.svg" alt="" />
+                                <img src="images/sns_icons_Select.svg" alt="Select icon" />
                                 <span class="visually-hidden">Select</span>
                             </label>
 
                             <label for="addPersonCheckbox" class="label-with-icon">
                                 <input type="radio" id="addPersonCheckbox" name="group1" value="add-person" />
-                                <img src="images/sns_icons_User.svg" alt="" />
+                                <img src="images/sns_icons_User.svg" alt="Add User Icon" />
                                 <span class="visually-hidden">Add User</span>
                             </label>
 
                             <label for="addSocialMediaPostCheckbox" class="label-with-icon">
                                 <input type="radio" id="addSocialMediaPostCheckbox" name="group1" value="add-post"/>
-                                <img src="images/sns_icons_Post.svg" alt="" />
+                                <img src="images/sns_icons_Post.svg" alt="Add Post Icon" />
                                 <span class="visually-hidden">Add Post</span>
                             </label>
                         </div>
@@ -107,7 +107,7 @@
                             </div>
                             <button type="button" id="addRandomPeopleButton" class="add-random-people-button">
                                 <span class="small-hidden">Add</span>
-                                <img src="images/sns_icons_User.svg" alt="" />
+                                <img src="images/sns_icons_User.svg" alt="Add User Icon" />
                             </button>
 
                             <div class="vertical-line"></div>
@@ -120,7 +120,7 @@
 
                             <button type="button" id="addRandomContentButton" class="add-random-content-button">
                                 <span class="small-hidden">Add</span>
-                                <img src="images/sns_icons_Post.svg" alt="" />
+                                <img src="images/sns_icons_Post.svg" alt="Add Post Icon" />
                             </button>
                         </div>
                     </section>
@@ -131,11 +131,11 @@
                         <h3>Simulate</h3>
                         <div class="tools">
                             <button type="button" id="stepButton" class="step-button">
-                                <img src="./images/foot.svg" />
+                                <img src="./images/foot.svg" alt="Step Icon" />
                                 <span class="wide-shown">Step</span>
                             </button>
                             <button type="button" id="playButton" >
-                                <img src="./images/play.svg" /> 
+                                <img src="./images/play.svg" alt="Start Icon"/> 
                                 <span class="wide-shown">Start</span>
                             </button>
                         </div>
@@ -175,33 +175,22 @@
 
             <section id="phone" class="phone">
                 <h2 class="visually-hidden">Phone control</h2>
-                <!-- <img src="../images/phone.png" alt="" class="phone-border" /> -->
-
                 <div class="phone-status-bar">
-                   
                     <div id="time" class="time"></div>
                     <div class="phoneIcon">
-
-
-                        
                         <img src="./images/networkIcon.svg" alt="" />
                         <img src="./images/wifiIcon.svg" alt="" />
-                        
-                          <div id="battery" class="battery">
+                        <div id="battery" class="battery">
                             <div id="battery-level" class="battery-level"></div>
                             <div id="level" class="level">50%</div>
                         </div>
-
-
                     </div>
-                    
                 </div>
 
                 <div id="selectedNodeOptions" class="hide fakebook">
-
                     <section class="fakebook-profile">
                         <h3 class="visually-hidden">Profile</h3>
-                        <img src="" alt="" id="selectedNodeImage" />
+                        <img src="" alt="Image of selected perosn" id="selectedNodeImage" />
                         <p id="selectedNodeUserName" class="username">Name</p>
 
 
@@ -229,7 +218,7 @@
                         <template id="feedTemplate">
                             <li>
                                 <h4 class="post-heading"></h4>
-                                <img class="post-image" src="https://unsplash.it/640/425" alt="">
+                                <img class="post-image" src="https://unsplash.it/640/425" alt="Image of news item">
                                 <div class="post-options">
                                     <button class="like-button">
                                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -237,8 +226,8 @@
                                         </svg>
                                     </button>
                                     
-                                    <button><img src="./images/share.svg" alt=""></button>
-                                    <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
+                                    <button><img src="./images/share.svg" alt="Share icon"></button>
+                                    <div><img src="./images/eye.svg" class="eye" alt="Views icon"><span aria-label="seen by">2</span></div>
                                 </div>
                             </li>
                         </template>
@@ -247,7 +236,7 @@
                     <section class="friends" id="friends">
                         <div class="section-heading">
                             <h3>Friends</h3>
-                            <button class="add-button"><img src="./images/addIcon.svg" alt="">Add Friends</button>
+                            <button class="add-button"><img src="./images/addIcon.svg" alt="Add friends icon">Add Friends</button>
                         </div>
 
                         <ul>
@@ -257,8 +246,8 @@
                         </ul>
                         <template id="friendsTemplate">
                             <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p>Christiana</p>
+                                <img src="./images/reset.svg" alt="Reset icon" />
+                                <p></p>
                                 <button class="unfriend-button">Unfriend</button>
                             </li>
                         </template>
@@ -311,25 +300,25 @@
                     <ul>
                         <li>
                             <button data-page="feed">
-                            <img src="./images/homeIcon.svg" alt="" />
+                            <img src="./images/homeIcon.svg" alt="Home icon" />
                             <span class="visually-hidden">Home</span>
                         </button>
                         </li>
                         <li>
                             <button data-page="liked">
-                            <img src="./images/likedIcon.svg" alt="" />
+                            <img src="./images/likedIcon.svg" alt="Like icon" />
                             <span class="visually-hidden">Liked</span>
                         </button>
                         </li>
                         <li>
                             <button data-page="friends">
-                            <img src="./images/friendsIcon.svg" alt="" />
+                            <img src="./images/friendsIcon.svg" alt="Friends icon" />
                             <span class="visually-hidden">Friends</span>
                         </button>
                         </li>
                         <li>
                             <button data-page="profile">
-                            <img src="./images/profile.svg" alt="" />
+                            <img src="./images/profile.svg" alt="Profile icon" />
                             <span class="visually-hidden">Profile</span>
                         </button>
                         </li>
@@ -357,7 +346,7 @@
                     <li>Info link<span class="info-link"></span></li>
                     <li>Liked<span class="liked-link"></span></li>
                     <li>Disliked<span class="disliked-link"></span></li>
-                    <li>Most important <img src="images/goldMedal.png" alt=""></li>
+                    <li>Most important <img src="images/goldMedal.png" alt="Golden medal for most popular person"></li>
                 </ul>
             </section>
 
@@ -365,7 +354,7 @@
                 <canvas id="nodeCanvas"></canvas>
                 <div id="nodeDataContainer" popover class="hide node-popover">
                     <p></p>
-                    <img src="" alt="" />
+                    <img src="" alt="Profile picture" />
                     <p>
                         Friends:
                         <span class="friendsSpan">1</span>
