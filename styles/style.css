@@ -301,11 +301,12 @@ TOOLBAR STYLES
     padding: 0;
     --background-color: transparent;
     margin-top: 1.5em;
-        & img{
-            width: 24px;
-            height: 24px;
-        }
-    }
+}
+
+.info-button{
+    width: 24px;
+    height: 24px;
+}
 
 .wide-shown {
     display: none;
