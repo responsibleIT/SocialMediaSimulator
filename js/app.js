@@ -24,7 +24,7 @@ const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
-const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
+// const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
@@ -32,10 +32,12 @@ const legendListItems = document.querySelectorAll(".legend li");
 const friendsUl = friends.querySelector("ul");
 const feedUl = feed.querySelector("ul");
 const likedUl = liked.querySelector("ul");
+const calcSection = document.querySelector(".calculated");
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
+let calcGroupsBool = true;
 let playing = false;
 
 //Global map of nodes
@@ -51,7 +53,9 @@ let selectedNode = null;
 let hoveredNode = null;
 
 // variables for filtering edges
-let filteredEdges = [];
+let filteredEdges = ["disliked-link"]; // disliked-link standard filtered
+
+const borderDistanceNode = 15;
 
 // Initial resize to set canvas size
 resizeCanvas();
@@ -60,6 +64,8 @@ resizeCanvas();
 ///// Event listeners /////
 ///////////////////////////
 
+
+// Existing functionality for legendListItems
 legendListItems.forEach((li) => {
     li.addEventListener("click", () => {
         const span = li.querySelector("span");
@@ -81,7 +87,31 @@ legendListItems.forEach((li) => {
             });
             li.style.textDecoration = "line-through";
         }
+        if (selectedNode) {
+            selectedNode.spawnForwardButtons(links, filteredEdges);
+        }
     });
+});
+
+// Initial hiding of forward buttons
+// const forwardButtons = document.querySelectorAll(".forwardButton");
+// forwardButtons.forEach((button) => {
+//     button.style.display = "none";
+// });
+
+
+
+
+
+
+calcSection.addEventListener("click", () => {
+    if (calcGroupsBool) {
+        calcGroupsBool = false;
+    } else {
+        calcGroupsBool = true;
+        findAllConnectedComponents();
+    }
+    document.querySelector(".pauseOrPlay").src = `images/pausedImage-${!calcGroupsBool}.svg`;
 });
 
 // function for counter inputs
@@ -152,16 +182,7 @@ findAllConnectedComponents();
 // });
 
 // single animation frame (step)
-stepButton.addEventListener("click", () => {
-    nodes.forEach((node) => {
-        if (node.label === "Person") {
-            node.step(nodes, links);
-            resizeNodes(nodes);
-        }
-    });
-    calculateAdjustedClosenessCentrality();
-    findAllConnectedComponents();
-});
+stepButton.addEventListener("click", () => stepAllNodes());
 
 // play/pause automatically stepping
 playButton.addEventListener("click", () => {
@@ -181,6 +202,10 @@ window.addEventListener("resize", resizeCanvas);
 ///////////////////////////
 //////// Functions ////////
 ///////////////////////////
+
+function hasAnchorPos() {
+    return CSS.supports("position", "absolute") && CSS.supports("top", "anchor(--test-anchor top)");
+}
 
 /**
  * Function to calculate the popularity of the post
@@ -210,6 +235,9 @@ function resizeCanvas() {
 
 // ...
 function findAllConnectedComponents() {
+    if (!calcGroupsBool) {
+        return;
+    }
     let visited = new Set();
     let components = [];
     // Filter to include only 'Person' nodes that have at least one friend
@@ -285,8 +313,19 @@ function drawRandom(label, count, userData) {
         let node;
 
         const id = nodes.size;
-        const x = Math.random() * canvasSize.width;
-        const y = Math.random() * canvasSize.height;
+        let x = Math.random() * canvasSize.width;
+        let y = Math.random() * canvasSize.height;
+        if (x < borderDistanceNode) {
+            x = x + borderDistanceNode;
+            console.log(x);
+        } else if (x > canvasSize.width - borderDistanceNode) {
+            x = x - borderDistanceNode;
+        }
+        if (y < borderDistanceNode) {
+            y = y + borderDistanceNode;
+        } else if (y > canvasSize.height - borderDistanceNode) {
+            y = y - borderDistanceNode;
+        }
 
         switch (label) {
             case "Person":
@@ -347,6 +386,7 @@ async function spawnNode(evt) {
     setEventListeners(node);
 }
 
+let hiddenImg;
 /**
  * ...
  * @param {Map} nodes - ...
@@ -356,8 +396,19 @@ function setEventListeners(node) {
         hoveredNode = node.id;
         if (node.label === "Person") {
             nodes.forEach((node) => {
-                node.element.style.anchorName = "";
+                if (node.element.style.anchorName !== `--MIP${node.id}`) {
+                    node.element.style.anchorName = "";
+                }
             });
+            if (node.element.style.anchorName === `--MIP${node.id}`) {
+                const allMedals = canvasContainer.querySelectorAll(".mipMedal");
+                allMedals.forEach((img) => {
+                    if (img.style.positionAnchor === `--MIP${node.id}`) {
+                        img.style.display = "none";
+                        hiddenImg = img;
+                    }
+                });
+            }
             node.element.style.anchorName = "--currentNode";
             showNodeDataContainer(node);
         }
@@ -366,6 +417,12 @@ function setEventListeners(node) {
     node.element.addEventListener("mouseout", function () {
         hoveredNode = null;
         nodeDataContainer.style.display = "none";
+        if (mostImportantPersons.length > 0 && mostImportantPersonsInText !== "Unknown") {
+        }
+        if (hiddenImg) {
+            hiddenImg.style.display = "block";
+            node.element.style.anchorName = `--MIP${node.id}`;
+        }
     });
 
     node.element.addEventListener("click", function () {
@@ -385,9 +442,9 @@ function setEventListeners(node) {
             default:
                 const nodeHovered = nodes.get(hoveredNode);
                 if (nodeHovered.label === "Person") {
-                    selectedNode.linkHandler(nodeHovered, links);
+                    selectedNode.linkHandler(nodeHovered, links, filteredEdges);
                 } else {
-                    nodeHovered.linkHandler(selectedNode, links);
+                    nodeHovered.linkHandler(selectedNode, links, filteredEdges);
                 }
 
                 resizeNodes(nodes);
@@ -445,11 +502,12 @@ function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[2].children[0].textContent = nodeData.friends.size;
     nodeDataContainer.children[2].children[2].textContent = nodeData.popularity;
     nodeDataContainer.style.display = "grid";
-    // if (hasAnchorPos()) {
-    //     //Move the nodeDataContainer to the position of the node label
-    //     nodeDataContainer.style.left = nodeData.x + 10 + "px";
-    //     nodeDataContainer.style.top = nodeData.y + 10 + "px";
-    // }
+
+    if (!hasAnchorPos()) {
+        //Move the nodeDataContainer to the position of the node label
+        nodeDataContainer.style.left = nodeData.x + 10 + "px";
+        nodeDataContainer.style.top = nodeData.y + 10 + "px";
+    }
 }
 
 function getNodesWithReaders(nodes) {
@@ -482,6 +540,7 @@ function showMobile(nodeData) {
     updateFeedList(nodeData);
     updateLikedList(nodeData);
 
+    //
     selectedNodeOptions.classList.remove("hide");
 }
 
@@ -574,7 +633,10 @@ function addPostToFeedList(feedUl, item, nodeData) {
 
     const likeButton = clone.querySelector(".like-button");
     if (nodeData.items.has(item.id)) {
-        likeButton.classList.add("active");
+        const foundItem = nodeData.items.get(item.id);
+        if (foundItem.score > 0) {
+            likeButton.classList.add("active");
+        }
     } else {
         likeButton.classList.remove("active");
     }
@@ -618,31 +680,41 @@ function updateLikedList(nodeData) {
     }
 }
 
-function addPostToLikedList(likedUl, item, nodeData) {
-    const clone = feedTemplate.content.cloneNode(true);
-    const img = clone.querySelector("img");
-    img.src = item.post.image;
-    const heading = clone.querySelector("h4");
-    heading.textContent = item.post.title;
-
-    const likeButton = clone.querySelector(".like-button");
-    likeButton.classList.add("active");
-    likeButton.addEventListener("click", () => {
-        if (nodeData.items.has(item.post.id)) {
-            nodeData.removeItemLink(item.post, links);
-            // transparent
-            likeButton.classList.remove("active");
-            updateFeedList(nodeData);
-            likeButton.parentElement.parentElement.remove();
-        } else {
-            nodeData.addItemLink(item.post, nodeData, links);
-            likeButton.classList.add("active");
-            updateFeedList(nodeData);
-            likeButton.parentElement.parentElement.remove();
-        }
+deleteButtonLikes.addEventListener("click", () => {
+    const node = selectedNode;
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
     });
+    updateLikedList(node);
+});
 
-    likedUl.appendChild(clone);
+function addPostToLikedList(likedUl, item, nodeData) {
+    if (item.score > 0) {
+        const clone = feedTemplate.content.cloneNode(true);
+        const img = clone.querySelector("img");
+        img.src = item.post.image;
+        const heading = clone.querySelector("h4");
+        heading.textContent = item.post.title;
+
+        const likeButton = clone.querySelector(".like-button");
+        likeButton.classList.add("active");
+        likeButton.addEventListener("click", () => {
+            if (nodeData.items.has(item.post.id)) {
+                nodeData.removeItemLink(item.post, links);
+                // transparent
+                likeButton.classList.remove("active");
+                updateFeedList(nodeData);
+                likeButton.parentElement.parentElement.remove();
+            } else {
+                nodeData.addItemLink(item.post, nodeData, links);
+                likeButton.classList.add("active");
+                updateFeedList(nodeData);
+                likeButton.parentElement.parentElement.remove();
+            }
+        });
+
+        likedUl.appendChild(clone);
+    }
 }
 
 /**
@@ -702,7 +774,7 @@ function selectNode(node) {
     if (node.label === "Person") {
         showPreLink(node);
         phone.classList.add("phone-selected");
-        node.spawnForwardButtons(links);
+        node.spawnForwardButtons(links, filteredEdges);
     }
     selectedNode = node;
     // showMobile(node);
@@ -726,6 +798,10 @@ function deselectNode() {
     node.removeForwardButtons();
 }
 
+let previousMips;
+let mostImportantPersonsInText;
+let mostImportantPersons = [];
+
 //Function for calculating the closeness centrality of all nodes
 function calculateAdjustedClosenessCentrality() {
     let centralities = {};
@@ -748,22 +824,55 @@ function calculateAdjustedClosenessCentrality() {
             centralities[node] = 0; // Or consider another approach for isolated nodes
         }
     });
-    let mostImportantPerson = "Unknown";
     let highestScore;
+    mostImportantPersons = [];
+    mostImportantPersonsInText = "Unknown";
     for (const [key, value] of Object.entries(centralities)) {
         const nodeName = nodes.get(Number(key));
         if ((highestScore === undefined) & (value > 0)) {
             highestScore = value;
-            mostImportantPerson = nodeName.userName;
+            mostImportantPersonsInText = nodeName.userName;
+            mostImportantPersons = [nodeName];
         } else if (value > highestScore) {
             highestScore = value;
-            mostImportantPerson = nodeName.userName;
+            mostImportantPersonsInText = nodeName.userName;
+            mostImportantPersons = [nodeName];
         } else if (value === highestScore) {
             highestScore = value;
-            mostImportantPerson = mostImportantPerson + ", " + nodeName.userName;
+            mostImportantPersonsInText = mostImportantPersonsInText + ", " + nodeName.userName;
+            mostImportantPersons.push(nodeName);
         }
     }
-    calcMostImportantPerson.textContent = mostImportantPerson;
+    // calcMostImportantPerson.textContent = mostImportantPersonsInText;
+    if (previousMips !== mostImportantPersonsInText) {
+        addMedalToMip(mostImportantPersons, mostImportantPersonsInText);
+    }
+}
+
+function addMedalToMip(mostImportantPersons, mostImportantPersonsInText) {
+    hiddenImg = "";
+    const allPreviousImages = canvasContainer.querySelectorAll(".mipMedal");
+    allPreviousImages.forEach((img) => {
+        img.remove();
+    });
+    previousMips = mostImportantPersonsInText;
+    mostImportantPersons.forEach((person) => {
+        const img = document.createElement("img");
+        img.src = "images/goldMedal.png";
+        img.classList.add("mipMedal");
+        if (hasAnchorPos()) {
+            canvasContainer.append(img);
+            img.style.positionAnchor = `--MIP${person.id}`;
+            img.style.display = "block";
+            person.element.style.anchorName = `--MIP${person.id}`;
+        } else {
+            person.element.append(img);
+            img.style.position = "relative";
+            img.style.top = "50%";
+            img.style.left = "50%";
+            img.style.display = "block";
+        }
+    });
 }
 
 /**
@@ -794,6 +903,32 @@ function bfsShortestPath(graph, startNode) {
 }
 
 /**
+ * Function for stepping all nodes and update calculations and data
+ */
+
+function stepAllNodes() {
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+            resizeNodes(nodes);
+            filteredEdges.forEach((filteredEdge) => {
+                const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${filteredEdge}`);
+                allLinksOfThatKind.forEach((span) => {
+                    span.style.display = "none";
+                });
+            });
+        }
+    });
+    calculateAdjustedClosenessCentrality();
+    findAllConnectedComponents();
+    if (selectedNode) {
+        updateFriendList(selectedNode);
+        updateLikedList(selectedNode);
+        updateFeedList(selectedNode);
+    }
+}
+
+/**
  * Function for automatically playing animation frames
  */
 
@@ -804,14 +939,7 @@ function framelooper() {
         }, 500);
     }
 
-    nodes.forEach((node) => {
-        if (node.label === "Person") {
-            node.step(nodes, links);
-            resizeNodes(nodes);
-        }
-    });
-    calculateAdjustedClosenessCentrality();
-    findAllConnectedComponents();
+    stepAllNodes();
 }
 
 // Switch the mobile pages
@@ -836,24 +964,23 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //Export & Import
-exportButton.addEventListener('click', () => {
+exportButton.addEventListener("click", () => {
     fileHandler.export(nodes);
 });
 
-importButton.addEventListener('click', async () => {
+importButton.addEventListener("click", async () => {
     await fileHandler.import(nodes, links);
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
         setEventListeners(node);
     });
     resizeNodes(nodes);
-})
+});
 
 
 
 
-// console.log(deleteNodeButton);
 deleteNodeButton.addEventListener('click', () => {
-    const node = selectedNode
+    const node = selectedNode;
     node.friends.forEach((friend) => {
         friend.person.removeFriend(node, links);
     });
@@ -869,10 +996,7 @@ deleteNodeButton.addEventListener('click', () => {
     nodes.delete(node.id);
     // showMobile(node);
 
-
     // updateFriendList(node);
-    console.log(nodes);
 });
-
 
 
