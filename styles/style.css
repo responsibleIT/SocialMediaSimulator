@@ -80,6 +80,9 @@ button {
         box-shadow: inset 0 0 3px 1px #0009;
         background-color: color-mix(in srgb, var(--background-color), #000000 30%);
     }
+    & > img {
+        pointer-events: none;
+    }
 }
 
 /* Only for screenreaders */

@@ -253,7 +253,8 @@ export default class Person extends Node {
         });
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
-            if (Math.random() > this.socialScore) { // change this back to 0.5?
+            if (Math.random() < this.socialScore) {
+                // change this back to 0.5?
                 post = post.post;
                 //Get all people who have read the post and liked it
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
@@ -506,6 +507,7 @@ export default class Person extends Node {
 
     //Function for adding an info link between the currently selected node and the node with the given id
     addInfoLink(from, to, links, score = 0) {
+        // check if
         if (to.person) {
             to = to.person;
         }
