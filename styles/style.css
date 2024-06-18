@@ -18,7 +18,6 @@ ROOT VARIABLES
     --main-color:#0075ff;
     --main-white-color: #ffffff; 
     --button-focus-outline: 2px solid orange;
-    --button-shadow: 0 0 2px 1px #0009;
     --label-background-color: rgba(0, 117, 255, 0.3);
     --node-background-color: blue;
     --node-selected-border: 2px solid orange;
