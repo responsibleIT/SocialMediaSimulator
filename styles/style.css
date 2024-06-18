@@ -333,7 +333,7 @@ TOOLBAR STYLES
 .tools button img {
     height: 1em;
     filter: invert(1);
-    /* display: block; */
+    vertical-align: bottom;
 }
 
 
