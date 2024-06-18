@@ -32,6 +32,7 @@ const legendListItems = document.querySelectorAll(".legend li");
 const friendsUl = friends.querySelector("ul");
 const feedUl = feed.querySelector("ul");
 const likedUl = liked.querySelector("ul");
+const toBeFriendsUl = searchFriends.querySelector("ul");
 const calcSection = document.querySelector(".calculated");
 let linkStripe;
 let mouseMoveHandler;
@@ -537,6 +538,7 @@ function showMobile(nodeData) {
     likedUl.innerHTML = "";
 
     updateFriendList(nodeData);
+    updateAddFriendList(nodeData);
     updateFeedList(nodeData);
     updateLikedList(nodeData);
 
@@ -579,7 +581,6 @@ function addPostToFriendList(friendsUl, friend, nodeData) {
     const clone = friendsTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
     const p = clone.querySelector("p");
-    p.classList.add("friend");
     const unfriendButton = clone.querySelector(".unfriend-button");
     p.textContent = friend.userName;
     img.src = friend.profileImage;
@@ -593,6 +594,38 @@ function addPostToFriendList(friendsUl, friend, nodeData) {
         resizeNodes(nodes);
     });
     friendsUl.appendChild(clone);
+}
+
+function updateAddFriendList(nodeData) {
+    const personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
+    const notFriends = new Map([...nodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
+
+    if (notFriends.size !== 0) {
+        toBeFriendsUl.innerHTML = "";
+        notFriends.forEach(friend => {
+            addFriendToAddFriendList(toBeFriendsUl, friend, nodeData);
+        });
+    } else {
+        toBeFriendsUl.innerHTML = "";
+    }
+    updateFriendList(nodeData);
+}
+
+function addFriendToAddFriendList(friendsUl, friend, nodeData) {
+    const clone = toBeFriendsTemplate.content.cloneNode(true);
+    const img = clone.querySelector("img");
+    const p = clone.querySelector("p");
+    const friendButton = clone.querySelector(".friend-button");
+    p.textContent = friend.userName;
+    img.src = friend.profileImage;
+    friendButton.addEventListener("click", () => {
+        if (nodeData.person) {
+            nodeData = nodeData.person;
+        }
+        nodeData.addFriend(friend, links);
+        resizeNodes(nodes);
+    });
+    toBeFriendsUl.appendChild(clone);
 }
 
 function updateFeedList(nodeData) {
@@ -950,7 +983,7 @@ function navigateToPage(pageId) {
     const pages = Array.from(mobilePages.children);
     const targetPage = document.getElementById(pageId);
 
-    pages.forEach((page) => (page.style.display = "none"));
+    pages.forEach(page => page.style.display = "none");
     targetPage.style.display = "block";
     if (pageId === "profile") {
         selectedProfile.style.display = "block";
