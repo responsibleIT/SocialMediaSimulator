@@ -102,8 +102,9 @@ legendListItems.forEach((li) => {
 //     button.style.display = "none";
 // });
 
-
-
+traitSelect.addEventListener("change", (e) => {
+    selectedNode.socialScore = traitSelect.value;
+});
 
 
 
@@ -534,7 +535,7 @@ function showMobile(nodeData) {
     totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
     increasedPopularityInput.value = nodeData.increasedPopularity;
-
+    traitSelect.value = nodeData.socialScore;
     friendsUl.innerHTML = "";
     feedUl.innerHTML = "";
     likedUl.innerHTML = "";

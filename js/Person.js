@@ -7,7 +7,7 @@ export default class Person extends Node {
         this.friends = new Map(); //Contains {friend: score} pairs
         this.items = new Map(); //Contains {item: score} pairs
         this.infoLinks = new Map(); //Contains {infoLink: score} pairs
-        this.socialScore = 0.5; //Decides how social the agent is
+        this.socialScore = 0.6; //Decides how social the agent is
         this.profileImage = user.image;
         this.userName = user.username;
         this.growFactor = 1.5;
@@ -253,7 +253,7 @@ export default class Person extends Node {
         });
         //For each post, flip a coin. If heads, add a random person that also liked the post as a friend
         positivePosts.forEach((post) => {
-            if (Math.random() > 0.5) {
+            if (Math.random() > this.socialScore) { // change this back to 0.5?
                 post = post.post;
                 //Get all people who have read the post and liked it
                 const peopleThatReadPost = Array.from(post.readers.values()).filter((reader) => {
