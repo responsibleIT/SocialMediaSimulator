@@ -105,8 +105,8 @@
                                 <input type="number" id="people-count" value="10" min="3" max="50" />
                                 <button tabindex="-1">+</button>
                             </div>
-                            <button type="button" id="addRandomPeopleButton">
-                                Add people
+                            <button type="button" id="addRandomPeopleButton" class="add-random-people-button">
+                                Add <img src="images/sns_icons_User_white.svg" alt="" />
                             </button>
 
                             <div class="vertical-line"></div>
@@ -117,8 +117,8 @@
                                 <button tabindex="-1">+</button>
                             </div>
 
-                            <button type="button" id="addRandomContentButton">
-                                Post content
+                            <button type="button" id="addRandomContentButton" class="add-random-content-button">
+                                Post <img src="images/sns_icons_Post_white.svg" alt="" />
                             </button>
                         </div>
                     </section>
@@ -128,11 +128,13 @@
                     <section>
                         <h3>Simulate</h3>
                         <div class="tools">
-                            <button type="button" id="stepButton">
-                                <img src="./images/start.svg" /> Step
+                            <button type="button" id="stepButton" class="step-button">
+                                <img src="./images/foot_white.svg" />
+                                <span class="wide-shown">Step</span>
                             </button>
-                            <button type="button" id="resetButton">
-                                <img src="./images/reset.svg" alt="resets" /> Reset
+                            <button type="button" id="startButton" >
+                                <img src="./images/start.svg" /> 
+                                <span class="wide-shown">Start</span>
                             </button>
                         </div>
                     </section>
@@ -143,10 +145,12 @@
                         <h3>File</h3>
                         <div class="tools">
                             <button type="button" id="importButton">
-                                Import
+                                <img src="./images/import_white.svg" alt="import button"/>
+                                <span class="wide-shown">Import</span>
                             </button>
                             <button type="button" id="exportButton">
-                                Export
+                                <img src="./images/export_white.svg" alt="export button"/>
+                                <span class="wide-shown">Export</span>
                             </button>
                         </div>
                     </section>
@@ -155,9 +159,13 @@
 
                     <section>
                         <div class="tools"> 
-                            <button type="button" id="help" class="help"><img src="./images/help.svg"></button>
+                            <!-- <h3>Info</h3> -->
+                            <button type="button" id="help" class="help">
+                                <img src="./images/help.svg" alt="info button">
+                            </button>
                             
                         </div>
+                </section>
                 </section>
             </div>
 

@@ -286,6 +286,35 @@ TOOLBAR STYLES
     align-items: center;
 }
 
+.tools button img{
+    height: 1em;
+    width: 1em;
+}
+
+.add-random-people-button img, .add-random-content-button img {
+    height: 12px;
+    width: 13px;
+}
+
+.help{
+    padding: 0;
+    --background-color: transparent;
+    margin-top: 1.5em;
+        & img{
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+.wide-shown {
+    display: none;
+}
+
+@media (min-width: 1310px) {
+    .wide-shown {
+        display: inline;
+    }
+}
 
 /*
 SPECIAL INPUTS
@@ -992,15 +1021,7 @@ FAKEBOOK STYLES
     animation: like 0.3s ease;
 }
 
-.help{
-padding: 0;
---background-color: transparent;
-margin-top: 1.5em;
-    & img{
-        width: 24px;
-        height: 24px;
-    }
-}
+
 
 @keyframes like {
     0% {
