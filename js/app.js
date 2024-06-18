@@ -38,6 +38,7 @@ let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
 let calcGroupsBool = true;
+let playing = false;
 
 //Global map of nodes
 let nodes = new Map();
@@ -180,25 +181,18 @@ increasedPopularityInput.addEventListener("change", () => {
 findAllConnectedComponents();
 // });
 
-stepButton.addEventListener("click", () => {
-    nodes.forEach((node) => {
-        if (node.label === "Person") {
-            node.step(nodes, links);
-            resizeNodes(nodes);
-            filteredEdges.forEach((filteredEdge) => {
-                const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${filteredEdge}`);
-                allLinksOfThatKind.forEach((span) => {
-                    span.style.display = "none";
-                });
-            });
-        }
-    });
-    calculateAdjustedClosenessCentrality();
-    findAllConnectedComponents();
-    if (selectedNode) {
-        updateFriendList(selectedNode);
-        updateLikedList(selectedNode);
-        updateFeedList(selectedNode);
+// single animation frame (step)
+stepButton.addEventListener("click", () => stepAllNodes());
+
+// play/pause automatically stepping
+playButton.addEventListener("click", () => {
+    if(playing) {
+        playing = false;
+        playButton.querySelector("img").src = "./images/play.svg";
+    } else {
+        playing = true;
+        playButton.querySelector("img").src = "./images/pause.svg";
+        framelooper();
     }
 });
 
@@ -908,6 +902,46 @@ function bfsShortestPath(graph, startNode) {
     return distances;
 }
 
+/**
+ * Function for stepping all nodes and update calculations and data
+ */
+
+function stepAllNodes() {
+    nodes.forEach((node) => {
+        if (node.label === "Person") {
+            node.step(nodes, links);
+            resizeNodes(nodes);
+            filteredEdges.forEach((filteredEdge) => {
+                const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${filteredEdge}`);
+                allLinksOfThatKind.forEach((span) => {
+                    span.style.display = "none";
+                });
+            });
+        }
+    });
+    calculateAdjustedClosenessCentrality();
+    findAllConnectedComponents();
+    if (selectedNode) {
+        updateFriendList(selectedNode);
+        updateLikedList(selectedNode);
+        updateFeedList(selectedNode);
+    }
+}
+
+/**
+ * Function for automatically playing animation frames
+ */
+
+function framelooper() {
+    if(playing) {
+        setTimeout(() => { // Set the speed manually
+            window.requestAnimationFrame(framelooper); // Request the next frame by calling this function
+        }, 500);
+    }
+
+    stepAllNodes();
+}
+
 // Switch the mobile pages
 document.addEventListener("DOMContentLoaded", function () {
     const phoneNav = document.getElementById("phoneNav");
@@ -964,6 +998,5 @@ deleteNodeButton.addEventListener('click', () => {
 
     // updateFriendList(node);
 });
-
 
 
