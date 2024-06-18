@@ -69,6 +69,9 @@ resizeCanvas();
 legendListItems.forEach((li) => {
     li.addEventListener("click", () => {
         const span = li.querySelector("span");
+        if (!span) {
+            return;
+        }
         const allLinksOfThatKind = canvasContainer.querySelectorAll(`div.${span.classList[0]}`);
 
         if (filteredEdges.includes(span.classList[0])) {
@@ -99,8 +102,9 @@ legendListItems.forEach((li) => {
 //     button.style.display = "none";
 // });
 
-
-
+traitSelect.addEventListener("change", (e) => {
+    selectedNode.socialScore = traitSelect.value;
+});
 
 
 
@@ -531,7 +535,7 @@ function showMobile(nodeData) {
     totalPopularity.textContent = Number(selectedNode.popularity) + Number(selectedNode.increasedPopularity);
 
     increasedPopularityInput.value = nodeData.increasedPopularity;
-
+    traitSelect.value = nodeData.socialScore;
     friendsUl.innerHTML = "";
     feedUl.innerHTML = "";
     likedUl.innerHTML = "";

@@ -590,6 +590,7 @@ LEGEND STYLES
         }
         & li:has(.post-dot, img){
             flex-direction: row;
+            cursor: auto;
         }
         & li:has(.disliked-link){
             text-decoration: line-through;
