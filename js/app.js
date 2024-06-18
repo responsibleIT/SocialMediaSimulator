@@ -942,23 +942,32 @@ function framelooper() {
     stepAllNodes();
 }
 
-// Switch the mobile pages
-document.addEventListener("DOMContentLoaded", function () {
-    const phoneNav = document.getElementById("phoneNav");
-    const buttons = phoneNav.querySelectorAll("button");
-    const pages = document.querySelectorAll("#friends, #profile, #liked, #selectedProfile, #feed");
+/**
+ * Function for switching pages in the mobile interface
+ */
 
-    buttons.forEach((button) => {
+function navigateToPage(pageId) {
+    const pages = Array.from(mobilePages.children);
+    const targetPage = document.getElementById(pageId);
+
+    pages.forEach((page) => (page.style.display = "none"));
+    targetPage.style.display = "block";
+    if (pageId === "profile") {
+        selectedProfile.style.display = "block";
+    }
+}
+
+// Mobile navigation
+document.addEventListener("DOMContentLoaded", function () {
+    const mobileButtons = document.querySelectorAll(".phone [data-page]");
+
+    mobileButtons.forEach((button) => {
         button.addEventListener("click", function () {
-            buttons.forEach((btn) => btn.classList.remove("active"));
+            mobileButtons.forEach((btn) => btn.classList.remove("active"));
 
             this.classList.add("active");
 
-            pages.forEach((page) => (page.style.display = "none"));
-            document.getElementById(this.dataset.page).style.display = "block";
-            if (this.dataset.page === "profile") {
-                selectedProfile.style.display = "block";
-            }
+            navigateToPage(this.dataset.page);
         });
     });
 });
