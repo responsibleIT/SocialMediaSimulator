@@ -592,7 +592,7 @@ function addFriendToFriendList(friendsUl, friend, nodeData) {
 
 function updateAddFriendsList(nodeData) {
     const personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
-    const notFriends = new Map([...nodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
+    const notFriends = new Map([...personNodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
 
     if (notFriends.size !== 0) {
         addFriendsUl.innerHTML = "";
