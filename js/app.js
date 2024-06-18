@@ -7,13 +7,11 @@ import FileHandler from "./FileHandler.js";
 import WebData from "./WebData.js";
 import Onboarding from "./Onboarding.js";
 
-
 const cursor = new Cursor();
 const userdata = new UserData();
 const fileHandler = new FileHandler();
 const webData = new WebData();
 const onboarding = new Onboarding();
-
 
 const canvas = document.getElementById("nodeCanvas");
 const canvasContainer = document.getElementById("canvasContainer");
@@ -24,7 +22,6 @@ const selectedNodeOptions = document.getElementById("selectedNodeOptions");
 const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
-// const calcClosenessCentrality = document.getElementById("calcClosenessCentrality");
 const increasedPopularityInput = document.getElementById("nodePopularity");
 const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
@@ -64,7 +61,6 @@ resizeCanvas();
 ///// Event listeners /////
 ///////////////////////////
 
-
 // Existing functionality for legendListItems
 legendListItems.forEach((li) => {
     li.addEventListener("click", () => {
@@ -95,12 +91,6 @@ legendListItems.forEach((li) => {
         }
     });
 });
-
-// Initial hiding of forward buttons
-// const forwardButtons = document.querySelectorAll(".forwardButton");
-// forwardButtons.forEach((button) => {
-//     button.style.display = "none";
-// });
 
 traitSelect.addEventListener("change", () => {
     selectedNode.socialScore = traitSelect.value;
@@ -179,9 +169,7 @@ increasedPopularityInput.addEventListener("change", () => {
     showMobile(selectedNode);
 });
 
-// calcGroupsButton.addEventListener("click", () => {
 findAllConnectedComponents();
-// });
 
 // single animation frame (step)
 stepButton.addEventListener("click", () => stepAllNodes());
@@ -205,6 +193,7 @@ window.addEventListener("resize", resizeCanvas);
 //////// Functions ////////
 ///////////////////////////
 
+// Check if anchor positioning is supported in the browser
 function hasAnchorPos() {
     return CSS.supports("position", "absolute") && CSS.supports("top", "anchor(--test-anchor top)");
 }
@@ -235,7 +224,7 @@ function resizeCanvas() {
     }
 }
 
-// ...
+// A function to calculate the number of groups in the network.
 function findAllConnectedComponents() {
     if (!calcGroupsBool) {
         return;
@@ -248,7 +237,6 @@ function findAllConnectedComponents() {
             if (node.label === "Person" && node.friends && node.friends.size > 0) {
                 return node;
             }
-            // return node.label === "Person" && node.friends && node.friends.size > 0;
         })
     );
     // Helper function to perform BFS and find all nodes connected to 'startNode'
@@ -319,7 +307,6 @@ function drawRandom(label, count, userData) {
         let y = Math.random() * canvasSize.height;
         if (x < borderDistanceNode) {
             x = x + borderDistanceNode;
-            console.log(x);
         } else if (x > canvasSize.width - borderDistanceNode) {
             x = x - borderDistanceNode;
         }
@@ -458,9 +445,6 @@ function setEventListeners(node) {
                     updateLikedList(selectedNode);
                     updateFeedList(selectedNode);
                 }
-
-            // showMobile(selectedNode);
-            // showNodeDataContainer(selectedNode);
         }
     });
 
@@ -542,12 +526,10 @@ function showMobile(nodeData) {
     updateFeedList(nodeData);
     updateLikedList(nodeData);
 
-    //
     selectedNodeOptions.classList.remove("hide");
 }
 
 function updateFriendList(nodeData, node) {
-    // friends
     if (nodeData.friends.size !== 0) {
         nodeData.friends.forEach((friend) => {
             if (friend.person) {
@@ -672,7 +654,6 @@ function addPostToFeedList(feedUl, item, nodeData) {
 }
 
 function updateLikedList(nodeData) {
-    // liked
     if (nodeData.items.size !== 0) {
         nodeData.items.forEach((item) => {
             const headings = likedUl.querySelectorAll(".post-heading");
@@ -717,16 +698,13 @@ function addPostToLikedList(likedUl, item, nodeData) {
         likeButton.addEventListener("click", () => {
             if (nodeData.items.has(item.post.id)) {
                 nodeData.removeItemLink(item.post, links);
-                // transparent
                 likeButton.classList.remove("active");
-                updateFeedList(nodeData);
-                likeButton.parentElement.parentElement.remove();
             } else {
                 nodeData.addItemLink(item.post, nodeData, links);
                 likeButton.classList.add("active");
-                updateFeedList(nodeData);
-                likeButton.parentElement.parentElement.remove();
             }
+            updateFeedList(nodeData);
+            likeButton.parentElement.parentElement.remove(); // TODO this should not be removed but is easiliy fixed when you reload the page when changing page.
         });
 
         likedUl.appendChild(clone);
@@ -793,7 +771,6 @@ function selectNode(node) {
         node.spawnForwardButtons(links, filteredEdges);
     }
     selectedNode = node;
-    // showMobile(node);
 }
 
 //Function for deselecting a node and remove the highlight
@@ -859,7 +836,6 @@ function calculateAdjustedClosenessCentrality() {
             mostImportantPersons.push(nodeName);
         }
     }
-    // calcMostImportantPerson.textContent = mostImportantPersonsInText;
     if (previousMips !== mostImportantPersonsInText) {
         addMedalToMip(mostImportantPersons, mostImportantPersonsInText);
     }
@@ -905,7 +881,7 @@ function bfsShortestPath(graph, startNode) {
     while (queue.length > 0) {
         let currentNodeId = queue.shift();
         let currentDistance = distances[currentNodeId];
-        let neighbors = graph.get(currentNodeId).friends; // Assuming 'friends' is the adjacency list
+        let neighbors = graph.get(currentNodeId).friends;
         neighbors.forEach((neighbor) => {
             neighbor = neighbor.person.id;
             if (distances[neighbor] === Infinity) {
@@ -949,8 +925,9 @@ function stepAllNodes() {
  */
 
 function framelooper() {
-    if(playing) {
-        setTimeout(() => { // Set the speed manually
+    if (playing) {
+        setTimeout(() => {
+            // Set the speed manually
             window.requestAnimationFrame(framelooper); // Request the next frame by calling this function
         }, 500);
     }
@@ -992,10 +969,7 @@ importButton.addEventListener("click", async () => {
     resizeNodes(nodes);
 });
 
-
-
-
-deleteNodeButton.addEventListener('click', () => {
+deleteNodeButton.addEventListener("click", () => {
     const node = selectedNode;
     node.friends.forEach((friend) => {
         friend.person.removeFriend(node, links);
@@ -1010,9 +984,4 @@ deleteNodeButton.addEventListener('click', () => {
     deselectNode();
     node.element.remove();
     nodes.delete(node.id);
-    // showMobile(node);
-
-    // updateFriendList(node);
 });
-
-

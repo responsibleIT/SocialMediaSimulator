@@ -64,6 +64,9 @@ button {
     cursor: pointer;
     transition: 100ms;
     text-wrap: nowrap;
+    display: flex;
+    gap: .5em;
+    align-items: center;
 
     &:focus-visible {
         outline: 2px solid orange;
@@ -181,8 +184,8 @@ canvas {
     box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
     border: none;
     position-anchor: --currentNode;
-    top: anchor(50%);
-    left: anchor(end);
+    top: anchor(40%);
+    left: anchor(25%);
     & img {
         width: 48px;
         aspect-ratio: 1;
@@ -290,17 +293,6 @@ TOOLBAR STYLES
     align-items: center;
 }
 
-
-/* .tools button img{
-    height: 1em;
-    width: 1em;
-} */
-
-.add-random-people-button img, .add-random-content-button img {
-    height: 12px;
-    width: 13px;
-}
-
 .help{
     padding: 0;
     --background-color: transparent;
@@ -327,7 +319,7 @@ TOOLBAR STYLES
 
 }
 
-@media (min-width: 1310px) {
+@media (min-width: 1350px) {
     .wide-shown {
         display: inline;
     }
@@ -336,7 +328,7 @@ TOOLBAR STYLES
 .tools button img {
     height: 1em;
     filter: invert(1);
-    /* display: block; */
+    vertical-align: bottom;
 }
 
 
@@ -1177,5 +1169,5 @@ Medal img for MIP
     left: anchor(start);
     width: 20px;
     height: auto;
-    z-index: 9999;
+    z-index: 98;
 }
