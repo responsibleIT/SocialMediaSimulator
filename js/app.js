@@ -929,7 +929,7 @@ function framelooper() {
         setTimeout(() => {
             // Set the speed manually
             window.requestAnimationFrame(framelooper); // Request the next frame by calling this function
-        }, 500);
+        }, 500); 
     }
 
     stepAllNodes();
