@@ -287,10 +287,11 @@ TOOLBAR STYLES
     align-items: center;
 }
 
-.tools button img{
+
+/* .tools button img{
     height: 1em;
     width: 1em;
-}
+} */
 
 .add-random-people-button img, .add-random-content-button img {
     height: 12px;
@@ -301,6 +302,7 @@ TOOLBAR STYLES
     padding: 0;
     --background-color: transparent;
     margin-top: 1.5em;
+    filter: invert(1);
 }
 
 .info-button{
@@ -327,6 +329,13 @@ TOOLBAR STYLES
         display: inline;
     }
 }
+
+.tools button img {
+    height: 1em;
+    filter: invert(1);
+    /* display: block; */
+}
+
 
 /*
 SPECIAL INPUTS

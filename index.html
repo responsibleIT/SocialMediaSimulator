@@ -107,7 +107,7 @@
                             </div>
                             <button type="button" id="addRandomPeopleButton" class="add-random-people-button">
                                 <span class="small-hidden">Add</span>
-                                <img src="images/sns_icons_User_white.svg" alt="" />
+                                <img src="images/sns_icons_User.svg" alt="" />
                             </button>
 
                             <div class="vertical-line"></div>
@@ -120,7 +120,7 @@
 
                             <button type="button" id="addRandomContentButton" class="add-random-content-button">
                                 <span class="small-hidden">Add</span>
-                                <img src="images/sns_icons_Post_white.svg" alt="" />
+                                <img src="images/sns_icons_Post.svg" alt="" />
                             </button>
                         </div>
                     </section>
@@ -131,14 +131,16 @@
                         <h3>Simulate</h3>
                         <div class="tools">
                             <button type="button" id="stepButton" class="step-button">
-                                <img src="./images/foot_white.svg" />
+                                <img src="./images/foot.svg" />
                                 <span class="wide-shown">Step</span>
                             </button>
-                            <button type="button" id="startButton" >
-                                <img src="./images/start.svg" /> 
+                            <button type="button" id="playButton" >
+                                <img src="./images/play.svg" /> 
                                 <span class="wide-shown">Start</span>
                             </button>
                         </div>
+
+                        
                     </section>
 
                     <div class="vertical-line"></div>
@@ -147,11 +149,11 @@
                         <h3>File</h3>
                         <div class="tools">
                             <button type="button" id="importButton">
-                                <img src="./images/import_white.svg" alt="import button"/>
+                                <img src="./images/import.svg" alt="import button"/>
                                 <span class="wide-shown">Import</span>
                             </button>
                             <button type="button" id="exportButton">
-                                <img src="./images/export_white.svg" alt="export button"/>
+                                <img src="./images/export.svg" alt="export button"/>
                                 <span class="wide-shown">Export</span>
                             </button>
                         </div>
@@ -256,29 +258,8 @@
                         <template id="friendsTemplate">
                             <li>
                                 <img src="./images/reset.svg" alt="" />
-                                <p class="friend-name">Christiana</p>
+                                <p>Christiana</p>
                                 <button class="unfriend-button">Unfriend</button>
-                            </li>
-                        </template>
-                    </section>
-
-                    <section class="friends" id="search-friends">
-                        <div class="section-heading">
-                            <h3>Search Friends</h3>
-                        </div>
-
-                        <input type="search" name="friends-search" id="friendsSearchBar" class="search-bar">
-
-                        <ul>
-                            <li>
-                                <p>No one is here</p>
-                            </li>
-                        </ul>
-                        <template id="toBeFriendsTemplate">
-                            <li>
-                                <img src="./images/reset.svg" alt="" />
-                                <p class="friend-name">Christiana</p>
-                                <button class="friend-button">Add as Friend</button>
                             </li>
                         </template>
                     </section>
