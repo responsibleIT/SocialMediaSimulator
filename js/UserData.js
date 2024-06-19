@@ -1,10 +1,8 @@
 export default class userData {
     constructor() {
         this.preFetchedData = [];
-        this.postData = [];
         this.realPostData = [];
         this.fetchUserData(50);
-        this.fetchPostData();
         this.fetchRealPostData();
     }
 
@@ -49,11 +47,6 @@ export default class userData {
 
         // Simulate async behavior with a promise
         return selectedPosts;
-    }
-
-    async fetchPostData() {
-        const response = await fetch(`../fakenews.json`);
-        this.postData = await response.json();
     }
 
     async fetchRealPostData() {
