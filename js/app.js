@@ -13,13 +13,8 @@ const fileHandler = new FileHandler();
 const webData = new WebData();
 const onboarding = new Onboarding();
 
-const canvas = document.getElementById("nodeCanvas");
-const canvasContainer = document.getElementById("canvasContainer");
 let canvasSize = { width: canvas.width, height: canvas.height };
-const nodeDataContainer = document.getElementById("nodeDataContainer");
 nodeDataContainer.style.display = "none";
-const selectedNodeOptions = document.getElementById("selectedNodeOptions");
-const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
 const increasedPopularityInput = document.getElementById("nodePopularity");
@@ -58,6 +53,9 @@ const borderDistanceNode = 15;
 // Initial resize to set canvas size
 resizeCanvas();
 
+// Initial calc groups
+findAllConnectedComponents();
+
 ///////////////////////////
 ///// Event listeners /////
 ///////////////////////////
@@ -93,7 +91,7 @@ legendListItems.forEach((li) => {
     });
 });
 
-// Adjust trait function
+// Adjust trait function (trait = socialScore)
 traitSelect.addEventListener("change", () => {
     selectedNode.socialScore = traitSelect.value;
 });
@@ -153,23 +151,30 @@ countInputs.forEach((input) => {
     });
 });
 
+// spawn random people
 randomPeopleButton.addEventListener("click", async () => {
     const count = document.getElementById("people-count").value;
     let userData = await userdata.get(count);
     drawRandom("Person", count, userData);
+
+    if (selectedNode !== null) {
+        updateAddFriendsList(selectedNode);
+    }
 });
 
+// spawn random posts
 randomContentButton.addEventListener("click", () => {
     const count = document.getElementById("post-count").value;
     const data = userdata.getPosts(count);
     drawRandom("Social Media Post", count, data);
 
     if (selectedNode !== null) {
-        showMobile(selectedNode);
+        updateFeedList(selectedNode);
     }
 });
 
-// onboading post and people add function
+// onboading post and people add function 
+// TODO: move to onboarding class & import functions from app.js into Onboarding.js
 next2.addEventListener("click", async () => {
     const peopleCount = document.getElementById("people-count-intro").value;
     const postCount = document.getElementById("post-count-intro").value;
@@ -180,6 +185,8 @@ next2.addEventListener("click", async () => {
     drawRandom("Social Media Post", postCount, peopleData);
 });
 
+// Eventlistener to spawn nodes
+// TODO: remove canvas and replace with div
 canvas.addEventListener("click", async (event) => {
     spawnNode(event);
 });
@@ -189,8 +196,6 @@ increasedPopularityInput.addEventListener("change", () => {
     resizeNodes(nodes);
     showMobile(selectedNode);
 });
-
-findAllConnectedComponents();
 
 // single animation frame (step)
 stepButton.addEventListener("click", () => stepAllNodes());
@@ -205,6 +210,43 @@ playButton.addEventListener("click", () => {
         playButton.querySelector("img").src = "./images/pause.svg";
         framelooper();
     }
+});
+
+//Export & Import
+exportButton.addEventListener("click", () => {
+    fileHandler.export(nodes);
+});
+
+importButton.addEventListener("click", async () => {
+    await fileHandler.import(nodes, links);
+    nodes.forEach((node) => {
+        setEventListeners(node);
+    });
+    resizeNodes(nodes);
+});
+
+// Delete all likes of a person
+deleteButtonLikes.addEventListener("click", () => {
+    const node = selectedNode;
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
+    });
+    updateLikedList(node);
+});
+
+// Mobile navigation
+document.addEventListener("DOMContentLoaded", function () {
+    const mobileButtons = document.querySelectorAll(".phone [data-page]");
+
+    mobileButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            mobileButtons.forEach((btn) => btn.classList.remove("active"));
+
+            this.classList.add("active");
+
+            navigateToPage(this.dataset.page);
+        });
+    });
 });
 
 // Add event listener for window resize
@@ -298,8 +340,8 @@ function findAllConnectedComponents() {
 }
 
 /**
- * ...
- * @param {map} nodes - ...
+ * Adjust size of nodes based on popularity
+ * @param {map} nodes - map with all nodes
  */
 function resizeNodes(nodes) {
     nodes.forEach((node, id) => {
@@ -314,10 +356,10 @@ function resizeNodes(nodes) {
 }
 
 /**
- * ...
- * @param {String} label - ...
- * @param {Number} count - ...
- * @param {Array} userData - ...
+ * Draw random nodes
+ * @param {String} label - type of node
+ * @param {Number} count - how many nodes
+ * @param {Array} userData - array the length of the count with separate objects for each node
  */
 function drawRandom(label, count, userData) {
     for (var i = 0; i < count; i++) {
@@ -360,7 +402,7 @@ function drawRandom(label, count, userData) {
 
 /**
  * Function to spawn a node on the canvas given the position of the cursor
- * @param {Event} evt - ...
+ * @param {Event} evt - click event for position
  */
 async function spawnNode(evt) {
     let label = addPersonCheckbox.checked ? "Person" : addSocialMediaPostCheckbox.checked ? "Social Media Post" : "";
@@ -396,10 +438,11 @@ async function spawnNode(evt) {
     setEventListeners(node);
 }
 
+// Variable to store medal and give it back to the node when showing data container
 let hiddenImg;
 /**
- * ...
- * @param {Map} nodes - ...
+ * Set all eventlisteners for a node
+ * @param {Map} nodes - all the nodes
  */
 function setEventListeners(node) {
     node.element.addEventListener("mouseover", function () {
@@ -480,8 +523,9 @@ function setEventListeners(node) {
 
 /**
  * Function to get the position of the cursor on the canvas, This is needed to place the nodes based on where you click
- * @param {Element} canvas - ...
- * @param {Event} evt - ...
+ * @param {Element} canvas - canvas element
+ * @param {Event} e - click event
+ * @param {Object} scroll - x and y coordinates
  */
 function getMousePosOnCanvas(canvas, e, scroll) {
     let canvasRect = canvas.getBoundingClientRect();
@@ -500,8 +544,8 @@ function getMousePosOnCanvas(canvas, e, scroll) {
 
 /**
  * Showdata function to display the nodeDataContainer with therein the node data when hovering over it
- * @param {Number} nodeId - ...
- * @param {Object} noteData - ...
+ * @param {Number} nodeId - id of a node
+ * @param {Object} noteData - data of a node
  */
 function showNodeDataContainer(nodeData) {
     nodeDataContainer.children[0].textContent = nodeData.userName;
@@ -517,6 +561,10 @@ function showNodeDataContainer(nodeData) {
     }
 }
 
+/**
+ * get all post nodes
+ * @param {Map} nodes - all the nodes
+ */
 function getNodesWithReaders(nodes) {
     const nodesWithReaders = [];
     nodes.forEach((node) => {
@@ -527,7 +575,12 @@ function getNodesWithReaders(nodes) {
     return nodesWithReaders;
 }
 
-//Function for showing the selectedNodeOptions container with the right data when a node is selected
+// TODO: move all mobile functions to a separate mobile class
+
+/**
+ * Function for showing the selectedNodeOptions container with the right data when a node is selected
+ * @param {Object} nodeData - data of the node to show the mobile for
+ */
 function showMobile(nodeData) {
     const image = document.getElementById("selectedNodeImage");
 
@@ -550,6 +603,11 @@ function showMobile(nodeData) {
     selectedNodeOptions.classList.remove("hide");
 }
 
+/**
+ * Function to update the friend list in the phone
+ * @param {Object} nodeData - data of the node to show the mobile for
+ * @param {Object} node - friend to remove from list
+ */
 function updateFriendsList(nodeData, node) {
     // friends
     if (nodeData.friends.size !== 0) {
@@ -581,6 +639,12 @@ function updateFriendsList(nodeData, node) {
     }
 }
 
+/**
+ * Function for adding a friend to the friendlist
+ * @param {Element} friendsUl - the ul to add the friend to
+ * @param {Object} friend - the friend to add
+ * @param {Object} nodeData - person to add the friend to
+ */
 function addFriendToFriendList(friendsUl, friend, nodeData) {
     const clone = friendsTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
@@ -608,6 +672,10 @@ function addFriendToFriendList(friendsUl, friend, nodeData) {
     friendsUl.appendChild(clone);
 }
 
+/**
+ * Function to update the add friend list in the phone
+ * @param {Object} nodeData - data of the node to show the mobile for
+ */
 function updateAddFriendsList(nodeData) {
     const personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
     const notFriends = new Map([...personNodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
@@ -622,24 +690,30 @@ function updateAddFriendsList(nodeData) {
     }
 }
 
-function addFriendToAddFriendList(friendsUl, friend, nodeData) {
+/**
+ * Function for adding a friend to the add friendlist
+ * @param {Element} addFriendsUl - the ul to add the person to
+ * @param {Object} node - the node to add to the list where you can add friends
+ * @param {Object} nodeData - person to add the friend to
+ */
+function addFriendToAddFriendList(addFriendsUl, node, nodeData) {
     const clone = addFriendsTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
     const p = clone.querySelector("p");
     const friendButton = clone.querySelector(".friend-button");
-    p.textContent = friend.userName;
-    img.src = friend.profileImage;
+    p.textContent = node.userName;
+    img.src = node.profileImage;
     friendButton.addEventListener("click", function () {
         if (nodeData.person) {
             nodeData = nodeData.person;
         }
-        if (nodeData.friends.has(friend.id)) {
-            nodeData.removeFriend(friend, links);
+        if (nodeData.friends.has(node.id)) {
+            nodeData.removeFriend(node, links);
             this.classList.remove("delete-button");
             this.classList.add("add-button");
             this.textContent = "Add as friend";
         } else {
-            nodeData.addFriend(friend, links);
+            nodeData.addFriend(node, links);
             this.classList.remove("add-button");
             this.classList.add("delete-button");
             this.textContent = "Unfriend";
@@ -649,6 +723,10 @@ function addFriendToAddFriendList(friendsUl, friend, nodeData) {
     addFriendsUl.appendChild(clone);
 }
 
+/**
+ * Function for checking which post to add to the feedlist
+ * @param {Object} nodeData - person to check if it has liked items
+ */
 function updateFeedList(nodeData) {
     const nodesWithReaderMaps = getNodesWithReaders(nodes);
     if (nodesWithReaderMaps.length !== 0) {
@@ -684,6 +762,12 @@ function updateFeedList(nodeData) {
     }
 }
 
+/**
+ * Function for adding a friend to the add friendlist
+ * @param {Element} feedUl - the ul to add the posts to
+ * @param {Object} item - the item to add to the list
+ * @param {Object} nodeData - person data to adjust the data of the items
+ */
 function addPostToFeedList(feedUl, item, nodeData) {
     const clone = feedTemplate.content.cloneNode(true);
     const img = clone.querySelector("img");
@@ -709,6 +793,9 @@ function addPostToFeedList(feedUl, item, nodeData) {
             updateLikedList(nodeData);
         } else if (foundItem) {
             foundItem.score = 1;
+            const foundLink = links.get(`${nodeData.id}-${item.id}`)
+            foundLink.element.classList.remove("disliked-link");
+            foundLink.element.classList.add("liked-link");
             e.target.classList.add("active");
         } else {
             nodeData.addItemLink(item, nodeData, links);
@@ -733,6 +820,10 @@ function addPostToFeedList(feedUl, item, nodeData) {
     feedUl.appendChild(clone);
 }
 
+/**
+ * Function for checking wich post to add to the liked list
+ * @param {Object} nodeData - person to check if it has liked items
+ */
 function updateLikedList(nodeData) {
     if (nodeData.items.size !== 0) {
         nodeData.items.forEach((item) => {
@@ -757,14 +848,12 @@ function updateLikedList(nodeData) {
     }
 }
 
-deleteButtonLikes.addEventListener("click", () => {
-    const node = selectedNode;
-    node.items.forEach((item) => {
-        node.removeItemLink(item.post, links);
-    });
-    updateLikedList(node);
-});
-
+/**
+ * Function for adding a post to the liked list
+ * @param {Element} feedUl - the ul to add the posts to
+ * @param {Object} item - the item to add to the list
+ * @param {Object} nodeData - person data to adjust the data of the items
+ */
 function addPostToLikedList(likedUl, item, nodeData) {
     if (item.score > 0) {
         const clone = feedTemplate.content.cloneNode(true);
@@ -793,6 +882,7 @@ function addPostToLikedList(likedUl, item, nodeData) {
 
 /**
  * Function for switching pages in the mobile interface
+ * @param {String} pageId - the id of the page you are navigating to
  */
 function navigateToPage(pageId) {
     const pages = Array.from(mobilePages.children);
@@ -810,24 +900,9 @@ function navigateToPage(pageId) {
     }
 }
 
-// Mobile navigation
-document.addEventListener("DOMContentLoaded", function () {
-    const mobileButtons = document.querySelectorAll(".phone [data-page]");
-
-    mobileButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            mobileButtons.forEach((btn) => btn.classList.remove("active"));
-
-            this.classList.add("active");
-
-            navigateToPage(this.dataset.page);
-        });
-    });
-});
-
 /**
  * Function for checking who has an info link with a given node
- * @param {Number} nodeId - ...
+ * @param {Number} nodeId - the id of the node
  */
 function checkInfoLinkRefs(nodeId) {
     let refs = [];
@@ -844,7 +919,7 @@ function checkInfoLinkRefs(nodeId) {
 
 /**
  * Show the link that follows the cursor
- * @param {Object} from - ...
+ * @param {Object} from - the data from the from node
  */
 function showPreLink(from) {
     canvasRect = canvasContainer.getBoundingClientRect();
@@ -875,7 +950,7 @@ function showPreLink(from) {
 
 /**
  * Function for selecting a node and highlight it and its data
- * @param {Object} node - ...
+ * @param {Object} node - the node that is selected
  */
 function selectNode(node) {
     node.element.classList.add("selected");
@@ -955,6 +1030,11 @@ function calculateAdjustedClosenessCentrality() {
     }
 }
 
+/**
+ * Function for selecting a node and highlight it and its data
+ * @param {Array} mostImportantPersons - Array of numbers of id's of the most important nodes
+ * @param {Array} mostImportantPersonsInText - Array of strings of names of the most important nodes
+ */
 function addMedalToMip(mostImportantPersons, mostImportantPersonsInText) {
     hiddenImg = "";
     const allPreviousImages = canvasContainer.querySelectorAll(".mipMedal");
@@ -982,8 +1062,8 @@ function addMedalToMip(mostImportantPersons, mostImportantPersonsInText) {
 }
 
 /**
- * Function for calculating the shortest paths between all nodes
- * @param {Map} graph - ... (nodes)
+ * Function for calculating the shortest paths between all nodes (Rick)
+ * @param {Map} graph - ...
  * @param {Object} startNode - ...
  */
 function bfsShortestPath(graph, startNode) {
@@ -1011,7 +1091,6 @@ function bfsShortestPath(graph, startNode) {
 /**
  * Function for stepping all nodes and update calculations and data
  */
-
 function stepAllNodes() {
     nodes.forEach((node) => {
         if (node.label === "Person") {
@@ -1037,7 +1116,6 @@ function stepAllNodes() {
 /**
  * Function for automatically playing animation frames
  */
-
 function framelooper() {
     if (playing) {
         setTimeout(() => {
@@ -1048,16 +1126,3 @@ function framelooper() {
 
     stepAllNodes();
 }
-
-//Export & Import
-exportButton.addEventListener("click", () => {
-    fileHandler.export(nodes);
-});
-
-importButton.addEventListener("click", async () => {
-    await fileHandler.import(nodes, links);
-    nodes.forEach((node) => {
-        setEventListeners(node);
-    });
-    resizeNodes(nodes);
-});
