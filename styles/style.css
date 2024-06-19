@@ -642,6 +642,9 @@ CALCULATE STYLES
         width: 1em;
         height: auto;
     }
+    & p span {
+        color: var(--main-color);
+    }
 }
 
 /*
@@ -903,7 +906,6 @@ FAKEBOOK STYLES
         --background-color: transparent;
         display: flex;
         padding: .25em;
-        color: var(--main-color);
         align-items: center;
     }
 

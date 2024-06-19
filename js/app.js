@@ -13,12 +13,6 @@ const fileHandler = new FileHandler();
 const webData = new WebData();
 const onboarding = new Onboarding();
 
-let canvasSize = { width: canvas.width, height: canvas.height };
-nodeDataContainer.style.display = "none";
-const randomPeopleButton = document.getElementById("addRandomPeopleButton");
-const randomContentButton = document.getElementById("addRandomContentButton");
-const increasedPopularityInput = document.getElementById("nodePopularity");
-const calcGroupsButton = document.getElementById("calcGroups");
 const countInputs = document.querySelectorAll(".counter-input");
 const legendListItems = document.querySelectorAll(".legend li");
 const friendsUl = friends.querySelector("ul");
@@ -26,6 +20,8 @@ const feedUl = feed.querySelector("ul");
 const likedUl = liked.querySelector("ul");
 const addFriendsUl = addFriends.querySelector("ul");
 const calcSection = document.querySelector(".calculated");
+
+let canvasSize = { width: canvas.width, height: canvas.height };
 let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
@@ -44,6 +40,9 @@ let selectedNode = null;
 
 // Variable to keep track of which node is hovered
 let hoveredNode = null;
+
+// Hide popup for data of hovered nodes
+nodeDataContainer.style.display = "none";
 
 // variables for filtering edges
 let filteredEdges = ["disliked-link"]; // disliked-link standard filtered
@@ -117,10 +116,10 @@ deleteNodeButton.addEventListener("click", () => {
 calcSection.addEventListener("click", () => {
     if (calculating) {
         calculating = false;
-        calcSection.querySelector('img').src = 'images/play.svg';
+        calcSection.querySelector("img").src = "images/play.svg";
     } else {
         calculating = true;
-        calcSection.querySelector('img').src = 'images/pause.svg';
+        calcSection.querySelector("img").src = "images/pause.svg";
         findAllConnectedComponents();
     }
 });
@@ -173,7 +172,7 @@ randomContentButton.addEventListener("click", () => {
     }
 });
 
-// onboading post and people add function 
+// onboading post and people add function
 // TODO: move to onboarding class & import functions from app.js into Onboarding.js
 next2.addEventListener("click", async () => {
     const peopleCount = document.getElementById("people-count-intro").value;
@@ -528,7 +527,7 @@ function setEventListeners(node) {
  * @param {Object} scroll - x and y coordinates
  */
 function getMousePosOnCanvas(canvas, e, scroll) {
-    let canvasRect = canvas.getBoundingClientRect();
+    canvasRect = canvas.getBoundingClientRect();
     if (scroll) {
         return {
             x: scroll.x + canvasContainer.scrollLeft,
