@@ -656,7 +656,7 @@ function updateFeedList(nodeData) {
             if (headings.length > 0) {
                 let dontAddToList = false;
                 headings.forEach((heading) => {
-                    if (heading.textContent === item.title) {
+                    if (Number(heading.dataset.postId) === item.id) {
                         const likeButton = heading.parentElement.querySelector(".like-button");
                         // check if its still a liked item
                         if (nodeData.items.has(item.id)) {
@@ -689,6 +689,7 @@ function addPostToFeedList(feedUl, item, nodeData) {
     img.src = item.image;
     const heading = clone.querySelector("h4");
     heading.textContent = item.title;
+    heading.dataset.postId = item.id;
 
     const likeButton = clone.querySelector(".like-button");
     if (nodeData.items.has(item.id)) {
@@ -729,14 +730,12 @@ function addPostToFeedList(feedUl, item, nodeData) {
 
 function updateLikedList(nodeData) {
     if (nodeData.items.size !== 0) {
-        const headings = likedUl.querySelectorAll(".post-heading");
-
-        // console.log(nodeData.items);
         nodeData.items.forEach((item) => {
+            const headings = likedUl.querySelectorAll(".post-heading");
             if (headings.length > 0) {
                 let dontAddToList = false;
                 headings.forEach((heading) => {
-                    if (heading.textContent === item.post.title) {
+                    if (Number(heading.dataset.postId) === item.post.id) {
                         dontAddToList = true;
                     }
                 });
@@ -744,7 +743,7 @@ function updateLikedList(nodeData) {
                     addPostToLikedList(likedUl, item, nodeData);
                 }
             } else {
-                // likedUl.innerHTML = "";
+                likedUl.innerHTML = "";
                 addPostToLikedList(likedUl, item, nodeData);
             }
         });
@@ -762,12 +761,14 @@ deleteButtonLikes.addEventListener("click", () => {
 });
 
 function addPostToLikedList(likedUl, item, nodeData) {
+    console.log("item id in addPostToLikedList", item.post.id, item.score);
     if (item.score > 0) {
         const clone = feedTemplate.content.cloneNode(true);
         const img = clone.querySelector("img");
         img.src = item.post.image;
         const heading = clone.querySelector("h4");
         heading.textContent = item.post.title;
+        heading.dataset.postId = item.post.id;
 
         const likeButton = clone.querySelector(".like-button");
         likeButton.classList.add("active");
