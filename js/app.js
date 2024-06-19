@@ -497,10 +497,12 @@ function setEventListeners(node) {
         //Check whether the node is a person node or a social media post node
         switch (selectedNode) {
             case null:
-                selectNode(node);
-                showMobile(node);
-                showNodeDataContainer(node);
-                generalOptions.classList.add("hide");
+                if (node.label === "Person") {
+                    selectNode(node);
+                    showMobile(node);
+                    showNodeDataContainer(node);
+                    generalOptions.classList.add("hide");
+                }
                 break;
             case node:
                 deselectNode(node);
