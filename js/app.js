@@ -755,6 +755,8 @@ function updateFeedList(nodeData) {
                 headings.forEach((heading) => {
                     if (Number(heading.dataset.postId) === item.id) {
                         const likeButton = heading.parentElement.querySelector(".like-button");
+                        heading.parentElement.querySelector(".seen-count").textContent = item.readers.size;
+
                         // check if its still a liked item
                         if (nodeData.items.has(item.id)) {
                             const foundItem = nodeData.items.get(item.id);
@@ -793,6 +795,8 @@ function addPostToFeedList(feedUl, item, nodeData) {
     const heading = clone.querySelector("h4");
     heading.textContent = item.title;
     heading.dataset.postId = item.id;
+
+    clone.querySelector(".seen-count").textContent = item.readers.size;
 
     const likeButton = clone.querySelector(".like-button");
     if (nodeData.items.has(item.id)) {
@@ -841,6 +845,7 @@ function updateLikedList(nodeData) {
                 headings.forEach((heading) => {
                     if (Number(heading.dataset.postId) === item.post.id) {
                         dontAddToList = true;
+                        heading.parentElement.querySelector(".seen-count").textContent = item.post.readers.size;
                     }
                 });
                 if (!dontAddToList) {
@@ -870,7 +875,7 @@ function addPostToLikedList(likedUl, item, nodeData) {
         const heading = clone.querySelector("h4");
         heading.textContent = item.post.title;
         heading.dataset.postId = item.post.id;
-
+        clone.querySelector(".seen-count").textContent = item.post.readers.size;
         const likeButton = clone.querySelector(".like-button");
         likeButton.classList.add("active");
         likeButton.addEventListener("click", () => {
