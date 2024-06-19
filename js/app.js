@@ -253,20 +253,14 @@ window.addEventListener("click", function (e) {
     if (e.target.classList && e.target.classList.length > 0) {
         // Check if the classList contains the desired class
         if (e.target.classList.contains("forward-button-mobile")) {
-            const forwardButtons = document.querySelectorAll(".forward-button-mobile");
-            forwardButtons.forEach((button) => {
-                if (button === e.target) {
-                    console.log("click");
-                    selectedNode.friends.forEach((friend) => {
-                        // TODO don't add a info link at this moment, calculate if the friend likes this post and adjust
-                        // the relationship score. Then if the score is higher of the same as the addInfoLink threshold,
-                        // add an infolink (node.step does this already)
-                        if (!friend.person.items.has(button.dataset.postId)) {
-                            const item = nodes.get(Number(button.dataset.postId));
-                            selectedNode.addItemLink(item, friend.person, links);
-                            selectedNode.addInfoLink(friend.person, selectedNode, links);
-                        }
-                    });
+            selectedNode.friends.forEach((friend) => {
+                // TODO don't add a info link at this moment, calculate if the friend likes this post and adjust
+                // the relationship score. Then if the score is higher of the same as the addInfoLink threshold,
+                // add an infolink (node.step does this already)
+                if (!friend.person.items.has(e.target.dataset.postId)) {
+                    const item = nodes.get(Number(e.target.dataset.postId));
+                    selectedNode.addItemLink(item, friend.person, links);
+                    selectedNode.addInfoLink(friend.person, selectedNode, links);
                 }
             });
         }
