@@ -105,7 +105,7 @@
                                 <input type="number" id="people-count" value="10" min="3" max="50" />
                                 <button tabindex="-1">+</button>
                             </div>
-                            <button type="button" id="addRandomPeopleButton" class="add-random-people-button">
+                            <button type="button" id="randomPeopleButton" class="add-random-people-button">
                                 <span class="small-hidden" aria-label="add users">Add</span>
                                 <img src="images/user.svg" alt="" />
                             </button>
@@ -118,7 +118,7 @@
                                 <button tabindex="-1">+</button>
                             </div>
 
-                            <button type="button" id="addRandomContentButton" class="add-random-content-button">
+                            <button type="button" id="randomContentButton" class="add-random-content-button">
                                 <span class="small-hidden" aria-label="add posts">Add</span>
                                 <img src="images/post.svg" alt="" />
                             </button>
@@ -228,7 +228,7 @@
                                         </button>
                                         
                                         <button class="forward-button-mobile" aria-label="share"><img src="./images/share.svg" alt=""></button>
-                                        <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
+                                        <div><img src="./images/eye.svg" class="eye" alt=""><span class="seen-count" aria-label="seen by">2</span></div>
                                     </div>
                                 </li>
                             </template>
@@ -285,7 +285,7 @@
                                     <div class="counter-input">
                                         
                                         <button tabindex="-1">–</button>
-                                        <input type="number" id="nodePopularity" value="0" min="0" max="50" />
+                                        <input type="number" id="increasedPopularityInput" value="0" min="0" max="50" />
                                         <button tabindex="-1">+</button>
                                     </div>
                                 </div>
