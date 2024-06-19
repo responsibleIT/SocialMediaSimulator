@@ -10,12 +10,38 @@ RESET
 }
 
 /* 
+ROOT VARIABLES
+*/
+
+:root {
+    --background-color: #d9dfe2;
+    --main-color:#0075ff;
+    --main-white-color: #ffffff; 
+    --button-focus-outline: 2px solid orange;
+    --label-background-color: rgba(0, 117, 255, 0.3);
+    --node-background-color: blue;
+    --node-selected-border: 2px solid orange;
+    --popover-color: black;
+    --popover-border: solid black 1px;
+    --link-friend-color: #00b000;
+    --link-disliked-color: black;
+    --pre-link-color: #999;
+    --battery-background: #D9D9D9;
+    --battery-level-color: lightgreen;
+    --battery-text-color: black;
+    --delete-button-color: red;
+    --profile-username-color: #0966ff;
+    --skip-button-background: #6c757d;
+    --liked-link-color: #ff9900;
+}
+
+/* 
 GENERAL STYLING
 */
 
 body {
     padding: 1em;
-    background-color: #d9dfe2;
+    background-color: var(--background-color);
     height: 100vh;
     font-family: system-ui;
 }
@@ -54,8 +80,7 @@ button {
 
 button {
     font: inherit;
-    --background-color: #0075ff;
-/*    background-color: var(--background-color);*/
+    --background-color: var(--main-color);
     background-color: color-mix(in srgb, var(--background-color), #ffffff 0%);
     color: white;
     border: none;
@@ -69,7 +94,7 @@ button {
     align-items: center;
 
     &:focus-visible {
-        outline: 2px solid orange;
+        outline: var(--button-focus-outline);
         outline-offset: 2px;
     }
 
@@ -78,7 +103,7 @@ button {
         box-shadow: 0 0 2px 1px #0009;
         background-color: color-mix(in srgb, var(--background-color), #ffffff 30%);
     }
-
+    
     &:active {
         box-shadow: inset 0 0 3px 1px #0009;
         background-color: color-mix(in srgb, var(--background-color), #000000 30%);
@@ -105,12 +130,12 @@ button {
 }
 
 .label-with-icon img {
-    width: 24px; /* Adjust size as needed */
-    height: 24px; /* Adjust size as needed */
+    width: 1.5em; 
+    height: 1.5em; 
 }
 
 p span {
-    color: #0075ff;
+    color: var(--button-color);
     font-weight: 700;
 }
 
@@ -126,7 +151,7 @@ body > header {
     z-index: 12;
     transition: 200ms;
     &:hover {
-        opacity: 0;
+        opacity:0;
         filter: alpha(opacity=0);
         z-index: 12;
     }
@@ -152,7 +177,7 @@ CANVAS STYLES
     grid-column: 1/2;
     grid-row: 1/3;
     overflow: auto;
-    cursor: url("./../images/Select-cursor.png") 7 7, default;
+    cursor: url("./../images/select-cursor.png") 7 7, default;
 }
 
 canvas {
@@ -166,31 +191,30 @@ canvas {
     .node-popover {
         position-visibility: anchors-visible;
         position: absolute; 
-        /* TODO VRAGEN BIJ SANNE WAAROM DIT UIT MOET EN BIJ DE TEST AAN */ 
     }
 }
 .node-popover {
     z-index: 99;
     width: fit-content;
     height: fit-content;
-    border-radius: 12px;
+    border-radius: 0.75em;
     display: grid;
     grid-template-rows: max-content max-content;
     grid-template-columns: 48px 1fr;
     padding: 12px 16px 12px 12px;
     gap: 8px;
-    background-color: white;
-    color: black;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px;
+    background-color: var(--main-white-color);
+    color: var(--popover-color);
+    box-shadow:rgba(0, 0, 0, 0.25) 0px 4px 4px;
     border: none;
     position-anchor: --currentNode;
-    top: anchor(40%);
-    left: anchor(25%);
+    top: anchor(50%);
+    left: anchor(end);
     & img {
-        width: 48px;
+        width: 3em;
         aspect-ratio: 1;
         border-radius: 50%;
-        border: solid black 1px;
+        border: var(--popover-border);
         grid-row: 1/3;
         grid-column: 1/2;
     }
@@ -201,13 +225,13 @@ canvas {
 
     & p {
         display: flex;
-        gap: 8px;
+        gap: 0.5em;
     }
 
     & p span:nth-of-type(2) {
         overflow: hidden;
-        width: 4px;
-        height: 4px;
+        width: 0.25em;
+        height: 0.25em;
         display: block;
         border-radius: 50%;
         border: black solid 2px;
@@ -217,7 +241,7 @@ canvas {
 
 .forwardButton {
     border: none;
-    border-radius: 8px;
+    border-radius: 0.5em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -273,7 +297,7 @@ TOOLBAR STYLES
     flex-direction: row;
     padding-inline: 1em;
     padding-block: 0.5em;
-    background-color: white;
+    background-color: var(--main-white-color);
     border-radius: 0.75rem;
     top: 0;
     gap: 0.75em;
@@ -301,8 +325,8 @@ TOOLBAR STYLES
 }
 
 .info-button{
-    width: 24px;
-    height: 24px;
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .wide-shown {
@@ -312,21 +336,21 @@ TOOLBAR STYLES
     display: inline;
 }
 
-@media(max-width: 1135px) {
+@media(max-width: 1162px) {
     .small-hidden {
         display: none;
     }
 
 }
 
-@media (min-width: 1350px) {
+@media (min-width: 1355px) {
     .wide-shown {
         display: inline;
     }
 }
 
 .tools button img {
-    height: 1em;
+    height: 1.2em;
     filter: invert(1);
     vertical-align: bottom;
 }
@@ -349,7 +373,7 @@ SPECIAL INPUTS
         font-weight: 700;
         font-size: 1em;
         text-align: center;
-        color: #0075ff;
+        color: var(--button-color);
         outline: none;
         width: 2ch;
         -moz-appearance: textfield;
@@ -375,20 +399,20 @@ SPECIAL INPUTS
     }
 
     &:has(:focus-visible) {
-        outline: 2px solid orange;
+        outline: var(--button-focus-outline);
         outline-offset: 2px;
     }
 }
 
 .select {
-    border: 2px solid #0075ff;
+    border: 2px solid var(--main-color);
     border-radius: .75em;
     display: block;
     position: relative;
     overflow: hidden;
 
     &:has(:focus-visible) {
-        outline: 2px solid orange;
+        outline: var(--button-focus-outline);
     }
     
 
@@ -429,30 +453,31 @@ NODE STYLES
 }
 
 .personNode {
-    background-color: blue;
+    background-color: var(--node-background-color);
     background-repeat: no-repeat;
     background-size: contain;
     border-radius: 50%;
 
     &.selected {
-        border: 2px solid orange;
+        border: var(--node-selected-border);
     }
 }
 
 .postNode {
     /* background-color: red; */
-    background-image: url(../images/post-red.svg);
+    background-image: url(../images/post.svg);
+    filter: invert(16%) sepia(86%) saturate(7468%) hue-rotate(358deg) brightness(110%) contrast(115%);
 }
 
 /* the person nodes that are not selected */
 .canvas-container:has(.personNode.selected) .personNode:not(.selected) {
-    background-color: color-mix(in srgb, blue, #d9dfe2 50%);
+    background-color: color-mix(in srgb, var(--node-background-color), var(--background-color) 50%);
 
     &::after {
         content: "";
         position: absolute;
         inset: 0;
-        background-color: #d9dfe2;
+        background-color: var(--background-color);
         opacity: 50%;
     }
 
@@ -464,7 +489,7 @@ NODE STYLES
 }
 
 .postNode.selected {
-    background-color: color-mix(in srgb, red, #d9dfe2 50%);
+    background-color: color-mix(in srgb, red, var(--background-color) 50%);
 }
 
 /* LINK STYLES */
@@ -487,20 +512,20 @@ NODE STYLES
 }
 
 .info-link {
-    background-color: #0075ff;
+    background-color: var(--main-color);
 }
 .friend-link {
-    background-color: #00b000;
+    background-color: var(--link-friend-color);
 }
 .liked-link {
-    background-color: #ff9900;
+    background-color: var(--liked-link-color);
 }
 .pre-link {
-    background-color: #999;
+    background-color: var(--pre-link-color);
     opacity: 0;
 }
 .disliked-link {
-    background-color: black;
+    background-color: var(--link-disliked-color);
     opacity: 0.1;
 }
 
@@ -511,7 +536,7 @@ NODE STYLES
 /* pre link als een persoon wordt gehovered */
 .canvas-container:has(.personNode:hover) {
     & .pre-link {
-        background-color: #00b000;
+        background-color: var(--link-friend-color);
         height: 2px;
     }
 }
@@ -519,13 +544,13 @@ NODE STYLES
 /* pre link als een post wordt gehovered */
 .canvas-container:has(.postNode:hover) {
     & .pre-link {
-        background-color: #ff9900;
+        background-color: var(--liked-link-color);
         height: 2px;
     }
 }
 
 label:has(input[type="radio"]:checked) {
-    background-color: rgba(0, 117, 255, 0.3);
+    background-color: var(--label-background-color);
 }
 
 input[type="radio"] {
@@ -541,7 +566,7 @@ LEGEND STYLES
     flex-direction: column;
     padding-block: 0.75em;
     padding-inline: 1em;
-    background-color: white;
+    background-color: var(--main-white-color);
     border-radius: 0.75rem;
     grid-column: 2 / 3;
     grid-row: 2 / 3;
@@ -572,15 +597,8 @@ LEGEND STYLES
                 animation: none;
             }
             & img {
-                width: 20px;
+                width: 1.25em;
                 height: auto;
-            }
-            & .post-dot {
-                background-color: red;
-                aspect-ratio: 1/1;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
             }
         }
         & li:has(.post-dot, img){
@@ -604,7 +622,7 @@ CALCULATE STYLES
 .calculated {
     grid-column: 2 / 3;
     grid-row: 3 / 4;
-    background-color: white;
+    background-color: var(--main-white-color);
     flex-direction: column;
     padding-block: 0.75em;
     padding-inline: 1em;
@@ -674,7 +692,7 @@ PHONE STYLES
 
 .phone-status-bar {
     width: 100%;
-    background-color: white;
+    background-color: var(--main-white-color);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 0.5em;
@@ -707,7 +725,7 @@ FAKEBOOK STYLES
     column-gap: 1em;
     row-gap: 1rem;
 
-    background-color: white;
+    background-color: var(--main-white-color);
 
     width: 100%;
     aspect-ratio: 1 / 2.08;
@@ -737,7 +755,7 @@ FAKEBOOK STYLES
             padding-block: 0.4em;
         }
         & p span {
-            color: #0075ff;
+            color: var(--button-color);
             font-weight: 700;
             font-family: system-ui;
         }
@@ -774,8 +792,6 @@ FAKEBOOK STYLES
     }
 }
 
-
-
 .phone nav {
     display: flex;
     position: absolute;
@@ -783,8 +799,8 @@ FAKEBOOK STYLES
     list-style: none;
     padding: 0.25rem 0 0.5rem 0;
     justify-content: center;
-    background-color: #0075ff;
-    color: white;
+    background-color: var(--main-color);
+    color: var(--main-white-color);
     bottom: 0;
     right: 0;
     left: 0;
@@ -801,6 +817,11 @@ FAKEBOOK STYLES
     & button {
         padding: 0;
         box-shadow: none;
+
+        & img {
+            width: 2.25em;
+            filter: invert(1);
+        }
     }
 
     & button.active {
@@ -815,11 +836,8 @@ FAKEBOOK STYLES
 }
 
 .fakebook-profile {
-    /* display: grid; */
-    /* grid-template-columns: max-content 1fr max-content; */
     text-align: center;
     justify-items: center;
-    /* gap: 0.5em; */
 
     & > img {
         width: 4rem;
@@ -857,7 +875,7 @@ FAKEBOOK STYLES
 
         & span {
             font-weight: bold;
-            color: #0966ff;
+            color: var(--profile-username-color);
         }
     }
 }
@@ -873,7 +891,7 @@ FAKEBOOK STYLES
     list-style: none;
 
     & li {
-        background-color: white;
+        background-color: var(--main-white-color);
     }
 }
 
@@ -885,31 +903,34 @@ FAKEBOOK STYLES
         --background-color: transparent;
         display: flex;
         padding: .25em;
-        color: #0075ff;
+        color: var(--main-color);
         align-items: center;
     }
 
     & * + button {
         margin-left: auto;
     }
+
+    & img {
+        height: 1.5em;
+    }
 }
 
 .battery {
     width: 1.25em;
     height: 10px;
-    /* border: 2px solid black; */
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #D9D9D9;
+    background-color: var(--battery-background);
     border-radius: 3px;
 
 }
 .battery-level {
     height: 100%;
     width: 0;
-    background-color: lightgreen;
+    background-color: var(--battery-level-color);
     position: absolute;
     left: 0;
     top: 0;
@@ -921,7 +942,7 @@ FAKEBOOK STYLES
     content: '';
     width: 2px;
     height: 2px;
-    background: #D9D9D9;
+    background: var(--battery-background);
     position: absolute;
     right: -3px;
     border-top-right-radius: 3px;
@@ -933,7 +954,7 @@ FAKEBOOK STYLES
     position: absolute;
     z-index: 1;
     font-size: .5em;
-    color: black;
+    color: var(--battery-text-color);
 }
 
 .friends {
@@ -982,6 +1003,7 @@ FAKEBOOK STYLES
 
         & button {
             padding: 0;
+            background-color: transparent;
             text-decoration: underline;
         }
     }
@@ -1034,21 +1056,18 @@ FAKEBOOK STYLES
                 padding: 0;
                 box-shadow: none;
             }
+
+            & svg,
+            & img {
+                width: 1.5em;
+            }
+
+            & .eye {
+                filter: invert(.45);
+            }
         }
     }
 }
-
-/* .like-button{
-    & svg{
-        fill: transparent;
-        transition: fill 0.3s ease;
-        stroke: #000000;
-    }
-}
-
-.like-button.clicked svg {
-    fill: red;
-} */
 
 .like-button svg {
     fill: transparent;
@@ -1086,7 +1105,7 @@ FAKEBOOK STYLES
 
 .delete-button {
     --background-color: transparent;
-    color: red;
+    color: var(--delete-button-color);
     text-decoration: underline;
     padding: 0;
 }
@@ -1097,6 +1116,10 @@ FAKEBOOK STYLES
     text-decoration: underline;
     padding: 0;
     gap: 0;
+
+    & img {
+        filter: invert(36%) sepia(63%) saturate(6710%) hue-rotate(205deg) brightness(106%) contrast(102%);
+    }
 }
 
 /* account  */
@@ -1162,8 +1185,8 @@ dialog {
 }
 
 .skip-button {
-    --background-color: #6c757d;
-    color: white;
+    --background-color: var(--skip-button-background);
+    color: var(--main-white-color);
 }
 
 video {
@@ -1186,7 +1209,7 @@ Medal img for MIP
     position-visibility: anchors-visible;
     top: anchor(0%);
     left: anchor(start);
-    width: 20px;
+    width: 1.25em;
     height: auto;
-    z-index: 98;
+    z-index: 9999;
 }

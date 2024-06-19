@@ -35,7 +35,7 @@ let linkStripe;
 let mouseMoveHandler;
 let scrollMoveHandler;
 let canvasRect;
-let calcGroupsBool = true;
+let calculating = true;
 let playing = false;
 
 //Global map of nodes
@@ -117,13 +117,14 @@ deleteNodeButton.addEventListener("click", () => {
 });
 
 calcSection.addEventListener("click", () => {
-    if (calcGroupsBool) {
-        calcGroupsBool = false;
+    if (calculating) {
+        calculating = false;
+        calcSection.querySelector('img').src = 'images/play.svg';
     } else {
-        calcGroupsBool = true;
+        calculating = true;
+        calcSection.querySelector('img').src = 'images/pause.svg';
         findAllConnectedComponents();
     }
-    document.querySelector(".pauseOrPlay").src = `images/pausedImage-${!calcGroupsBool}.svg`;
 });
 
 // function for counter inputs
@@ -246,7 +247,7 @@ function resizeCanvas() {
 
 // A function to calculate the number of groups in the network.
 function findAllConnectedComponents() {
-    if (!calcGroupsBool) {
+    if (!calculating) {
         return;
     }
     let visited = new Set();
@@ -609,7 +610,7 @@ function addFriendToFriendList(friendsUl, friend, nodeData) {
 
 function updateAddFriendsList(nodeData) {
     const personNodes = new Map([...nodes].filter(([id, node]) => node.label === "Person"));
-    const notFriends = new Map([...nodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
+    const notFriends = new Map([...personNodes].filter(([id]) => !nodeData.friends.has(id) && nodeData.id !== id));
 
     if (notFriends.size !== 0) {
         addFriendsUl.innerHTML = "";

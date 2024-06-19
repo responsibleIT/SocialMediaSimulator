@@ -9,7 +9,7 @@
     <body> 
         <header>
             <h1>Social Media Simulator</h1>
-            <img src="images/logo.svg" alt="" class="logo" />
+            <img src="images/logo.svg" alt="Responsible IT" class="logo" />
         </header>
         <main>
             <!-- Dialog for Onboarding Step 1 -->
@@ -76,19 +76,19 @@
                         <div class="tools">
                             <label for="emptyStateCheckbox" class="label-with-icon">
                                 <input type="radio" id="emptyStateCheckbox" name="group1" checked value="select" />
-                                <img src="images/sns_icons_Select.svg" alt="" />
+                                <img src="images/select.svg" alt="" />
                                 <span class="visually-hidden">Select</span>
                             </label>
 
                             <label for="addPersonCheckbox" class="label-with-icon">
                                 <input type="radio" id="addPersonCheckbox" name="group1" value="add-person" />
-                                <img src="images/sns_icons_User.svg" alt="" />
+                                <img src="images/user.svg" alt="" />
                                 <span class="visually-hidden">Add User</span>
                             </label>
 
                             <label for="addSocialMediaPostCheckbox" class="label-with-icon">
                                 <input type="radio" id="addSocialMediaPostCheckbox" name="group1" value="add-post"/>
-                                <img src="images/sns_icons_Post.svg" alt="" />
+                                <img src="images/post.svg" alt="" />
                                 <span class="visually-hidden">Add Post</span>
                             </label>
                         </div>
@@ -106,8 +106,8 @@
                                 <button tabindex="-1">+</button>
                             </div>
                             <button type="button" id="addRandomPeopleButton" class="add-random-people-button">
-                                <span class="small-hidden">Add</span>
-                                <img src="images/sns_icons_User.svg" alt="" />
+                                <span class="small-hidden" aria-label="add users">Add</span>
+                                <img src="images/user.svg" alt="" />
                             </button>
 
                             <div class="vertical-line"></div>
@@ -119,8 +119,8 @@
                             </div>
 
                             <button type="button" id="addRandomContentButton" class="add-random-content-button">
-                                <span class="small-hidden">Add</span>
-                                <img src="images/sns_icons_Post.svg" alt="" />
+                                <span class="small-hidden" aria-label="add posts">Add</span>
+                                <img src="images/post.svg" alt="" />
                             </button>
                         </div>
                     </section>
@@ -131,11 +131,11 @@
                         <h3>Simulate</h3>
                         <div class="tools">
                             <button type="button" id="stepButton" class="step-button">
-                                <img src="./images/foot.svg" />
+                                <img src="./images/foot.svg" alt="" />
                                 <span class="wide-shown">Step</span>
                             </button>
                             <button type="button" id="playButton" >
-                                <img src="./images/play.svg" /> 
+                                <img src="./images/play.svg" alt="Start Icon"/> 
                                 <span class="wide-shown">Start</span>
                             </button>
                         </div>
@@ -149,11 +149,11 @@
                         <h3>File</h3>
                         <div class="tools">
                             <button type="button" id="importButton">
-                                <img src="./images/import.svg" alt="import button"/>
+                                <img src="./images/import.svg" alt=""/>
                                 <span class="wide-shown">Import</span>
                             </button>
                             <button type="button" id="exportButton">
-                                <img src="./images/export.svg" alt="export button"/>
+                                <img src="./images/export.svg" alt=""/>
                                 <span class="wide-shown">Export</span>
                             </button>
                         </div>
@@ -163,9 +163,8 @@
 
                     <section>
                         <div class="tools"> 
-                            <!-- <h3>Info</h3> -->
-                            <button type="button" id="help" class="help">
-                                <img src="./images/help.svg" alt="info button" class="info-button">
+                            <button type="button" id="help" class="help" aria-label="help">
+                                <img src="./images/help.svg" alt="" class="info-button">
                             </button>
                             
                         </div>
@@ -175,33 +174,22 @@
 
             <section id="phone" class="phone">
                 <h2 class="visually-hidden">Phone control</h2>
-                <!-- <img src="../images/phone.png" alt="" class="phone-border" /> -->
-
                 <div class="phone-status-bar">
-                   
                     <div id="time" class="time"></div>
                     <div class="phoneIcon">
-
-
-                        
-                        <img src="./images/networkIcon.svg" alt="" />
-                        <img src="./images/wifiIcon.svg" alt="" />
-                        
-                          <div id="battery" class="battery">
+                        <img src="./images/network.svg" alt="" />
+                        <img src="./images/wifi.svg" alt="" />
+                        <div id="battery" class="battery">
                             <div id="battery-level" class="battery-level"></div>
                             <div id="level" class="level">50%</div>
                         </div>
-
-
                     </div>
-                    
                 </div>
 
                 <div id="selectedNodeOptions" class="hide fakebook">
-
                     <section class="fakebook-profile">
                         <h3 class="visually-hidden">Profile</h3>
-                        <img src="" alt="" id="selectedNodeImage" />
+                        <img src="" alt="Profile image of selected peroson" id="selectedNodeImage" />
                         <p id="selectedNodeUserName" class="username">Name</p>
 
 
@@ -231,15 +219,15 @@
                             <template id="feedTemplate">
                                 <li>
                                     <h4 class="post-heading"></h4>
-                                    <img class="post-image" src="https://unsplash.it/640/425" alt="">
+                                    <img class="post-image" src="" alt="">
                                     <div class="post-options">
                                         <button class="like-button">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 6.29875C11.6074 6.29875 11.2511 6.069 11.0891 5.71137C10.4573 4.31658 9.37609 3.25 7.5 3.25C7.50407 3.25 7.50336 3.25003 7.4982 3.25029C7.42316 3.25394 6.40663 3.30344 5.40233 3.9597C4.40333 4.61249 3.25 5.97094 3.25 9C3.25 10.1891 3.71609 11.4989 4.51245 12.8495C5.30341 14.191 6.3768 15.4997 7.48645 16.6669C9.43856 18.7202 11.4313 20.2614 11.9992 20.688C12.5647 20.2637 14.5589 18.7218 16.5123 16.6669C17.6219 15.4998 18.6951 14.1911 19.4859 12.8496C20.2821 11.4989 20.7481 10.1891 20.7481 9C20.7481 5.97094 19.5948 4.61249 18.5958 3.9597C17.5915 3.30344 16.575 3.25394 16.4999 3.25029C16.4948 3.25003 16.4941 3.25 16.4981 3.25L12 6.29875ZM12 6.29875C12.3926 6.29875 12.7489 6.069 12.9109 5.71137C13.5427 4.31658 14.6239 3.25 16.5 3.25L12 6.29875Z" stroke-width="2" stroke-linejoin="round"/>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+                                                <path d="M66.36,115.23c2.03-1.48,49.64-36.55,49.64-67.23,0-2.08-.09-4.04-.27-5.89-2-20.65-14.46-27.14-21.98-29.18-3.31-.9-5.67-.93-5.75-.93-12.71,0-20.05,7.54-24,16.26-3.95-8.72-11.29-16.26-24-16.26-.08,0-2.39.03-5.66.91-7.7,2.06-20.69,8.79-22.2,30.76-.1,1.38-.14,2.83-.14,4.33,0,30.68,47.62,65.75,49.64,67.23,1.4,1.02,3.31,1.02,4.71,0Z" stroke-width="12" stroke-linejoin="round"/>
                                             </svg>
                                         </button>
                                         
-                                        <button class="forward-button-mobile"><img src="./images/share.svg" alt=""></button>
+                                        <button class="forward-button-mobile" aria-label="share"><img src="./images/share.svg" alt=""></button>
                                         <div><img src="./images/eye.svg" class="eye" alt=""><span aria-label="seen by">2</span></div>
                                     </div>
                                 </li>
@@ -249,7 +237,7 @@
                         <section class="friends" id="friends">
                             <div class="section-heading">
                                 <h3>Friends</h3>
-                                <button class="add-button" id="addFriendsButton" data-page="addFriends"><img src="./images/addIcon.svg" alt="">Add Friends</button>
+                                <button class="add-button" id="addFriendsButton" data-page="addFriends"><img src="./images/add.svg" alt="">Add Friends</button>
                             </div>
 
                             <ul>
@@ -259,7 +247,7 @@
                             </ul>
                             <template id="friendsTemplate">
                                 <li>
-                                    <img src="./images/reset.svg" alt="" />
+                                    <img src="" alt="" />
                                     <p class="friend">Christiana</p>
                                     <button class="friend-button delete-button">Unfriend</button>
                                 </li>
@@ -282,7 +270,7 @@
                             </ul>
                             <template id="addFriendsTemplate">
                                 <li>
-                                    <img src="./images/reset.svg" alt="" />
+                                    <img src="" alt="" />
                                     <p class="friend">Christiana</p>
                                     <button class="friend-button add-button">Add as friend</button>
                                 </li>
@@ -305,11 +293,11 @@
                                     <p>Trait: </p>
                                     <div class="select">
                                         <select id="traitSelect">
-                                            <option value="1">Social</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
+                                            <option value="0.8">Very open</option>
+                                            <option value="0.6">Mostly open</option>
+                                            <option value="0.4">Mostly private</option>
+                                            <option value="0.2">Very private</option>
+                                            <option value="0">Lonely</option>
                                         </select>
                                     </div>
                                 </div>
@@ -338,19 +326,19 @@
                     <ul>
                         <li>
                             <button data-page="feed">
-                            <img src="./images/homeIcon.svg" alt="" />
+                            <img src="./images/home.svg" alt="" />
                             <span class="visually-hidden">Home</span>
                         </button>
                         </li>
                         <li>
                             <button data-page="liked">
-                            <img src="./images/likedIcon.svg" alt="" />
+                            <img src="./images/liked.svg" alt="" />
                             <span class="visually-hidden">Liked</span>
                         </button>
                         </li>
                         <li>
                             <button data-page="friends">
-                            <img src="./images/friendsIcon.svg" alt="" />
+                            <img src="./images/friends.svg" alt="" />
                             <span class="visually-hidden">Friends</span>
                         </button>
                         </li>
@@ -366,25 +354,19 @@
             <section class="calculated">
                 <div>
                     <h2>Calculations</h2>
-                    <!-- <p>Most important person: <span id="calcMostImportantPerson"> Unknown</span></p> -->
-                    <img src="images/pausedImage-false.svg" class="pauseOrPlay" alt="An image of a pause button">
+                    <img src="images/pause.svg" class="pauseOrPlay" aria-label="pause">
                 </div>
            
                 <p>Number of groups: <span id="calcGroups"></span></p>
-                <!-- <div class="tools"> -->
-                    <!-- <button type="button" id="calcClosenessCentrality">Closeness Centrality</button> -->
-                    <!-- <button type="button" id="calcGroups">Groups</button> -->
-
-                <!-- </div> -->
             </section>
             <section class="legend">
                 <h2>Legend</h2>
                 <ul>
-                    <li>Friends<span class="friend-link"></span></li>
-                    <li>Info link<span class="info-link"></span></li>
-                    <li>Liked<span class="liked-link"></span></li>
-                    <li>Disliked<span class="disliked-link"></span></li>
-                    <li>Most important <img src="images/goldMedal.png" alt=""></li>
+                    <li>Friends<span class="friend-link" aria-label="green line"></span></li>
+                    <li>Info link<span class="info-link" aria-label="blue line"></span></li>
+                    <li>Liked<span class="liked-link" aria-label="orange line"></span></li>
+                    <li>Disliked<span class="disliked-link" aria-label="grey line"></span></li>
+                    <li>Most important <img src="images/goldMedal.png" alt="Golden medal"></li>
                 </ul>
             </section>
 
