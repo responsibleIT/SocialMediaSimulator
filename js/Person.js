@@ -148,7 +148,7 @@ export default class Person extends Node {
             this.items.set(post.id, { post: post, score: score });
             post.readers.set(this.id, { person: this, score: score });
 
-            const link2 = new Edge(this, post, "info-link");
+            const link2 = new Edge(this, post, "item-link");
             links.set(this.id + "-" + post.id, link2);
         }
 
