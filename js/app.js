@@ -13,13 +13,8 @@ const fileHandler = new FileHandler();
 const webData = new WebData();
 const onboarding = new Onboarding();
 
-// const canvas = document.getElementById("nodeCanvas");
-// const canvasContainer = document.getElementById("canvasContainer");
 let canvasSize = { width: canvas.width, height: canvas.height };
-// const nodeDataContainer = document.getElementById("nodeDataContainer");
 nodeDataContainer.style.display = "none";
-// const selectedNodeOptions = document.getElementById("selectedNodeOptions");
-// const generalOptions = document.getElementById("generalOptions");
 const randomPeopleButton = document.getElementById("addRandomPeopleButton");
 const randomContentButton = document.getElementById("addRandomContentButton");
 const increasedPopularityInput = document.getElementById("nodePopularity");
