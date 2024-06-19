@@ -208,8 +208,8 @@ canvas {
     box-shadow:rgba(0, 0, 0, 0.25) 0px 4px 4px;
     border: none;
     position-anchor: --currentNode;
-    top: anchor(50%);
-    left: anchor(end);
+    top: anchor(25%);
+    left: anchor(25%);
     & img {
         width: 3em;
         aspect-ratio: 1;
