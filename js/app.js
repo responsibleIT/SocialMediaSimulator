@@ -701,10 +701,14 @@ function addPostToFeedList(feedUl, item, nodeData) {
         likeButton.classList.remove("active");
     }
     likeButton.addEventListener("click", (e) => {
-        if (nodeData.items.has(item.id)) {
+        const foundItem = nodeData.items.get(item.id);
+        if (foundItem && foundItem.score > 0) {
             nodeData.removeItemLink(item, links);
             e.target.classList.remove("active");
             updateLikedList(nodeData);
+        } else if (foundItem) {
+            foundItem.score = 1;
+            e.target.classList.add("active");
         } else {
             nodeData.addItemLink(item, nodeData, links);
             e.target.classList.add("active");
@@ -761,7 +765,6 @@ deleteButtonLikes.addEventListener("click", () => {
 });
 
 function addPostToLikedList(likedUl, item, nodeData) {
-    console.log("item id in addPostToLikedList", item.post.id, item.score);
     if (item.score > 0) {
         const clone = feedTemplate.content.cloneNode(true);
         const img = clone.querySelector("img");
