@@ -248,6 +248,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+window.addEventListener("click", function (e) {
+    // Ensure the classList is not empty
+    if (e.target.classList && e.target.classList.length > 0) {
+        // Check if the classList contains the desired class
+        if (e.target.classList.contains("forward-button-mobile")) {
+            const forwardButtons = document.querySelectorAll(".forward-button-mobile");
+            forwardButtons.forEach((button) => {
+                if (button === e.target) {
+                    console.log("click");
+                    selectedNode.friends.forEach((friend) => {
+                        // TODO don't add a info link at this moment, calculate if the friend likes this post and adjust
+                        // the relationship score. Then if the score is higher of the same as the addInfoLink threshold,
+                        // add an infolink (node.step does this already)
+                        if (!friend.person.items.has(button.dataset.postId)) {
+                            const item = nodes.get(Number(button.dataset.postId));
+                            selectedNode.addItemLink(item, friend.person, links);
+                            selectedNode.addInfoLink(friend.person, selectedNode, links);
+                        }
+                    });
+                }
+            });
+        }
+    }
+});
+
 // Add event listener for window resize
 window.addEventListener("resize", resizeCanvas);
 
@@ -792,7 +817,7 @@ function addPostToFeedList(feedUl, item, nodeData) {
             updateLikedList(nodeData);
         } else if (foundItem) {
             foundItem.score = 1;
-            const foundLink = links.get(`${nodeData.id}-${item.id}`)
+            const foundLink = links.get(`${nodeData.id}-${item.id}`);
             foundLink.element.classList.remove("disliked-link");
             foundLink.element.classList.add("liked-link");
             e.target.classList.add("active");
@@ -804,18 +829,8 @@ function addPostToFeedList(feedUl, item, nodeData) {
     });
 
     const forwardButton = clone.querySelector(".forward-button-mobile");
+    forwardButton.dataset.postId = item.id;
 
-    forwardButton.addEventListener("click", () => {
-        nodeData.friends.forEach((friend) => {
-            // TODO don't add a info link at this moment, calculate if the friend likes this post and adjust
-            // the relationship score. Then if the score is higher of the same as the addInfoLink threshold,
-            // add an infolink (node.step does this already)
-            if (!friend.person.items.has(item.id)) {
-                nodeData.addItemLink(item, friend.person, links);
-                nodeData.addInfoLink(friend.person, nodeData, links);
-            }
-        });
-    });
     feedUl.appendChild(clone);
 }
 
@@ -875,6 +890,10 @@ function addPostToLikedList(likedUl, item, nodeData) {
             updateFeedList(nodeData);
             likeButton.parentElement.parentElement.remove(); // TODO this should not be removed but is easiliy fixed when you reload the page when changing page.
         });
+
+        const forwardButton = clone.querySelector(".forward-button-mobile");
+        forwardButton.dataset.postId = item.post.id;
+
         likedUl.append(clone);
     }
 }
