@@ -93,8 +93,27 @@ legendListItems.forEach((li) => {
     });
 });
 
+// Adjust trait function
 traitSelect.addEventListener("change", () => {
     selectedNode.socialScore = traitSelect.value;
+});
+
+// Delete node function
+deleteNodeButton.addEventListener("click", () => {
+    const node = selectedNode;
+    node.friends.forEach((friend) => {
+        friend.person.removeFriend(node, links);
+    });
+    node.items.forEach((item) => {
+        node.removeItemLink(item.post, links);
+    });
+    node.infoLinks.forEach((infoLink) => {
+        infoLink.person.removeInfoLink(infoLink.person, node, links);
+    });
+
+    deselectNode();
+    node.element.remove();
+    nodes.delete(node.id);
 });
 
 calcSection.addEventListener("click", () => {
@@ -528,7 +547,6 @@ function showMobile(nodeData) {
     updateAddFriendsList(nodeData);
     updateFeedList(nodeData);
     updateLikedList(nodeData);
-
     selectedNodeOptions.classList.remove("hide");
 }
 
@@ -639,10 +657,16 @@ function updateFeedList(nodeData) {
             if (headings.length > 0) {
                 let dontAddToList = false;
                 headings.forEach((heading) => {
-                    if (heading.textContent === item.title) {
+                    if (Number(heading.dataset.postId) === item.id) {
                         const likeButton = heading.parentElement.querySelector(".like-button");
+                        // check if its still a liked item
                         if (nodeData.items.has(item.id)) {
-                            likeButton.classList.add("active");
+                            const foundItem = nodeData.items.get(item.id);
+                            if (foundItem.score > 0) {
+                                likeButton.classList.add("active");
+                            } else {
+                                likeButton.classList.remove("active");
+                            }
                         } else {
                             likeButton.classList.remove("active");
                         }
@@ -666,6 +690,7 @@ function addPostToFeedList(feedUl, item, nodeData) {
     img.src = item.image;
     const heading = clone.querySelector("h4");
     heading.textContent = item.title;
+    heading.dataset.postId = item.id;
 
     const likeButton = clone.querySelector(".like-button");
     if (nodeData.items.has(item.id)) {
@@ -677,10 +702,14 @@ function addPostToFeedList(feedUl, item, nodeData) {
         likeButton.classList.remove("active");
     }
     likeButton.addEventListener("click", (e) => {
-        if (nodeData.items.has(item.id)) {
+        const foundItem = nodeData.items.get(item.id);
+        if (foundItem && foundItem.score > 0) {
             nodeData.removeItemLink(item, links);
             e.target.classList.remove("active");
             updateLikedList(nodeData);
+        } else if (foundItem) {
+            foundItem.score = 1;
+            e.target.classList.add("active");
         } else {
             nodeData.addItemLink(item, nodeData, links);
             e.target.classList.add("active");
@@ -701,7 +730,6 @@ function addPostToFeedList(feedUl, item, nodeData) {
             }
         });
     });
-
     feedUl.appendChild(clone);
 }
 
@@ -712,7 +740,7 @@ function updateLikedList(nodeData) {
             if (headings.length > 0) {
                 let dontAddToList = false;
                 headings.forEach((heading) => {
-                    if (heading.textContent === item.post.title) {
+                    if (Number(heading.dataset.postId) === item.post.id) {
                         dontAddToList = true;
                     }
                 });
@@ -744,6 +772,7 @@ function addPostToLikedList(likedUl, item, nodeData) {
         img.src = item.post.image;
         const heading = clone.querySelector("h4");
         heading.textContent = item.post.title;
+        heading.dataset.postId = item.post.id;
 
         const likeButton = clone.querySelector(".like-button");
         likeButton.classList.add("active");
@@ -758,10 +787,43 @@ function addPostToLikedList(likedUl, item, nodeData) {
             updateFeedList(nodeData);
             likeButton.parentElement.parentElement.remove(); // TODO this should not be removed but is easiliy fixed when you reload the page when changing page.
         });
-
-        likedUl.appendChild(clone);
+        likedUl.append(clone);
     }
 }
+
+/**
+ * Function for switching pages in the mobile interface
+ */
+function navigateToPage(pageId) {
+    const pages = Array.from(mobilePages.children);
+    const targetPage = document.getElementById(pageId);
+    const updateFunction = `update${pageId.charAt(0).toUpperCase() + pageId.slice(1)}List`;
+    if (eval(`typeof ${updateFunction} === 'function'`)) {
+        eval(`${updateFunction}(selectedNode)`);
+    }
+    pages.forEach((page) => (page.style.display = "none"));
+    targetPage.style.display = "block";
+    if (pageId === "profile") {
+        selectedProfile.style.display = "block";
+    } else {
+        selectedProfile.style.display = "none";
+    }
+}
+
+// Mobile navigation
+document.addEventListener("DOMContentLoaded", function () {
+    const mobileButtons = document.querySelectorAll(".phone [data-page]");
+
+    mobileButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            mobileButtons.forEach((btn) => btn.classList.remove("active"));
+
+            this.classList.add("active");
+
+            navigateToPage(this.dataset.page);
+        });
+    });
+});
 
 /**
  * Function for checking who has an info link with a given node
@@ -987,42 +1049,6 @@ function framelooper() {
     stepAllNodes();
 }
 
-/**
- * Function for switching pages in the mobile interface
- */
-
-function navigateToPage(pageId) {
-    const pages = Array.from(mobilePages.children);
-    const targetPage = document.getElementById(pageId);
-    const updateFunction = `update${pageId.charAt(0).toUpperCase() + pageId.slice(1)}List`;
-    if (eval(`typeof ${updateFunction} === 'function'`)) {
-        eval(`${updateFunction}(selectedNode)`);
-    }
-
-    pages.forEach((page) => (page.style.display = "none"));
-    targetPage.style.display = "block";
-    if (pageId === "profile") {
-        selectedProfile.style.display = "block";
-    } else {
-        selectedProfile.style.display = "none";
-    }
-}
-
-// Mobile navigation
-document.addEventListener("DOMContentLoaded", function () {
-    const mobileButtons = document.querySelectorAll(".phone [data-page]");
-
-    mobileButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            mobileButtons.forEach((btn) => btn.classList.remove("active"));
-
-            this.classList.add("active");
-
-            navigateToPage(this.dataset.page);
-        });
-    });
-});
-
 //Export & Import
 exportButton.addEventListener("click", () => {
     fileHandler.export(nodes);
@@ -1034,21 +1060,4 @@ importButton.addEventListener("click", async () => {
         setEventListeners(node);
     });
     resizeNodes(nodes);
-});
-
-deleteNodeButton.addEventListener("click", () => {
-    const node = selectedNode;
-    node.friends.forEach((friend) => {
-        friend.person.removeFriend(node, links);
-    });
-    node.items.forEach((item) => {
-        node.removeItemLink(item.post, links);
-    });
-    node.infoLinks.forEach((infoLink) => {
-        infoLink.person.removeInfoLink(infoLink.person, node, links);
-    });
-
-    deselectNode();
-    node.element.remove();
-    nodes.delete(node.id);
 });

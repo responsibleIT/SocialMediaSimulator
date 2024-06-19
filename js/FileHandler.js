@@ -98,7 +98,7 @@ export default class FileHandler {
 			      			});
 			      			nodeItem.infoLinks.forEach(infoLink => {
 			      				const infoLinkNode = nodes.get(infoLink.id);
-			      				node.addInfoLink(infoLinkNode, node, links, item.score);
+			      				node.addInfoLink(infoLinkNode, node, links, infoLink.score);
 			      				
 			      			});
 			      		}
