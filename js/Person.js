@@ -7,7 +7,7 @@ export default class Person extends Node {
         this.friends = new Map(); //Contains {friend: score} pairs
         this.items = new Map(); //Contains {item: score} pairs
         this.infoLinks = new Map(); //Contains {infoLink: score} pairs
-        this.socialScore = 0.6; //Decides how social the agent is
+        this.socialScore = this.getRandomNumber(); //Decides how social the agent is
         this.profileImage = user.image;
         this.userName = user.username;
         this.growFactor = 1.5;
@@ -460,5 +460,14 @@ export default class Person extends Node {
     removeInfoLink(from, to, links) {
         links.get(from + "-" + to).element.remove();
         links.delete(`${from}-${to}`);
+    }
+
+    getRandomNumber() {
+        // Define the possible values
+        const values = [0.2, 0.4, 0.6, 0.8];
+        // Generate a random index from 0 to 4
+        const randomIndex = Math.floor(Math.random() * values.length);
+        // Return the value at the random index
+        return values[randomIndex];
     }
 }

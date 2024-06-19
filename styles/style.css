@@ -501,7 +501,11 @@ NODE STYLES
     &.info-link, &.friend-link, &.liked-link, &.disliked-link {
         animation: shoot 1s linear;
     }
+    &.highlight-link {
+        height: 1.5px;
+    }
 }
+
 @keyframes shoot {
     from {
         scale: 0;
