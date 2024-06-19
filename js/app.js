@@ -972,6 +972,11 @@ function selectNode(node) {
         showPreLink(node);
         phone.classList.add("phone-selected");
         node.spawnForwardButtons(links, filteredEdges);
+        links.forEach((link) => {
+            if (link.from === node || link.to === node) {
+                link.element.classList.add("highlight-link");
+            }
+        });
     }
     selectedNode = node;
 }
@@ -988,6 +993,11 @@ function deselectNode() {
     if (linkStripe) {
         linkStripe.remove();
     }
+
+    const allHighlightedLinks = document.querySelectorAll(".highlight-link");
+    allHighlightedLinks.forEach((link) => {
+        link.classList.remove("highlight-link");
+    });
 
     selectedNodeOptions.classList.add("hide");
     selectedNode = null;
