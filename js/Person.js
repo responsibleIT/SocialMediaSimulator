@@ -458,8 +458,11 @@ export default class Person extends Node {
 
     //Function for removing an info link between the currently selected node and the node with the given id
     removeInfoLink(from, to, links) {
-        links.get(from + "-" + to).element.remove();
-        links.delete(`${from}-${to}`);
+        const link = links.get(from.id + "-" + to.id)
+        if(link){
+            link.element.remove();
+            links.delete(`${from.id}-${to.id}`);
+        }
     }
 
     getRandomNumber() {
