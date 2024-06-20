@@ -107,7 +107,14 @@ deleteNodeButton.addEventListener("click", () => {
     node.infoLinks.forEach((infoLink) => {
         infoLink.person.removeInfoLink(infoLink.person, node, links);
     });
-
+    if ((node.element.style.anchorName = `--MIP${node.id}`)) {
+        const allMedals = document.querySelectorAll(".mipMedal");
+        allMedals.forEach((medal) => {
+            if (medal.style.positionAnchor === `--MIP${node.id}`) {
+                medal.remove();
+            }
+        });
+    }
     deselectNode();
     node.element.remove();
     nodes.delete(node.id);
