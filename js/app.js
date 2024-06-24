@@ -211,11 +211,11 @@ playButton.addEventListener("click", () => {
     if (playing) {
         playing = false;
         playButton.querySelector("img").src = "./images/play.svg";
-        playbutton.querySelector("span").textContent = "Start";
+        const span = (playButton.querySelector("span").textContent = "Start");
     } else {
         playing = true;
         playButton.querySelector("img").src = "./images/pause.svg";
-        playbutton.querySelector("span").textContent = "Stop";
+        const span = (playButton.querySelector("span").textContent = "Stop");
         framelooper();
     }
 });
@@ -231,6 +231,12 @@ importButton.addEventListener("click", async () => {
         setEventListeners(node);
     });
     resizeNodes(nodes);
+    filteredEdges.forEach((filter) => {
+        const links = document.querySelectorAll(`div.${filter}`);
+        links.forEach((link) => {
+            link.style.display = "none";
+        });
+    });
 });
 
 // Delete all likes of a person
