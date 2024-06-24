@@ -200,7 +200,7 @@ canvas.addEventListener("click", async (event) => {
 increasedPopularityInput.addEventListener("change", () => {
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showMobile(selectedNode);
+    showMobile(selectedNode); 
 });
 
 // single animation frame (step)
