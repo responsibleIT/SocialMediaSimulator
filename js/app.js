@@ -211,9 +211,11 @@ playButton.addEventListener("click", () => {
     if (playing) {
         playing = false;
         playButton.querySelector("img").src = "./images/play.svg";
+        playbutton.querySelector("span").textContent = "Start";
     } else {
         playing = true;
         playButton.querySelector("img").src = "./images/pause.svg";
+        playbutton.querySelector("span").textContent = "Stop";
         framelooper();
     }
 });
