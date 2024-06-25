@@ -594,28 +594,53 @@ LEGEND STYLES
             align-items: center;
             gap: 0.5em;
             cursor: pointer;
-
+            transition: 150ms;  
+            position: relative; 
+            padding-bottom: 0.6rem;
+            /* z-index: 3; */
             & span {
                 height: 3px;
                 width: 100%;
                 animation: none;
+                transition: 200ms;
+                position: absolute;
+                bottom: 0;
             }
             & img {
                 width: 1.25em;
                 height: auto;
             }
+            &:hover span{
+                animation: slideToTop 200ms linear forwards;
+                opacity: .5;
+            }
         }
         & li:has(.post-dot, img){
             flex-direction: row;
             cursor: auto;
+            &:hover {
+                animation: none;
+            }
         }
         & li:has(.disliked-link){
             text-decoration: line-through;
+            &:hover span{
+                opacity: .1;
+            }
         }
     }
 
     & li:nth-of-type(4){
         margin-top: 0.7em;
+    }
+}
+
+@keyframes slideToTop {
+    from {
+        height: 3px;
+    }
+    to {
+        height: 100%;
     }
 }
 

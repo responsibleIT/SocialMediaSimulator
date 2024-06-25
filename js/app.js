@@ -200,7 +200,7 @@ canvas.addEventListener("click", async (event) => {
 increasedPopularityInput.addEventListener("change", () => {
     selectedNode.increasedPopularity = increasedPopularityInput.value;
     resizeNodes(nodes);
-    showMobile(selectedNode);
+    showMobile(selectedNode); 
 });
 
 // single animation frame (step)
@@ -211,9 +211,11 @@ playButton.addEventListener("click", () => {
     if (playing) {
         playing = false;
         playButton.querySelector("img").src = "./images/play.svg";
+        const span = (playButton.querySelector("span").textContent = "Start");
     } else {
         playing = true;
         playButton.querySelector("img").src = "./images/pause.svg";
+        const span = (playButton.querySelector("span").textContent = "Pause");
         framelooper();
     }
 });
@@ -229,6 +231,12 @@ importButton.addEventListener("click", async () => {
         setEventListeners(node);
     });
     resizeNodes(nodes);
+    filteredEdges.forEach((filter) => {
+        const links = document.querySelectorAll(`div.${filter}`);
+        links.forEach((link) => {
+            link.style.display = "none";
+        });
+    });
 });
 
 // Delete all likes of a person
