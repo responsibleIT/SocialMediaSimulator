@@ -215,7 +215,7 @@ playButton.addEventListener("click", () => {
     } else {
         playing = true;
         playButton.querySelector("img").src = "./images/pause.svg";
-        const span = (playButton.querySelector("span").textContent = "Stop");
+        const span = (playButton.querySelector("span").textContent = "Pause");
         framelooper();
     }
 });
