@@ -9,3 +9,4 @@ export default class Post extends Node {
         this.growFactor = 0.5;
     }
 } 
+

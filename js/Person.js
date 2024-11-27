@@ -66,7 +66,7 @@ export default class Person extends Node {
             myScore = this.calculateScore(myScore, randomPost);
 
             this.items.set(randomPost.id, { post: randomPost, score: myScore });
-            randomPost.readers.set(this.id, { personId: this.id, score: myScore });
+            randomPost.readers.set(this.id, { id: this.id, score: myScore });
 
             links.set(`${this.id}-${randomPost.id}`, {
                 fromId: this.id,
@@ -74,8 +74,6 @@ export default class Person extends Node {
                 type: "item-link",
                 score: myScore,
             });
-
-            console.log(`Person ${this.userName} read post ${randomPost.id} with score ${myScore}`);
         }
     }
 
@@ -139,10 +137,9 @@ export default class Person extends Node {
             if (Math.random() < this.socialScore) {
                 const postNode = post.post;
     
-                // Validate if postNode.readers is a Map or has a values() method
-                if (postNode.readers && typeof postNode.readers.values === "function") {
+                if (postNode.readers && postNode.readers.values) {
                     const peopleThatReadPost = Array.from(postNode.readers.values()).filter((reader) => {
-                        const personId = reader.personId;
+                        const personId = reader.id;
                         return (
                             reader.score > 0 &&
                             personId !== this.id &&
@@ -152,20 +149,15 @@ export default class Person extends Node {
     
                     if (peopleThatReadPost.length > 0) {
                         const randomReader = peopleThatReadPost[Math.floor(Math.random() * peopleThatReadPost.length)];
-                        const randomPerson = nodes.get(randomReader.personId);
+                        const randomPerson = nodes.get(randomReader.id);
                         if (randomPerson) {
                             this.addFriend(randomPerson, links);
                         }
                     }
-                } else {
-                    console.error(
-                        `Invalid readers property on postNode: ${JSON.stringify(postNode)}`
-                    );
                 }
             }
         });
     }
-    
 
     manageRelationships(links, nodes) {
         this.friends.forEach((friend, friendId) => {
@@ -206,11 +198,10 @@ export default class Person extends Node {
         const positiveItems = Array.from(this.items.values()).filter(
             (item) => item.score > 0
         );
-        // console.log(`Before move: (${this.x}, ${this.y}, ${this.z})`);
+        console.log(`Before move: (${this.x}, ${this.y}, ${this.z})`);
         // console.log("Friends:", this.friends);
         // console.log("InfoLinks:", this.infoLinks);
         // console.log("Items:", this.items);
-
 
         // Calculate the average position of all friends, infoLinks, and items
         let averageX = this.x;
@@ -218,9 +209,9 @@ export default class Person extends Node {
         let averageZ = this.z;
     
         positiveFriends.forEach((friend) => {
-            const friendNode = nodes.get(friend.personId);
+            const friendNode = nodes.get(friend.id);
             if (!friendNode) {
-                console.warn(`Friend node not found for ID: ${friend.personId}`);
+                console.warn(`Friend node not found for ID: ${this.id}`);
             }
             if (friendNode) {
                 averageX += friendNode.x;
@@ -230,9 +221,9 @@ export default class Person extends Node {
         });
     
         positiveInfoLinks.forEach((infoLink) => {
-            const infoNode = nodes.get(infoLink.personId);
+            const infoNode = nodes.get(infoLink.id);
             if (!infoNode) {
-                console.warn(`InfoLink node not found for ID: ${infoLink.personId}`);
+                console.warn(`InfoLink node not found for ID: ${this.id}`);
             }
             if (infoNode) {
                 averageX += infoNode.x;
