@@ -1,13 +1,22 @@
 export default class Edge {
-    constructor(from, to, type) {
-        this.from = from;
-        this.to = to;
+    constructor(fromId, toId, type) {
+        this.fromId = fromId;
+        this.toId = toId;
         this.type = type;
         this.element = null;
-        this.drawLink();
+
+        // Only draw the link if the DOM is available (browser environment)
+        if (typeof document !== "undefined" && typeof window !== "undefined") {
+            this.drawLink();
+        }
     }
 
     drawLink() {
+        // Check if the DOM is available
+        if (typeof document === "undefined") {
+            return; // Skip DOM-related operations in Node.js
+        }
+
         let linkStripe = document.createElement("div");
         this.element = linkStripe;
         linkStripe.className = "linkStripe";
@@ -17,12 +26,17 @@ export default class Edge {
 
         linkStripe.classList.add(this.type);
 
-        canvasContainer.appendChild(linkStripe);
+        // Ensure `canvasContainer` exists in your environment
+        if (typeof canvasContainer !== "undefined") {
+            canvasContainer.appendChild(linkStripe);
+        }
 
         return linkStripe;
     }
 
     calcAngle() {
+        if (!this.element) return;
+
         let Ydifference = this.from.y - this.to.y;
         let Xdifference = this.from.x - this.to.x;
 

@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.8.3",
+    "uuid": "^11.0.3"
+  },
+  "type": "module"
+}
