@@ -222,7 +222,7 @@ playButton.addEventListener("click", () => {
 
 //Export & Import
 exportButton.addEventListener("click", () => {
-    fileHandler.export(nodes);
+    fileHandler.exportToLink(nodes);
 });
 
 importButton.addEventListener("click", async () => {
@@ -398,6 +398,7 @@ function drawRandom(label, count, userData) {
         const id = nodes.size;
         let x = Math.random() * canvasSize.width;
         let y = Math.random() * canvasSize.height;
+        let z = Math.random() * canvasSize.width;
         if (x < borderDistanceNode) {
             x = x + borderDistanceNode;
         } else if (x > canvasSize.width - borderDistanceNode) {
@@ -408,17 +409,22 @@ function drawRandom(label, count, userData) {
         } else if (y > canvasSize.height - borderDistanceNode) {
             y = y - borderDistanceNode;
         }
+        if (z < borderDistanceNode) {
+            z = z + borderDistanceNode;
+        } else if (z > canvasSize.width - borderDistanceNode) {
+            z = z - borderDistanceNode;
+        }
 
         switch (label) {
             case "Person":
                 const image = userData[i].image;
                 const username = userData[i].username;
-                node = new Person(id, "Person", x, y, { image, username });
+                node = new Person(id, "Person", x, y, z, { image, username });
                 break;
             case "Social Media Post":
                 const postImage = userData[i].enclosure.url;
                 const title = userData[i].title;
-                node = new Post(id, "Social Media Post", x, y, { title, postImage });
+                node = new Post(id, "Social Media Post", x, y, z, { title, postImage });
                 break;
             default:
                 break;
@@ -451,13 +457,13 @@ async function spawnNode(evt) {
             userData = await userdata.get(1);
             const image = userData[0].image;
             const username = userData[0].username;
-            node = new Person(id, "Person", mousePos.x, mousePos.y, { image, username });
+            node = new Person(id, "Person", mousePos.x, mousePos.y, Math.random() * canvasSize.width, { image, username });
             break;
         case "Social Media Post":
             let postData = await userdata.getPosts(1);
             const postImage = postData[0].enclosure.url;
             const title = postData[0].title;
-            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y, { title, postImage });
+            node = new Post(id, "Social Media Post", mousePos.x, mousePos.y, Math.random() * canvasSize.width, { title, postImage });
             break;
         default:
             break;

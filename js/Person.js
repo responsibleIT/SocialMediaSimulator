@@ -2,8 +2,8 @@ import Node from "./Node.js";
 import Edge from "./Edge.js";
 
 export default class Person extends Node {
-    constructor(id, label, x, y, user) {
-        super(id, label, x, y, 10);
+    constructor(id, label, x, y, z, user) {
+        super(id, label, x, y, z, 10);
         this.friends = new Map(); //Contains {friend: score} pairs
         this.items = new Map(); //Contains {item: score} pairs
         this.infoLinks = new Map(); //Contains {infoLink: score} pairs
@@ -121,7 +121,9 @@ export default class Person extends Node {
         const amountSimilarPosts = Array.from(this.items.values()).filter((item) => {
             item = item.post;
 
-            const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && Math.abs(item.y - post.y) < similarityThreshold;
+            const similarPostsArray = Math.abs(item.x - post.x) < similarityThreshold && 
+                                      Math.abs(item.y - post.y) < similarityThreshold &&
+                                      Math.abs(item.z - post.z) < similarityThreshold;
             // TODO FIX: similarPostsArray returns false
             return similarPostsArray.length;
         });
@@ -170,8 +172,11 @@ export default class Person extends Node {
     }
 
     calculateScore(myScore, post) {
-        //Calculate the distance from me to the post
-        const distance = Math.sqrt(Math.pow(this.x - post.x, 2) + Math.pow(this.y - post.y, 2));
+        //Calculate the distance from me to the post based on x y and z coordinates
+        let dx = post.x - this.x;
+        let dy = post.y - this.y;
+        let dz = post.z - this.z;
+        let distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
         //Adjust the score based on the distance
         myScore = myScore - distance / this.acceptanceDisctance;
@@ -262,32 +267,39 @@ export default class Person extends Node {
         //Calculate the average position of all friends, infolinks and items
         let averageX = this.x;
         let averageY = this.y;
+        let averageZ = this.z;
 
         positiveFriends.forEach((friend) => {
             averageX += friend.person.x;
             averageY += friend.person.y;
+            averageZ += friend.person.z;
         });
         positiveInfoLinks.forEach((infoLink) => {
             infoLink = infoLink.person;
 
             averageX += infoLink.x;
             averageY += infoLink.y;
+            averageZ += infoLink.z;
         });
         positiveItems.forEach((item) => {
             averageX += item.post.x;
             averageY += item.post.y;
+            averageZ += item.post.z;
         });
         averageX = averageX / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
         averageY = averageY / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
+        averageZ = averageZ / (positiveFriends.length + positiveInfoLinks.length + positiveItems.length + 1);
 
         //Move the agent towards the average position
         let dx = averageX - this.x;
         let dy = averageY - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
+        let dz = averageZ - this.z;
+        let distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
         if (distance > 0) {
             this.x += (dx / distance) * this.stepDistance;
             this.y += (dy / distance) * this.stepDistance;
+            this.z += (dz / distance) * this.stepDistance;
             this.element.style.left = this.x + "px";
             this.element.style.top = this.y + "px";
             this.moveLinks(links);

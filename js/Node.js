@@ -1,9 +1,10 @@
 export default class Node {
-    constructor(id, label, x, y, radius) {
+    constructor(id, label, x, y, z, radius) {
         this.id = id;
         this.label = label;
         this.x = x;
         this.y = y;
+        this.z = z;
         this.radius = radius;
         this.element = null;
         this.popularity = 0;

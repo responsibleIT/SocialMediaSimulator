@@ -25,7 +25,7 @@ export default class FileHandler {
 		return array;
 	}
 
-	export(nodes) {
+	exportToLink(nodes) {
 
 		let filename = prompt('Give your network a name', '');
 
@@ -45,6 +45,12 @@ export default class FileHandler {
 	        link.click();
 	        link.remove();
 	    }
+	}
+
+	exportToJSON(nodes) {
+		const nodesArray = this.mapToArray(nodes);
+		const jsonNodeData = JSON.stringify(nodesArray);
+		return jsonNodeData;
 	}
 
 	import(nodes, links) {
