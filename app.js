@@ -17,7 +17,7 @@ app.use(session({
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://cm3ztl6gk11vz9rs2fv8mdf3d:Yw6fWfBsSit4yAYfSTlFJ67D@213.108.110.8:9000/?readPreference=primary&ssl=false', {
+mongoose.connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
