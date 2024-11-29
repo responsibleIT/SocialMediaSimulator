@@ -1,6 +1,5 @@
-import express from 'express';
 import dotenv from 'dotenv';
-dotenv.config();
+import express from 'express';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import { Simulation } from './dataschema.js';
@@ -8,6 +7,7 @@ import Person from './js/Person.js'; // Import Person class
 import Post from './js/Post.js'; // Import Post class
 import { v4 as uuidv4 } from 'uuid';
 
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(session({
